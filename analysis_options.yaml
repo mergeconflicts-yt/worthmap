@@ -1,0 +1,22 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - lib/design/tokens/tokens.g.dart
+    - lib/l10n/app_localizations*.dart
+    - build/**
+    - ios/**
+  errors:
+    invalid_annotation_target: ignore
+
+linter:
+  rules:
+    - always_declare_return_types
+    - avoid_print
+    - cancel_subscriptions
+    - directives_ordering
+    - prefer_single_quotes
+    - require_trailing_commas
+    - unawaited_futures

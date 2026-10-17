@@ -1,0 +1,3 @@
+tags:
+  golden:
+    description: Golden image tests (AGENTS.md 4). No network and no personal data.

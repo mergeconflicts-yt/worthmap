@@ -1,0 +1,22 @@
+/// The only import a feature uses (DESIGN 1): `package:contour/design/design.dart`.
+library;
+
+export 'components/buttons/app_button.dart';
+export 'components/buttons/icon_button.dart';
+export 'components/buttons/info_button.dart';
+export 'components/hero/ob_hero.dart';
+export 'components/surfaces/glass_card.dart';
+export 'components/surfaces/screen_header.dart';
+export 'components/surfaces/widget_slot.dart';
+export 'format/money_text.dart';
+export 'icons/app_icons.dart';
+export 'layout/detail_screen.dart';
+export 'layout/form_screen.dart';
+export 'layout/page_background.dart';
+export 'layout/tab_root_screen.dart';
+export 'theme/app_theme.dart';
+export 'theme/section.dart';
+export 'tokens/space.dart';
+export 'tokens/token_types.dart';
+export 'tokens/tokens.g.dart';
+export 'typography/app_text.dart';

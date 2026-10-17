@@ -1,0 +1,40 @@
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+.ios/
+.android/
+
+# Drift / build_runner
+*.g.dart
+# NOTE: *.g.dart stays ignored. Never edit generated files (AGENTS 3).
+# Regenerate with: dart run build_runner build -d
+
+# l10n output
+lib/l10n/app_localizations*.dart
+.i18n/
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.iml
+.DS_Store
+
+# Native
+Pods/
+*.xcworkspace/xcuserdata/
+derivedData/
+
+# Secrets — never commit keys (AGENTS 2.7)
+*.key
+*.p12
+*.jks
+local.properties
+
+# Local design assets and tooling
+design-mockups/
+heic/
+.commandcode/
