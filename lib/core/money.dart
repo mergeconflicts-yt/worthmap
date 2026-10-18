@@ -10,6 +10,10 @@ final class Currency {
   const Currency._(this.code, this.minorUnits);
 
   /// Validates [code] (three uppercase letters) and [minorUnits] (0 to 4).
+  ///
+  /// Test-only: production code uses [Currency.of] for the pinned ISO 4217
+  /// table (CR-12, DATABASE_DESIGN 3). The factory stays to build edge cases
+  /// in tests.
   factory Currency(String code, {required int minorUnits}) {
     if (!_codePattern.hasMatch(code)) {
       throw ArgumentError.value(
@@ -43,6 +47,19 @@ final class Currency {
   static const Currency kwd = Currency._('KWD', 3);
   static const Currency inr = Currency._('INR', 2);
   static const Currency twd = Currency._('TWD', 2);
+
+  /// CR-12: the pinned ISO 4217 table. Production code uses this, never the
+  /// factory, so a caller cannot supply its own minor-unit metadata.
+  static Currency of(String code) => switch (code) {
+        'USD' => Currency.usd,
+        'EUR' => Currency.eur,
+        'GBP' => Currency.gbp,
+        'JPY' => Currency.jpy,
+        'KWD' => Currency.kwd,
+        'INR' => Currency.inr,
+        'TWD' => Currency.twd,
+        _ => throw ArgumentError.value(code, 'code', 'Unknown currency'),
+      };
 
   @override
   bool operator ==(Object other) =>
@@ -84,10 +101,12 @@ final class Money implements Comparable<Money> {
   const Money._(this.minor, this.currency);
 
   /// Creates an amount from an integer number of minor units.
-  factory Money.fromMinor(int minor, Currency currency) {
-    _checkRange(BigInt.from(minor));
-    return Money._(minor, currency);
-  }
+  ///
+  /// CR-18: no range check here. A Dart `int` cannot exceed the signed 64-bit
+  /// range, so the check costs one BigInt per amount. [_of] checks every
+  /// computed value.
+  factory Money.fromMinor(int minor, Currency currency) =>
+      Money._(minor, currency);
 
   /// The signed 64-bit minor-unit range (SYSTEM_DESIGN 7).
   static final BigInt maxMinor = BigInt.parse('9223372036854775807');
@@ -115,7 +134,11 @@ final class Money implements Comparable<Money> {
     return _of(BigInt.from(minor) - BigInt.from(other.minor), currency);
   }
 
-  Money operator -() => Money._(-minor, currency);
+  /// SPEC 4.1: the additive inverse.
+  ///
+  /// The result is range-checked: negating [minMinor] would exceed [maxMinor]
+  /// and throws [MoneyOutOfRange] (R03).
+  Money operator -() => _of(-BigInt.from(minor), currency);
 
   /// SPEC 4.1: multiplies by an exact factor and rounds to minor units.
   ///

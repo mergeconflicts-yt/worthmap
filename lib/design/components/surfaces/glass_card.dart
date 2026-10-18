@@ -6,6 +6,7 @@ import '../../tokens/space.dart';
 import '../../tokens/token_types.dart';
 import '../../tokens/tokens.g.dart';
 import '../../typography/app_text.dart';
+import '../interaction/app_interaction.dart';
 
 /// DESIGN 6.7: `GlassCard` variants.
 enum GlassCardVariant {
@@ -85,13 +86,10 @@ class GlassCard extends StatelessWidget {
 
     final body = onTap == null
         ? card
-        : MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: onTap,
-              child: card,
-            ),
+        : AppInteraction(
+            onActivated: onTap,
+            borderRadius: BorderRadius.circular(RadiusTokens.card),
+            child: card,
           );
 
     final header = title == null
@@ -173,6 +171,8 @@ class _Header extends StatelessWidget {
         Text(
           meta!.toUpperCase(),
           style: AppText.labelCaps.copyWith(color: tokens.textSecondary),
+          // CR-14: spoken name keeps the original case.
+          semanticsLabel: meta,
         ),
       ],
     );

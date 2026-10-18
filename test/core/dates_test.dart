@@ -61,4 +61,38 @@ void main() {
       lessThan(0),
     );
   });
+
+  // R05: the year must stay inside the database date range.
+  test('accepts the database year range and rejects outside it', () {
+    expect(LocalDate(1, 1, 1).toString(), '0001-01-01');
+    expect(LocalDate(9999, 12, 31).toString(), '9999-12-31');
+    expect(() => LocalDate(0, 1, 1), throwsArgumentError);
+    expect(() => LocalDate(-1, 1, 1), throwsArgumentError);
+    expect(() => LocalDate(10000, 1, 1), throwsArgumentError);
+  });
+
+  test('tryParse rejects years outside the range', () {
+    expect(LocalDate.tryParse('0000-01-01'), isNull);
+    expect(LocalDate.tryParse('0001-01-01'), LocalDate(1, 1, 1));
+    expect(LocalDate.tryParse('9999-12-31'), isNotNull);
+  });
+
+  test('leap-day rules hold at the range edges', () {
+    expect(LocalDate(4, 2, 29).day, 29);
+    expect(() => LocalDate(1, 2, 29), throwsArgumentError);
+    expect(() => LocalDate(9999, 2, 29), throwsArgumentError);
+  });
+
+  // R04: a parse error must not carry the source text (AGENTS 2.6).
+  test('parse errors never carry the source text', () {
+    const marker = 'SENSITIVE-ACCOUNT-1234';
+    try {
+      LocalDate.parse(marker);
+      fail('expected InvalidLocalDateFormat');
+    } on InvalidLocalDateFormat catch (error) {
+      expect(error.source, isNull);
+      expect(error.message, InvalidLocalDateFormat.code);
+      expect(error.toString(), isNot(contains(marker)));
+    }
+  });
 }

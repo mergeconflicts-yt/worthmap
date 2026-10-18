@@ -16,16 +16,20 @@ Contour is a local-first personal finance app for iPhone and Android. It shows t
 | DOCUMENT | OWNS |
 |---|---|
 | AGENTS.md | Workflow, commands, code conventions, roles, definition of done |
-| SYSTEM_DESIGN.md | Modules, storage, workers, derived data, privacy enforcement, recovery, performance plan |
-| DATABASE_DESIGN.md | Tables, constraints, codecs, queries, migrations |
+| docs/approved-architecture/SYSTEM_DESIGN.md | Modules, storage, workers, derived data, privacy enforcement, recovery, performance plan |
+| docs/approved-architecture/DATABASE_DESIGN.md | Tables, constraints, codecs, queries, migrations |
 | DESIGN.md | Tokens, type, components, charts, style rules (wins on style) |
 | docs/screens/SCREENS.md | Layout of each screen, by screen id (DESIGN.md 14 points to it) |
-| docs/USAGE_FLOWS.md | Journeys, save boundaries, correction gates G01–G14 |
-| docs/WIDGET_CATALOGUE.md | Widgets and Quick look tiles |
+| docs/flows/USAGE_FLOWS.md | Journeys, save boundaries, correction gates G01–G14 |
+| docs/spec/spec-widgets.md and docs/approved-architecture/widget-framework.md | Widgets and Quick look tiles |
 | docs/DECISIONS.md | Decisions, history and open questions |
 
-- Screenshots: `docs/screens/<screen id>.png` (for example `X10Home.png`). Text wins over a screenshot.
-- The final look is Obsidian (dark and Obsidian Light) in `contour-design.html`. Older Slabs screenshots are out of date for style and layout; use the Obsidian figure with the same id. Appendix A wins over prototype numbers.
+- Screenshots: `docs/screens/<screen id>.png` (for example `X10Home.png`). They are
+  not in this checkout yet; use the screen description in `docs/screens/SCREENS.md`.
+  Text wins over a screenshot. See docs/DECISIONS.md (SCREEN-REFERENCES).
+- The final look is Obsidian (dark and Obsidian Light). The `contour-design.html`
+  figure is not in this checkout yet. Appendix A wins over prototype numbers.
+  See docs/DECISIONS.md (SCREEN-REFERENCES).
 - Conflicts inside this file: section 2 wins, then 3, then 4, then the rest.
 - Use only the screen ids in 5.4.
 - `code style` = names in code. "Quotes" = text the user sees.

@@ -52,6 +52,8 @@ class ScreenHeader extends StatelessWidget {
             child: Text(
               kicker!.toUpperCase(),
               style: AppText.labelCaps.copyWith(color: role.text),
+              // CR-14: spoken name keeps the original case.
+              semanticsLabel: kicker,
             ),
           )
         else

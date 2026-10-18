@@ -3,14 +3,22 @@ import 'dart:math' as math;
 
 import 'token_gen_lib.dart';
 
-/// Pairs that DESIGN leaves open. The check still measures them and prints the
-/// value, but does not fail. See docs/DECISIONS.md (LIGHT-LOSS-CONTRAST).
-// DECISION-PENDING: LIGHT-LOSS-CONTRAST
-const Set<String> _documentedExceptions = <String>{
-  'state.loss|light|page',
-  'data.signed.loss|light|page',
-  'text.heroFill.stop1|light|page',
+/// A measured pair below its minimum passes only when a closed decision exempts
+/// it. The map holds `pair -> decision id`; the pair is `label|theme|background`.
+/// It is a failure while the decision is still an open question (CR-19).
+const Map<String, String> _exemptions = <String, String>{
+  'state.loss|light|page': 'LIGHT-LOSS-CONTRAST',
+  'state.loss|light|pageSpotlight': 'LIGHT-LOSS-CONTRAST',
+  'data.signed.loss|light|page': 'LIGHT-LOSS-CONTRAST',
+  'data.signed.loss|light|pageSpotlight': 'LIGHT-LOSS-CONTRAST',
+  'text.heroFill.stop1|light|page': 'T05-HERO-FILL-CONTRAST',
 };
+
+/// Decision ids that are closed and permit their exemption to pass. Add an id
+/// only when docs/DECISIONS.md records it under "Decided" with the reason.
+/// The ids above are open questions, so their pairs fail until the design owner
+/// supplies a compliant token or changes the contract (R07).
+const Set<String> _closedDecisions = <String>{};
 
 void main() {
   final tokenMap = _colorTokenMap();
@@ -19,6 +27,22 @@ void main() {
   final failures = <String>[];
   final warnings = <String>[];
   var checks = 0;
+
+  /// A below-minimum pair fails unless a *closed* decision exempts it. An open
+  /// decision keeps the failure visible (R07, CR-19).
+  void record(String pair, String message) {
+    final decision = _exemptions[pair];
+    if (decision == null) {
+      failures.add(message);
+      return;
+    }
+    if (_closedDecisions.contains(decision)) {
+      warnings.add('$message (exempt: $decision)');
+      return;
+    }
+    failures.add('$message (open decision $decision; resolve or change the '
+        'contract, then close it in docs/DECISIONS.md)');
+  }
 
   void check(
     String label,
@@ -43,11 +67,7 @@ void main() {
       if (ratio + 1e-9 < min) {
         final message = '$label ($theme) on ${bg.label}: '
             '${ratio.toStringAsFixed(2)}:1 < ${min.toStringAsFixed(1)}:1';
-        if (_documentedExceptions.contains('$label|$theme|${bg.label}')) {
-          warnings.add('$message (documented exception)');
-        } else {
-          failures.add(message);
-        }
+        record('$label|$theme|${bg.label}', message);
       }
     }
   }
@@ -56,6 +76,12 @@ void main() {
     final page = _Bg(
       'page',
       _resolve(tokenMap, 'color.palette.page', theme),
+    );
+    // DESIGN 9: check the composited page. The top spotlight lays white over the
+    // page, so this is the worst page surface for text.
+    final spotlight = _Bg(
+      'pageSpotlight',
+      _over(_spotlightFill(theme), page.color!),
     );
     final sheet = _Bg(
       'sheet',
@@ -85,7 +111,7 @@ void main() {
         'text.$role',
         'color.role.text.$role',
         theme,
-        backgrounds: <_Bg>[page, ...glassBgs, ...tileBgs],
+        backgrounds: <_Bg>[page, spotlight, ...glassBgs, ...tileBgs],
       );
     }
     check(
@@ -98,7 +124,7 @@ void main() {
       'icon.secondary',
       'color.role.icon.secondary',
       theme,
-      backgrounds: <_Bg>[page, ...glassBgs, ...tileBgs],
+      backgrounds: <_Bg>[page, spotlight, ...glassBgs, ...tileBgs],
       min: 3.0,
     );
     check(
@@ -117,25 +143,25 @@ void main() {
       'state.gain',
       'color.role.state.gain',
       theme,
-      backgrounds: <_Bg>[page],
+      backgrounds: <_Bg>[page, spotlight],
     );
     check(
       'state.loss',
       'color.role.state.loss',
       theme,
-      backgrounds: <_Bg>[page],
+      backgrounds: <_Bg>[page, spotlight],
     );
     check(
       'data.signed.gain',
       'color.data.signed.gain',
       theme,
-      backgrounds: <_Bg>[page],
+      backgrounds: <_Bg>[page, spotlight],
     );
     check(
       'data.signed.loss',
       'color.data.signed.loss',
       theme,
-      backgrounds: <_Bg>[page],
+      backgrounds: <_Bg>[page, spotlight],
     );
 
     final heroStops = heroFill[theme]!;
@@ -145,12 +171,7 @@ void main() {
       if (ratio + 1e-9 < 7.0) {
         final message = 'text.heroFill stop $i ($theme) on page: '
             '${ratio.toStringAsFixed(2)}:1 < 7.0:1';
-        if (_documentedExceptions
-            .contains('text.heroFill.stop$i|$theme|page')) {
-          warnings.add('$message (documented exception)');
-        } else {
-          failures.add(message);
-        }
+        record('text.heroFill.stop$i|$theme|page', message);
       }
     }
 
@@ -286,6 +307,18 @@ Map<String, Map<String, String>> _colorTokenMap() {
     };
   }
   return map;
+}
+
+/// The top page spotlight fills white over the page (DESIGN 2.2, 9). The value
+/// is a spotlight token; the theme entry holds `color` and `anchor`.
+_Rgba _spotlightFill(String theme) {
+  var node = readTokensJson();
+  for (final part in 'color.role.surface.pageSpotlight'.split('.')) {
+    node = node[part] as Map<String, dynamic>;
+  }
+  final value = node[r'$value'] as Map<String, dynamic>;
+  final entry = value[theme] as Map<String, dynamic>;
+  return _parse(entry['color'] as String);
 }
 
 Map<String, List<_Rgba>> _gradientStopMap(String path) {

@@ -116,6 +116,8 @@ class DesignGallery extends StatelessWidget {
           text.toUpperCase(),
           style:
               AppText.labelCaps.copyWith(color: context.tokens.textSecondary),
+          // CR-14: spoken name keeps the original case.
+          semanticsLabel: text,
         ),
       );
 

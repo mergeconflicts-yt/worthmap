@@ -1,28 +1,28 @@
 # Contour — Phase 1 Tasks (Base)
 
-Version: 2026-10-17. Scope: Phase 1 only. Authority order: AGENTS.md, SPEC.md + docs/spec/, SYSTEM_DESIGN in docs/approved-architecture/system-design.md, DATABASE_DESIGN in docs/approved-architecture/database-design.md, DESIGN.md + docs/design/, docs/screens/SCREENS.md, docs/flow.md + docs/flows/. Do not inspect wealthfolio/. PF-01 stays in force. Use synthetic data only. Do not invent financial or privacy rules.
+Version: 2026-10-17. Scope: Phase 1 only. Authority order: AGENTS.md, SPEC.md + docs/spec/, SYSTEM_DESIGN in docs/approved-architecture/SYSTEM_DESIGN.md, DATABASE_DESIGN in docs/approved-architecture/DATABASE_DESIGN.md, DESIGN.md + docs/design/, docs/screens/SCREENS.md, docs/flow.md + docs/flows/USAGE_FLOWS_REFERENCE.md. Do not inspect wealthfolio/. PF-01 stays in force. Use synthetic data only. Do not invent financial or privacy rules.
 
 ## Phase 1 kickoff status (2026-10-17)
 
 ### Roll-up (2026-10-17)
 
-- Done: T01, T02, T02b, T03, T04, T05. Remaining: T06-T12.
-- Next: T06 (widget framework Phase 1). It depends on T05 (done) and T07 (layout tables interface, still blocked input) — start with the in-memory layout repo behind the same interface.
-- Test state: `flutter test` 81 non-golden pass; `flutter test --tags golden` 8 pass and stable.
-- Gate state: `dart format`, `flutter analyze`, `check_tokens`, `check_contrast` all pass. Not wired yet: `custom_lint` (T12), `gen-l10n` (T10), `integration_test` (T12).
+- Done (awaiting independent review): T01, T02, T02b, T03, T04, T06. Partly done: T05 (hero split-number typography open). Remaining: T07-T12.
+- Next: T07 (encrypted database) — G01 still open; `SCHEMA.sql` is now present under `docs/approved-architecture/database/`. While blocked, T08 can start with a fake `KeyStore`, or T12 can add the design/privacy lint scaffolding. T06 is awaiting review, so the framework host/registry exist.
+- Test state: `flutter test` 185 pass (includes the 8 goldens); `flutter test --tags golden` 8 pass and stable.
+- Gate state: `dart format`, `flutter analyze`, `check_tokens` pass. `check_contrast` **fails by design** on the two open contrast decisions (R07, CR-19) until the design owner resolves them. Not wired yet: `custom_lint` (T12), `gen-l10n` (T10), `integration_test` (T12).
 
 ### Workspace verification
 
-- The workspace is not a git working tree (`git status` fails). Branch and pull-request rules (AGENTS 8) cannot run yet. Create the repository or a worktree before integration.
-- `flutter analyze`: no issues. `flutter test`: 81 non-golden pass; `flutter test --tags golden`: 8 pass (T04 gallery + T05 components, dark/light, 1.0/2.0).
-- T01-T05 are complete. The token tools (T03), golden tests (T04) and Phase 1 components (T05) now exist. The remaining AGENTS 4 commands do not exist yet and are expected to fail until their owning task: `dart run custom_lint` (T12 wiring), `flutter gen-l10n` (T10 strings), `flutter test integration_test` (T12).
-- Confirmed missing sources (do not substitute): `docs/WIDGET_CATALOGUE.md` (current source is `docs/spec/spec-widgets.md`), `SCHEMA.sql`. Now present: `tool/`, `docs/DECISIONS.md`, `lib/core/`, `lib/design/`. Still absent: `lib/domain/`, `lib/data/`, `lib/features/`, `lib/l10n/`.
+- The workspace is a git working tree. Branch and pull-request rules (AGENTS 8) apply.
+- `flutter analyze`: no issues. `flutter test`: 185 pass; `flutter test --tags golden`: 8 pass (T04 gallery + T05 components, dark/light, 1.0/2.0).
+- T01-T06 are complete. The token tools (T03), golden tests (T04), Phase 1 components (T05) and the widget framework (T06) now exist. The remaining AGENTS 4 commands do not exist yet and are expected to fail until their owning task: `dart run custom_lint` (T12 wiring), `flutter gen-l10n` (T10 strings), `flutter test integration_test` (T12).
+- Present: `tool/`, `docs/DECISIONS.md`, `lib/core/`, `lib/design/`, `lib/app/widgets/`, `lib/features/home/widgets/` (T06 test widgets), `docs/approved-architecture/database/SCHEMA.sql`. Still absent: `lib/domain/`, `lib/data/`, `lib/l10n/`, `docs/screens/*.png`, `docs/WIDGET_CATALOGUE.md` (current source is `docs/spec/spec-widgets.md`).
 
 ### Independent tracks (after T01; run in parallel)
 
 - core — T02 (done), T02b (done). Owner: Domain builder. Files: `lib/core/*`, `test/core/*`.
-- design-system — T03 (done) → T04 (done) → T05 (done) → T06 (next). Owner: Design-system builder. Files: `lib/design/*`, `tool/gen_tokens.dart`, `tool/check_tokens.dart`, `tool/check_contrast.dart`, `test/golden/design/*`.
-- native-storage — T07→T08 (and T11 later). Owner: Data builder then Native builder. Files: `lib/data/*`, `lib/app/auth/*`, `native/*`.
+- design-system — T03 (done) → T04 (done) → T05 (done) → T06 (done, awaiting review). Owner: Design-system builder. Files: `lib/design/*`, `tool/gen_tokens.dart`, `tool/check_tokens.dart`, `tool/check_contrast.dart`, `test/golden/design/*`.
+- native-storage — T07 (blocked input) → T08 (and T11 later). Owner: Data builder then Native builder. Files: `lib/data/*`, `lib/app/auth/*`, `native/*`.
 
 ### Contract every task and pull request must name
 
@@ -44,13 +44,17 @@ Success · Failures · Cancellation · Checks
 
 ## Blocked prerequisites (do not close in feature code)
 
-- G01 Account prerequisites: move basic bank, cash, card setup + opening balances to base phase. Define inclusive balance anchor and accepted postings after it. Blocks F01, F03, F05, F06, F10. Source: docs/flow.md, docs/flows/usage-flows-reference.md.
+- G01 Account prerequisites: move basic bank, cash, card setup + opening balances to base phase. Define inclusive balance anchor and accepted postings after it. Blocks F01, F03, F05, F06, F10. Source: docs/flow.md, docs/flows/USAGE_FLOWS_REFERENCE.md.
 - WIDGET-X03-DEFAULT: X03 catalogue entry and defaults open. Text absent except parenthetical in docs/spec/spec-widgets.md:84. Phase 1 accepts with test widgets and test layout file only. Source: docs/spec/spec-widgets.md, widget-framework.md.
-- LAYOUT-UPGRADE DECISION-PENDING: interim rule usable for tests W-J, W-L. Production new-release behaviour stays product-gated. Source: docs/spec/spec-widgets.md W10, database-design.md:225.
+- LAYOUT-UPGRADE DECISION-PENDING: interim rule usable for tests W-J, W-L. Production new-release behaviour stays product-gated. Source: docs/spec/spec-widgets.md W10, DATABASE_DESIGN.md:225.
 - WIDGET-HALF-REFLOW: threshold open, interim above 1.3 on phones. Blocks final geometry sign-off only.
-- PF-01 phone confinement: no personal-data persistence, no iOS release claim. Prototype with synthetic data only. Source: system-design.md 12.2.
-- Missing sources: SCHEMA.sql absent, docs/WIDGET_CATALOGUE.md absent (current source is docs/spec/spec-widgets.md). lib/core (T02-T02b), lib/design (T03-T05), tool/ and docs/DECISIONS.md now exist. T07 must translate DATABASE_DESIGN + database/table-map.md + query-contracts.md + shared-state.md. Do not invent tables.
+- PF-01 phone confinement: no personal-data persistence, no iOS release claim. Prototype with synthetic data only. Source: SYSTEM_DESIGN.md 12.2.
+- Missing sources: docs/WIDGET_CATALOGUE.md absent (current source is docs/spec/spec-widgets.md); docs/screens/*.png and the design-gallery HTML absent (see DECISIONS SCREEN-REFERENCES). `SCHEMA.sql` is now present at docs/approved-architecture/database/SCHEMA.sql. lib/core (T02-T02b), lib/design (T03-T05), tool/ and docs/DECISIONS.md now exist. T07 must translate DATABASE_DESIGN + database/table-map.md + query-contracts.md + shared-state.md. Do not invent tables.
 - CASHFLOW-*, SUBS-TOTAL, REGULAR-INVEST, HOME-GOALS-NAME: block later financial widgets only, not Phase 1 host.
+- FIN-3 gate: no `lib/domain/numbers` task before FIN-3-01..04 are closed.
+  FIN-3-01 (TWR sub-period formula) is fixed in spec-calculation.md 13.12.
+  FIN-3-02..04 (13.2 and 13.4 test values, net worth bridge gaps, Appendix A
+  contradictions) stay open in docs/DECISIONS.md (G14-FIN-DEFINITIONS).
 
 ## Task order
 
@@ -116,7 +120,7 @@ Foundation first: T01. Then parallel tracks only after T01 merges: core (T02), d
 - Provides: templates + components consumed by T06, T10. Consumes: T03-T04.
 - Acceptance: one control row lint passes. One add control lint passes. Every tappable has semantic label. Every money widget has hidden state. Goldens dark/light 1.0/2.0. `custom_lint` passes (no_color_literals, no_text_style, no_raw_spacing, etc.).
 - Evidence: gallery + goldens + lint logs. Reviewer: design and accessibility.
-- Status: done 2026-10-17, awaiting independent review. Built: `TabRootScreen`, `DetailScreen`, `FormScreen`, `PageBackground`, `GlassCard` (normal, stage, wide; CARD-TITLE-OUT title/meta), `ScreenHeader`, `WidgetSlot` (normal, editing placeholder), `AppButton` (primary, neutral, ghost, soft, destructive; disabled, icon, compact, full width), `AppIconButton` (onPage, onCard, plain), `InfoButton`, `ObHero` (number, period, detail; hidden, side figures) + `MoneyText`/`ValueState` in `lib/design/format/`; `Space`/`VSpace`/`HSpace`. Gallery `lib/design/gallery/components_gallery.dart`; goldens `test/golden/design/components_{dark,light}_{1.0x,2.0x}.png`; `test/design/components_test.dart` (format + amounts + hidden state). Tokens added: `color.role.text.heroFill` (DESIGN 14.1c) and `space.cardTitleGap` (10). Checks: `flutter analyze` clean; `check_tokens` OK; `check_contrast` OK 529 pairs; `flutter test` 81 pass; `flutter test --tags golden` 8 pass and stable. Open: `custom_lint` design rules do not exist yet (T12), so the one-control-row / one-add-control / raw-spacing lints are not run; strings in the gallery are literal (l10n is T10); `obHero.period` background chart needs T11 charts; `WidgetSlot` dashed outline needs a component painter (WIDGETSLOT-DASH). Reviewer: design and accessibility.
+- Status: partly done 2026-10-17, awaiting independent review. Built: `TabRootScreen`, `DetailScreen`, `FormScreen`, `PageBackground`, `GlassCard` (normal, stage, wide; CARD-TITLE-OUT title/meta), `ScreenHeader`, `WidgetSlot` (normal, editing placeholder), `AppButton` (primary, neutral, ghost, soft, destructive; disabled, icon, compact, full width), `AppIconButton` (onPage, onCard, plain), `InfoButton`, `ObHero` (number, detail; hidden, side figures) + `MoneyText`/`ValueSpec`/`ValueState`/`formatValueState`/`FitNumber` in `lib/design/format/`; `Space`/`VSpace`/`HSpace`. Gallery `lib/design/gallery/components_gallery.dart`; goldens `test/golden/design/components_{dark,light}_{1.0x,2.0x}.png`; `test/design/components_test.dart` (format + value states + hidden state), `test/design/fit_number_test.dart`. Tokens added: `color.role.text.heroFill` (DESIGN 14.1c) and `space.cardTitleGap` (10). Checks: `flutter analyze` clean; `check_tokens` OK; `check_contrast` OK 529 pairs; `flutter test` pass; `flutter test --tags golden` 8 pass and stable. Open: the hero split-number typography and the `period` variant (needs T11 charts) are not built — `ObHeroVariant.period` was removed, T05 stays partly done (DECISIONS HERO-SPLIT-NUMBER); `custom_lint` design rules do not exist yet (T12), so the one-control-row / one-add-control / raw-spacing lints are not run; strings in the gallery are literal (l10n is T10); `WidgetSlot` dashed outline needs a component painter (WIDGETSLOT-DASH). Reviewer: design and accessibility.
 
 ### T06 — Widget framework Phase 1 (registry, host, layout repo, editor)
 
@@ -126,7 +130,7 @@ Foundation first: T01. Then parallel tracks only after T01 merges: core (T02), d
 - Provides: `WidgetRegistry`, `SurfaceHost`, layout edit session (private candidate, Done commits touched surfaces, Cancel writes nothing). Consumes: T05 templates, T07 layout tables (or in-memory stub with identical API).
 - Acceptance: W-A to W-L subset for Phase 1 with test widgets: registry from Phase 1, no fixed cards, Done/Cancel semantics, resident-only Add preview shows Not loaded yet on cache miss, hidden lease release. Tests use synthetic layout only. WIDGET-X03-DEFAULT stays open — test catalogue row only, flagged `// DECISION-PENDING: WIDGET-X03-DEFAULT`.
 - Evidence: unit tests + widget tests + editor convergence test logs. Reviewer: product and finance + design and accessibility.
-- Status: next, ready to start 2026-10-17. T05 is done, so the templates and components exist. T07 (layout tables) is still blocked input (SCHEMA.sql, G01), so start with the in-memory layout repo behind the same interface and mark Drift wiring pending. Blocked prerequisite noted, not closed.
+- Status: done 2026-10-17, awaiting independent review. Built: `lib/app/widgets/layout_model.dart` (`WidgetSize`, `LayoutPlacement`, `LayoutSection`, `SurfaceLayout`, `AddWidgetEntry`/`AddTarget`/`AddBlock`, `LayoutBundle` with rename chain, `LayoutFormatError`); `registry.dart` (`WidgetKind`, `WidgetDescriptor`, `WidgetRegistry.validate` for the supported W-L subset); `read_store.dart` (`MetricKey`, `MetricState`, `MetricValue`, `SharedReadStore`, `InMemoryReadStore`); `default_layout.dart` (test bundle); `layout_repository.dart` (`StoredLayout`, `LayoutRepository`, `InMemoryLayoutRepository`); `resolver.dart` (`LayoutResolver`, `ResolvedPlacement/Section/Surface`; unknown key skip W3.10, gate W3.12/6, size fallback W3.11, explicit-empty DB4-4, empty-section drop); `editor.dart` (`LayoutEditor` private candidate, hide/move/moveSection/add/take/insert/resetToDefault/undo/done/cancel, `LayoutCommit` with base version + new-in-version); `widget_surface_host.dart` (`WidgetSurfaceHost` two-level host with half-size pairing). Design additions: `lib/design/components/surfaces/widget_section.dart`, `widget_edit_bar.dart` (design-system file ownership cross — see DECISIONS T06-DESIGN-COMPONENTS). Test widgets: `lib/features/home/widgets/test_widget_catalogue.dart` (test.alpha/beta/gamma/own/tile.a). Tests: `test/widget_framework/*` (layout model, registry, resolver, editor, repository, read store; host widget tests). Checks: `flutter analyze` clean; `check_tokens` OK; `check_contrast` OK 529 pairs; `flutter test` 147 pass; `flutter test --tags golden` 8 pass. Open: WIDGET-X03-DEFAULT (test catalogue only); in-memory repo (T07 Drift wiring pending); l10n strings are constants (`testNotLoadedLabel`), replaced in T10; host pairing threshold stays interim per WIDGET-HALF-REFLOW; `WidgetSlot` dashed outline still pending (WIDGETSLOT-DASH). Reviewer: product and finance + design and accessibility.
 
 ### T07 — Encrypted database, migrations, ChangeLog, layout tables
 

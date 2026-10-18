@@ -8,6 +8,7 @@ analyzer:
     - lib/l10n/app_localizations*.dart
     - build/**
     - ios/**
+    - android/**
   errors:
     invalid_annotation_target: ignore
 

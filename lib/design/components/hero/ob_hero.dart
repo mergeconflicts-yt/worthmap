@@ -1,7 +1,7 @@
-import 'package:contour/core/money.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../format/money_text.dart';
+import '../../format/fit_number.dart';
+import '../../format/value_presentation.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/section.dart';
 import '../../tokens/space.dart';
@@ -10,15 +10,17 @@ import '../buttons/info_button.dart';
 
 /// DESIGN 6.7, 14.2: `0bHero` variants.
 enum ObHeroVariant {
-  /// One number and its context line.
+  /// One number and its context line. Side figures sit in a row.
   number,
 
-  /// A number with period chips and a background chart.
-  period,
-
-  /// A number with side figures (DESIGN 14.2, detail).
+  /// A number with stacked side figures (DESIGN 14.2, detail).
   detail,
 }
+
+// HERO-PERIOD and HERO-SPLIT-NUMBER are pending: the period variant needs the
+// T11 charts, and the split-number typography (currency mark 0.45 em weight
+// 300, raised; cents 0.5 em in text.secondary; DESIGN 2.5) is not built yet.
+// DECISION-PENDING: HERO-SPLIT-NUMBER.
 
 /// DESIGN 6.7: one side figure beside a detail hero number: a signed value and
 /// a small `label.caps` period under it.
@@ -35,21 +37,21 @@ class HeroSideFigure {
 class ObHero extends StatelessWidget {
   const ObHero({
     required this.kicker,
-    required this.amount,
-    required this.state,
+    required this.value,
     this.variant = ObHeroVariant.number,
     this.hidden = false,
     this.contextLine,
     this.onInfo,
     this.infoLabel,
     this.sideFigures = const <HeroSideFigure>[],
-    this.noneRecordedLabel,
+    this.hiddenLabel,
     super.key,
   });
 
   final String kicker;
-  final Money? amount;
-  final ValueState state;
+
+  /// The hero number and its state.
+  final ValueSpec value;
   final ObHeroVariant variant;
   final bool hidden;
   final String? contextLine;
@@ -57,8 +59,14 @@ class ObHero extends StatelessWidget {
   final String? infoLabel;
   final List<HeroSideFigure> sideFigures;
 
-  /// The label for [ValueState.noneRecorded], from l10n.
-  final String? noneRecordedLabel;
+  /// The accessible word in hidden mode, from l10n.
+  final String? hiddenLabel;
+
+  ValuePresentation get _presentation => formatValueState(
+        value,
+        hidden: hidden,
+        hiddenLabel: hiddenLabel,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -66,14 +74,17 @@ class ObHero extends StatelessWidget {
     final role = tokens.role(context.section);
     final largeText = MediaQuery.textScalerOf(context).scale(13) >= 13 * 1.3;
 
+    final presentation = _presentation;
+
     final number = ShaderMask(
       blendMode: BlendMode.srcIn,
       shaderCallback: (Rect bounds) =>
           tokens.textHeroFill.toLinearGradient().createShader(bounds),
-      child: Text(
-        _numberText(),
+      child: FitNumber(
+        text: presentation.text,
         style: AppText.numberHeroLight,
-        maxLines: 1,
+        minFontSize: 40,
+        semanticsLabel: presentation.semanticsLabel,
       ),
     );
 
@@ -85,6 +96,9 @@ class ObHero extends StatelessWidget {
             child: Text(
               kicker.toUpperCase(),
               style: AppText.labelCaps.copyWith(color: role.text),
+              // CR-14: keep the spoken name in the original case; a screen
+              // reader can spell out all-caps words letter by letter.
+              semanticsLabel: kicker,
             ),
           ),
           if (onInfo != null)
@@ -96,7 +110,7 @@ class ObHero extends StatelessWidget {
       ),
       const VSpace(Space.m),
       SemanticAmount(
-        label: _numberSemantics(),
+        label: presentation.semanticsLabel,
         child: number,
       ),
     ];
@@ -113,7 +127,8 @@ class ObHero extends StatelessWidget {
 
     if (sideFigures.isNotEmpty) {
       children.add(const VSpace(Space.m));
-      children.add(largeText ? _sideColumn(tokens) : _sideRow(tokens));
+      final stack = variant == ObHeroVariant.detail || largeText;
+      children.add(stack ? _sideColumn(tokens) : _sideRow(tokens));
     }
 
     return Column(
@@ -154,31 +169,14 @@ class ObHero extends StatelessWidget {
         figure.value,
         if (figure.period != null)
           Text(
-            figure.period!.toUpperCase(),
+            figure.period!,
             style: AppText.labelCaps.copyWith(color: tokens.textSecondary),
+            // CR-14: the period is already caps in the source; keep it spoken.
+            semanticsLabel: figure.period,
           ),
       ],
     );
   }
-
-  String _numberText() {
-    switch (state) {
-      case ValueState.noneRecorded:
-      case ValueState.missing:
-        return noneRecordedLabel ?? '';
-      case ValueState.real:
-      case ValueState.estimated:
-      case ValueState.expected:
-        break;
-    }
-    final value = amount!;
-    if (hidden) {
-      return '${currencyMark(value.currency)}$hiddenMask';
-    }
-    return formatMoney(value);
-  }
-
-  String _numberSemantics() => _numberText();
 }
 
 /// DESIGN 6.6: replaces the pixels' accessible name so the amount can be masked

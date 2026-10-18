@@ -10,28 +10,25 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # State — one provider per state, code generation (AGENTS 6.2)
-  flutter_riverpod: 2.5.1
-  riverpod_annotation: 2.3.5
-  # Routing — router sets Section per route (AGENTS 3, DESIGN 3)
-  go_router: 14.2.0
-  # Storage — Drift typed access only; cipher adapter verified in T07 (SYSTEM_DESIGN A02)
-  # NOTE(T07): no sqlite driver in T01. Driver lands with verified SQLCipher adapter.
-  drift: 2.20.0
   # Icons — Lucide SVG assets bundled in lib/design/icons (DESIGN 2.11). ISC licence.
   flutter_svg: 2.3.0
-  # Exact math — Decimal only, never double for money (AGENTS 2.3, SPEC 4.1)
+  # Exact math — Decimal only, never double for money (AGENTS 2.3, SPEC 4.1).
+  # BSD-3-Clause licence. No network. See docs/DECISIONS.md (CR-08-DEPENDENCIES).
   decimal: 2.3.3
-  uuid: 4.2.2
-  intl: 0.18.1
+  # Unused packages are removed until their owning task adds them with a
+  # DECISIONS record (AGENTS 6.8, CR-08). Owning tasks:
+  #   T06/T09 flutter_riverpod, riverpod_annotation, build_runner,
+  #           riverpod_generator  (state; AGENTS 6.2)
+  #   T07     drift, drift_dev, a verified SQLCipher driver (SYSTEM_DESIGN A02)
+  #   T09     go_router  (routing; AGENTS 3)
+  #   T10     intl, chosen by flutter_localizations — do not pin it (CR-08)
+  #   uuid    not needed: lib/core/ids.dart writes UUIDv7 (CR-08)
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: 4.0.0
-  build_runner: 2.4.9
-  drift_dev: 2.20.0
-  riverpod_generator: 2.4.0
+  # Design and privacy lint rules (DESIGN 9). Lands early in T12.
   custom_lint: 0.6.4
 
 flutter:

@@ -1,14 +1,14 @@
 # Contour usage flows — reference (USAGE_FLOWS_REFERENCE.md)
 
 - This file holds the full journey detail: numbered steps, recovery text, check descriptions, component contracts and screen coverage.
-- [USAGE_FLOWS.md](./USAGE_FLOWS.md) is the short core. Both files use the same ids (F01–F21, `G01`–`G14`, C01–C12, Fxx-A checks) and have the same authority.
+- [flow.md](../flow.md) is the short core. This reference holds the full detail. Both files use the same ids (F01–F21, `G01`–`G14`, C01–C12, Fxx-A checks) and have the same authority.
 - Version 1.5 · 16 October 2026 · WIDGET-ARCH-001: in-app widget framework and editing paths aligned from Phase 1; prior save/recovery and gateway corrections retained.
 
-Read [AGENTS](./AGENTS.md), the applicable [SPEC](./SPEC.md) and [DESIGN](./DESIGN.md) sections, then the flow. Screen references: [design gallery ↗](./design/gallery.html) and [docs/screens/SCREENS.md](./docs/screens/SCREENS.md). [DECISIONS](./docs/DECISIONS.md) records selected corrections. Wealthfolio is out of scope.
+Read [AGENTS](../../AGENTS.md), the applicable [SPEC](../../SPEC.md) and [DESIGN](../../DESIGN.md) sections, then the flow. Screen references: `docs/screens/SCREENS.md`. [DECISIONS](../DECISIONS.md) records selected corrections. Wealthfolio is out of scope. The design-gallery HTML files are not in this checkout; see docs/DECISIONS.md (SCREEN-REFERENCES).
 
 ## Authority and readiness
 
-- SPEC owns product behaviour and numbers. [SYSTEM_DESIGN](./SYSTEM_DESIGN.md) owns storage, workers, calculations, privacy and recovery. [DATABASE_DESIGN](./DATABASE_DESIGN.md) owns tables, write boundaries, queries and migrations. DESIGN owns interface components.
+- SPEC owns product behaviour and numbers. [SYSTEM_DESIGN](../approved-architecture/SYSTEM_DESIGN.md) owns storage, workers, calculations, privacy and recovery. [DATABASE_DESIGN](../approved-architecture/DATABASE_DESIGN.md) owns tables, write boundaries, queries and migrations. DESIGN owns interface components.
 - This guide maps flows and names gaps. It does not override those documents.
 - Use the current inventory in docs/screens/SCREENS.md and the recorded SPEC/DESIGN correction gates; prototype figures are not financial evidence.
 - Do not copy sample figures, HTML event handlers or missing browser interactions into domain code.
@@ -154,7 +154,7 @@ Each journey lists Sources, Entry, numbered steps, Recovery (where it differs fr
 3. Save a basic account and dated opening balance once → Home recalculates available values. Unknown inputs stay Missing; an entered zero is real. `G01` must land before base-phase acceptance.
 4. Later launch/timeout with lock on → `X02Lock`. Success resumes the pending target or Home. Failure/cancel stays locked; no data change.
 
-Phase 1 also builds the independent widget registry, surface host, layout repository and editor (SPEC W8). First-run Home uses that host with the approved X03 catalogue/defaults; a missing catalogue row is a product prerequisite, not a fixed-card exception. W-A–L run with test-only widgets and bundled layout data before later financial modules are available. See [WIDGET_FRAMEWORK](./WIDGET_FRAMEWORK.md).
+Phase 1 also builds the independent widget registry, surface host, layout repository and editor (SPEC W8). First-run Home uses that host with the approved X03 catalogue/defaults; a missing catalogue row is a product prerequisite, not a fixed-card exception. W-A–L run with test-only widgets and bundled layout data before later financial modules are available. See [WIDGET_FRAMEWORK](../approved-architecture/widget-framework.md).
 
 **Recovery:** optional setup is skippable. Background blurs content. Restore draft/route context only after authentication.
 
@@ -453,9 +453,9 @@ flowchart LR
 1. `X80Settings` links: `X81CaptureSources`, `X84Rules`, `X85Features`, `X86Privacy`, `X83Backup`, C10 for others.
 2. Enable a source: check release/platform, explain access, request OS/provider permission. Save enabled state only after setup succeeds. Denial leaves it off; records intact.
 3. Local source results stage to Inbox. Persist parsed fields and source IDs, never raw notification text. Advance the source cursor only after durable staging or explicit discard. No remote acknowledgement or email connection.
-4. Source off stops scheduling and future ingestion; accepted records stay. An in-flight response rechecks source identity, durable policy/configuration revision, runtime capability and installation/database epochs in the staging/cursor transaction. Disable/re-enable and A→B→A configuration changes revoke older callbacks even when enabled again. See [EXECUTION_SAFETY](./docs/EXECUTION_SAFETY.md) 4.
+4. Source off stops scheduling and future ingestion; accepted records stay. An in-flight response rechecks source identity, durable policy/configuration revision, runtime capability and installation/database epochs in the staging/cursor transaction. Disable/re-enable and A→B→A configuration changes revoke older callbacks even when enabled again. See [EXECUTION_SAFETY](../approved-architecture/execution-safety.md) 4.
 5. `X82GmailBridge` is obsolete: no route, setup or switch. Email networking is prohibited. FinanceKit stays hidden until its local-only adapter and entitlement are verified.
-6. Market sources default off. Enablement saves the provider and secures any credential. The restricted gateway accepts only public symbol/catalogue, price/history, instrument-detail and bounded public raster-logo requests through typed descriptors (SPEC 10.5; [SYSTEM_DESIGN](./SYSTEM_DESIGN.md) 11). Additional asset classes need their own reviewed descriptor and decoder bounds. FX stays manual/local import. Quote updates change input versions, not transaction history. Failure keeps last quote and date. Network off cancels work and rejects late responses.
+6. Market sources default off. Enablement saves the provider and secures any credential. The restricted gateway accepts only public symbol/catalogue, price/history, instrument-detail and bounded public raster-logo requests through typed descriptors (SPEC 10.5; [SYSTEM_DESIGN](../approved-architecture/SYSTEM_DESIGN.md) 11). Additional asset classes need their own reviewed descriptor and decoder bounds. FX stays manual/local import. Quote updates change input versions, not transaction history. Failure keeps last quote and date. Network off cancels work and rejects late responses.
 7. Feature switches gate all related entry points and keep stored records. They never bypass release/platform checks.
 8. Screens and widgets opens the same editor used on each customisable screen. Restore the default widgets resets all ten screen/tile preference surfaces in one writer transaction. A feature switch removes its widgets from rendering and Add widget but keeps their stored keys; re-enabling restores eligible placements without a layout rewrite.
 

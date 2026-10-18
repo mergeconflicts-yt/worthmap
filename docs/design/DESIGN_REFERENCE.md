@@ -1,11 +1,11 @@
 # Contour — Design System Reference (DESIGN_REFERENCE.md)
 
-- This file is the complete design-system reference. [DESIGN.md](./design.md) is the short core; it uses the same section numbers, so "DESIGN 2.5" is section 2.5 here.
-- Screens are in [docs/screens/SCREENS.md](./docs/screens/SCREENS.md).
+- This file is the complete design-system reference. [DESIGN.md](../../DESIGN.md) is the short core; it uses the same section numbers, so "DESIGN 2.5" is section 2.5 here.
+- Screens are in [docs/screens/SCREENS.md](../screens/SCREENS.md).
 
 **Version 2.1 "Obsidian" — 15 October 2026.** Companion to SPEC.md (section 7).
 
-- This file says **how** to build the interface. SPEC.md says **what** each screen contains. Screens: [docs/screens/SCREENS.md](./docs/screens/SCREENS.md). Visual reference: the Obsidian figures in contour-design.html.
+- This file says **how** to build the interface. SPEC.md says **what** each screen contains. Screens: [docs/screens/SCREENS.md](../screens/SCREENS.md). Visual reference: the Obsidian figures in contour-design.html.
 - The look is **Obsidian** (DESIGN-SYNC-001) with METAL-RIM-001, CARD-TITLE-OUT, POLISH-001, MOTION-002, WIDGETS-001...004, HOME-QUICKLOOK and the REVIEW-004 fixes. Superseded looks: docs/DECISIONS.md.
 - NUM-001...003, UI-001 and DESIGN-HTML-002...010 still apply where they define numbers, words and states.
 
@@ -506,7 +506,7 @@ All amounts, percentages, changes and dates go through `lib/design/format/`. Nev
 
 ### 6.7 Obsidian components
 
-Each has a semantic label, l10n strings, a gallery entry, goldens (dark and Light, 100% and 200%) and a hidden-amount golden where it shows money. Widget catalogue: [docs/spec/SPEC_WIDGETS.md](./docs/spec/spec-widgets.md) (W11, W12). "Hidden" = what the hidden-amount state shows.
+Each has a semantic label, l10n strings, a gallery entry, goldens (dark and Light, 100% and 200%) and a hidden-amount golden where it shows money. Widget catalogue: [docs/spec/SPEC_WIDGETS.md](../spec/spec-widgets.md) (W11, W12). "Hidden" = what the hidden-amount state shows.
 
 | COMPONENT | VARIANTS | ANATOMY AND RULES | HIDDEN |
 |---|---|---|---|
@@ -749,4 +749,4 @@ Section 5 lists the fixed parts. Visual order:
 
 ### 14.4 Screen by screen
 
-Every screen (90 ids in 75 screen groups, Start to Settings) is described in [docs/screens/SCREENS.md](./docs/screens/SCREENS.md): template, section, blocks in order, labels and sample values. Its top part lists the rules shared by all screens. This file owns components; SPEC.md owns behaviour.
+Every screen (90 ids in 75 screen groups, Start to Settings) is described in [docs/screens/SCREENS.md](../screens/SCREENS.md): template, section, blocks in order, labels and sample values. Its top part lists the rules shared by all screens. This file owns components; SPEC.md owns behaviour.

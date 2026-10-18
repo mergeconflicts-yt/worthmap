@@ -98,6 +98,14 @@ void main() {
     expect(Currency.usd.toString(), 'USD');
   });
 
+  // CR-12: production code uses the pinned table, not caller metadata.
+  test('Currency.of returns the pinned table', () {
+    expect(Currency.of('USD'), Currency.usd);
+    expect(Currency.of('JPY'), Currency.jpy);
+    expect(Currency.of('TWD'), Currency.twd);
+    expect(() => Currency.of('XXX'), throwsArgumentError);
+  });
+
   test('money has value semantics and a debug string only', () {
     final a = Money.fromMinor(100, Currency.usd);
     expect(a, Money.fromMinor(100, Currency.usd));
@@ -122,5 +130,58 @@ void main() {
       throwsA(isA<MoneyOutOfRange>()),
     );
     expect(const MoneyOutOfRange().toString(), 'MoneyOutOfRange');
+  });
+
+  // R03: the signed 64-bit boundary must not overflow silently.
+  group('signed 64-bit range', () {
+    final int maxInt = Money.maxMinor.toInt();
+    final int minInt = Money.minMinor.toInt();
+    Money max() => Money.fromMinor(maxInt, Currency.usd);
+    Money min() => Money.fromMinor(minInt, Currency.usd);
+    Money one() => Money.fromMinor(1, Currency.usd);
+
+    test('bounds are accepted', () {
+      expect(max().minor, maxInt);
+      expect(min().minor, minInt);
+    });
+
+    test('negating the minimum throws, not overflows', () {
+      expect(() => -min(), throwsA(isA<MoneyOutOfRange>()));
+    });
+
+    test('negating the maximum stays in range', () {
+      expect((-max()).minor, minInt + 1);
+    });
+
+    test('negating -1, 0 and 1 flips the sign', () {
+      expect((-Money.fromMinor(-1, Currency.usd)).minor, 1);
+      expect((-Money.zero(Currency.usd)).minor, 0);
+      expect((-Money.fromMinor(1, Currency.usd)).minor, -1);
+    });
+
+    test('addition past either bound throws', () {
+      expect(() => max() + one(), throwsA(isA<MoneyOutOfRange>()));
+      expect(() => min() - one(), throwsA(isA<MoneyOutOfRange>()));
+      expect((min() + max()).minor, -1);
+    });
+
+    test('subtraction past either bound throws', () {
+      expect(
+        () => max() - Money.fromMinor(-1, Currency.usd),
+        throwsA(isA<MoneyOutOfRange>()),
+      );
+    });
+
+    test('multiplication past either bound throws', () {
+      expect(
+        () => max().times(Decimal.fromInt(2)),
+        throwsA(isA<MoneyOutOfRange>()),
+      );
+      expect(
+        () => min().times(Decimal.fromInt(-1)),
+        throwsA(isA<MoneyOutOfRange>()),
+      );
+      expect(min().times(Decimal.one).minor, minInt);
+    });
   });
 }

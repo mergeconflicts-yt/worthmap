@@ -1,0 +1,252 @@
+R01 • P1
+Show the complete hero amount at large text sizes
+lib/design/components/hero/ob_hero.dart • line 73; test/golden/design/components_golden_test.dart • line 19
+Evidence and effect. The hero uses one fixed text style and maxLines: 1 , with no FitNumber . The existing 200% Light golden visibly clips the sample $4,123.65 to $4,12 and $129,800.00 to $129, . The inputs are in lib/design/gallery/components_gallery.dart • line 22. A golden test can pass while it preserves this incorrect display.
+Change. Implement the shared number-fitting behavior in lib/design/ . Follow DESIGN 2.5: keep the complete number and use the documented minimum size. Add reflow where needed. Do not use an ellipsis, remove digits, or turn off system text scaling to make the test pass. Inspect each corrected baseline before replacing it.
+Acceptance tests.
+• Check 320, 375 and 420 logical-pixel phone widths at text scale 1.0 and 2.0, in both themes.
+• Check positive, negative, zero, long currency marks and hidden amounts. Confirm that the complete number is painted inside its bounds; a text-finder assertion alone cannot detect clipping.
+• Check that the visible and spoken values agree.
+
+R02 • P1
+Keep Estimated, Expected and Missing states distinct lib/design/format/money_text.dart • line 107; lib/design/components/hero/ob_hero.dart • line 164
+Evidence and effect. real, estimated and expected use the same display and spoken text. There is no built-in Est, or Expected marker. Missing and None recorded can become an empty string. In the hero, Missing uses the None recorded label. The public constructors also accept amount: null with state: real, which reaches amount! . These APls can conceal missing data or show an unconfirmed amount as an ordinary amount. This is a presentation defect; no totals engine exists yet to review.
+Change. Use one state-aware value presentation contract for the hero and other money components. Preserve the SPEC state meaning, required labels and any required date. Make invalid state/value combinations unrepresentable or reject them at the boundary in release builds. Keep labels ready for I10n. Do not make each feature screen recreate these rules. See SPEC.md • line 112 and docs/design/DESIGN_REFERENCE.md • line 397.
+
+Acceptance tests.
+
+• Cover Real, Estimated, Expected, None recorded, Missing, and the price-age state when supported. Assert both visible labels and semantics.
+• Cover hidden mode with these states. No amount may remain in the accessible name.
+• Reject invalid input combinations. Missing and None recorded must never render blank or as a numeric zero.
+R03 • P2
+Check negation and formatting at the signed 64-bit limit lib/core/money.dart • line 118; lib/design/format/money_text.dart • line 37
+Evidence and effect. Money accepts the minimum signed 64-bit value. Addition and subtraction use checked Bigint intermediates, but unary negation uses native -minor and the private unchecked constructor. Formatting uses native minor. abs () ..At the minimum value, native integer negation can overflow and remain negative. This can preserve the wrong sign in a calculation and add an extra minus sign in the formatted amount. This finding follows the source and the Dart integer API; a native Dart regression test was not run here.
+Change. Route unary negation through the existing checked Bigint path. Return MoneyOut0fRange when the positive result is outside the allowed range. Format the magnitude from Bigint or from validated digits, without native abs () . Keep decimal conversion exact.
+Acceptance tests.
+• Start with failing tests for min, min + 1, max, -1, 0 and 1 on the native Dart VM.
+• Negating min must throw the documented range error. Formatting the accepted USD minimum must produce exactly
+-$92,233, 720, 368, 547, 758. 08.
+• Test addition, subtraction and multiplication at both bounds. Line coverage alone does not cover these cases.
+R04 • P2
+Remove source text from parse errors lib/core/dates.dart • line 61
+Evidence and effect. FormatException( 'Not an ISO local date', source) retains the full input. If an importer passes an invalid field from a statement, that field becomes part of the error. The default FormatException.toString) includes source text.
+AGENTS 2.6 prohibits file contents in errors. No actual logging or network transmission was found in this path.
+Change. Return a stable error code or a source-free exception. Keep raw input inside the private parsing boundary only. Audit the other value codecs for the same error pattern before importers use them.
+
+
+Acceptance tests.
+• Pass a synthetic sensitive marker as invalid input. Assert that neither the exception fields nor its string contain the marker.
+• Verify that callers can still identify an invalid-date error without inspecting the source value.
+R05 • P2
+Use the database date range in LocalDate lib/core/dates.dart • line 8; lib/core/dates.dart • line 41
+Evidence and effect. The factory checks month and day but not year. The parser accepts 0000-01-01. The factory also accepts negative years and years above 9999. These values cannot pass the approved SQL date constraint, which permits 0001-01-01 through 9999-12-31. See docs/approved-architecture/database/SCHEMA.sql • line 211. A value can therefore pass core validation and fail when stored.
+Change. Apply one year-range check in both construction and parsing. Ensure every accepted LocalDate has a strict, ten-character
+ISO representation that the database codec accepts.
+Acceptance tests.
+• Accept years 1 and 9999 at valid month/day boundaries.
+• Reject years -1, 0 and 10000; tryParse returns null for an invalid date.
+• Check leap-day cases and round-trip accepted dates through the production Drift codec when T07 exists.
+R06 • P2
+Make shared controls work with a keyboard lib/design/components/buttons/app_button.dart • line 126; lib/design/components/buttons/icon_button.dart • line 43;
+lib/design/components/surfaces/glass_card.dart • line 86
+Evidence and effect. The custom controls use GestureDetector and MouseRegion, with no focus node, activation action or keyboard binding. A mouse cursor and a semantic button label do not provide keyboard focus or Enter/Space activation. The controls also lack the required visible focus and hover states. This conflicts with AGENTS 11 and DESIGN 13.2, including external keyboards on phones.
+Change. Create one shared interaction implementation in the design layer. Use Flutter focus/actions/shortcuts support, for example FocusableActionDetector, with the approved focus and hover tokens. Apply it to text buttons, icon buttons, InfoButton and tappable cards.
+
+Acceptance tests.
+• Tab and Shift+Tab reach enabled controls in the expected order.
+• Enter and Space activate once. Disabled controls cannot activate. Focus remains visible.
+• Check focus/hover in both themes. Check semantic names and ensure that edit-mode widget previews cannot activate through keyboard input.
+R07 • P2
+Do not pass the contrast gate with unresolved failures tool/check_contrast:dart • line 6; tool/check_contrast.dart • line 46; tool/check_contrast.dart • line 148
+Evidence and effect. The checker changes known failures into warnings. An independent read-only calculation from tokens.json gives Light loss text 4.385917:1 against the page, below the required 4.5:1. The second Light hero stop is 6.967527:1, below the project-specific 7:1 rule. These conflicts are openly recorded in docs/DECISIONS.md, but they remain unresolved. A sign or a glyph does not increase text contrast. The current check also omits the page spotlight from its page/background evaluation.
+Change. Keep these requirements visibly failing until a separate design decision supplies compliant token values or explicitly. changes the relevant contract. Then remove the bypasses. Check the actual composited surfaces described by DESIGN 9, including the spotlight. Do not silently modify approved tokens in a feature change.
+Acceptance tests.
+• Inject a below-threshold token and require a nonzero checker exit status.
+• Check both themes and all relevant foreground/background combinations with the documented composition order.
+• Report measured values without rounding a failing value into a pass.
+R08 • P2 • before TO7
+Restore the complete architecture handoff before database implementation docs/TASKS.md • line 134; agents.md • line 11
+Evidence and effect. The implementation copy lacks SCHEMA.sql, the SQL migration fixtures, reference validators and the architecture manifest. Its task file proposes translation from prose/table-map documents while the approved executable reference already exists in the parent project. Several copied agent instructions also point to absent paths such as root SYSTEM_DESIGN.md, root DATABASE_DESIGN.md and docs/USAGE_FLOWS.md. The local Git status note is stale: worthmap is now a Git repository. This makes the next agent work with incomplete or incorrect inputs.
+
+Change. Provide the approved architecture package with its source files and verification inputs. Preserve canonical paths where possible; otherwise update all links in one documentation-only change. Use SCHEMA.sql as a checked reference for Drift translation, not as a production migration. Keep PF-01 and product correction gates open until their own evidence closes them.
+Change task status to distinguish implemented, awaiting review, changes requested and accepted.
+Acceptance tests.
+• Verify that every required local document link resolves, including on a case-sensitive filesystem.
+• Verify the source package against its manifest before adapting it. Preserve fixtures for old schema versions.
+• Run the reference validators and separate native Drift/SQLCipher migration tests when that work is implemented. Reference
+SQL checks alone do not prove production encryption.
+What is already aligned
+• Money stores integer minor units with currency metadata. Rates and quantities use Decimal. Checked Bigint intermediates already exist for addition, subtraction and rounding.
+• Core types stay separate from Flutter. Time and UUID inputs can be supplied for deterministic tests.
+• Colors, typography, icons, layout templates and formatting are concentrated in the design layer. Fonts and icons are bundled locally.
+• The task plan includes the widget registry in Phase 1. It permits an in-memory layout repository while persistent storage is incomplete.
+• No authored application networking or personal-data logging call was found in the inspected lib source. This is a source observation, not a complete dependency or device privacy audit.
+• The plan retains PF-01 and SQLCipher verification as open gates. It does not claim that the current scaffold can safely persist personal data.
+Implementation order after this review
+• 1. Repair the foundation. Domain/core owner takes R03-R05. Design-system owner takes R01-R02 and R06. The design and tooling owners resolve R07. Use failing regression tests first for number changes. One owner edits each shared file.
+• 2. Repair the handoff. Complete R08. Bring in the exact schema, fixtures and contracts before T07. Use one verified architecture source.
+• 3. Complete the acceptance harness. Bring the missing design/privacy lints forward from T12. T05 acceptance explicitly requires them. The current task file already says they were not run; keep this visible instead of treating their acceptance as passed.
+
+
+• 4. Continue T06 with synthetic data. Test registry identity, independent placement state, Done/Cancel behavior and shared metric requests. Do not let a widget calculate its own net worth. An in-memory layout test is valid scaffolding, but it does not complete storage acceptance.
+• 5. Implement T07/T08 under the existing privacy gates. Establish the single command writer, atomic ChangeLog and dependency revisions, encryption checks, lock lifecycle and recovery. A consumer must read the same published metric version as other consumers.
+• 6. Prove one full synthetic update path. A command updates a source value; one shared store publishes the result; two screens and a widget observe the same value without refresh. Count computations to prove reuse. Test failure, retry and restart paths before expanding to many features.
+• 7. Measure on phones. Use the approved B/L/S workloads and P01-P22 plan. Measure interaction latency, update latency, frame time, worker cost, peak memory, database/WAL growth and cache retention. Do not infer these results from the small component tests.
+Other readiness items already within the plan
+• Finish the T01 dependency record. The inspected decisions file records flutter_svg, but the seeded direct packages also need the required reason, licence, release and network review. This review did not independently audit all transitive packages.
+• Locale handling, derived tokens, the hero period chart and widget edit outline are explicitly deferred in the task/decision files.
+Keep each deferred item attached to an actual owning task. The current reference to "T11 charts" is inconsistent: T11 is the privacy/delete-all task.
+• A single blank start screen is expected at this stage. Missing portfolio features, calculators and imports are planned work, not new regressions reported here.
+
+
+
+2. Blockers (fix before T06)
+CR-01: A fresh checkout does not compile
+• Evidence:
+• .gitignore:11 ignores *.g.dart.
+• lib/design/tokens/tokens.g.dart does not exist in the checkout.
+• 14 files import it, for example lib/app/app.dart:3 and lib/design/typography/app_text.dart:4.
+• Effect:
+• flutter analyze and flutter test fail on a clean clone until someone runs dart run tool/gen_tokens.dart.
+• The T03 acceptance "regenerates without diff" cannot be checked, because no committed file exists to compare with.
+• Change (pick one and record it in DECISIONS):
+• (a) Preferred: commit tokens.g.dart. Add !lib/design/tokens/tokens.g.dart after line 11 of gitignore.
+check_tokens then proves that the file matches tokens. json.
+• (b) Keep it ignored. Put dart run tool/gen_tokens. dart as step 1 in the README and in CI. Note that the Drift and Riverpod *.g. dart, files will follow the same rule.
+CR-02: The specs that domain code will follow still contain wrong formulas
+• Evidence:
+• docs/spec/spec-calculation.md:75 still has the TWR sub-period formula r = (end - start - flow) / start with the flow at the start of the day. With a start of 100, +100 added at the start and an end of 220, the true return is 10%. The formula gives 20% (REVIEW-003 FIN-3-01).
+• The 13.2 and 13.4 test values, the net worth bridge gaps and the Appendix A contradictions are also still open (FIN-3-
+01 to FIN-3-04).
+• Effect:
+• AGENTS 2.8 and 5.3 say that domain tests start from the SPEC values.
+• The first domain builder will write tests that lock in the wrong numbers.
+• Change:
+• Fix SPEC 13 and Appendix A in their own documentation pull request, before any Lib/domain/ task.
+• Add a gate line to TASKS: "No Lib/domain/numbers task before FIN-3-01..04 closed."
+
+
+CR-03: Money components hide the value state
+• Evidence:
+• lib/design/format/money_text.dart:114-119 draws estimated and expected exactly like real. No "Est." or
+"Expected" mark shows, and the spoken label has none either.
+• lib/design/components/hero/ob_hero.dart:166-168 shows the None recorded label for ValueState.missing.
+SPEC 4.9 says these are two different states.
+• money_text.dart:110,112 and ob_hero.dart:168 168: the labels are optional, with ?? ' as the fallback. An unknown value can therefore show as blank text with an empty accessible name.
+• money_text.dart:118 and ob_hero.dart:174: amount! crashes when state is real, estimated or expected and amount is null.
+• Effect:
+• This breaks the trust rules in SPEC 4.3 and 4.9, which are non-negotiable rule 3.
+• Each later screen inherits the defect.
+• Change:
+• Use named constructors, so that a wrong combination cannot be built:
+• MoneyText.real(amount), .estimated(amount, estLabel), -expected(amount, expectedLabel) .
+• noneRecorded(label), missing(label) .
+• Make each label required.
+• Show "Est." and "Expected" as DESIGN 8 and SPEC 4.9 require, in both the pixels and the semantics.
+• Put the state-to-text logic in one place, for example formatValueState() in lib/design/format/. Then MoneyText and ObHero share it, because now they each have a copy.
+• Add a golden for each state, and a widget test: "missing never shows None recorded".
+3. Major findings
+CR-04: The hero number does not fit long amounts or large text
+• Evidence:
+• ob_hero.dart:73-77 draws the 64 pt number with maxLines: 1 and no fit.
+• DESIGN reference line 213 says "64 (fits down to 40)".
+• Effect: "$1,234,567.89" or text scale 2.0 cuts off or overflows the hero on a 375 pt phone.
+• Change:
+• Fit from 64 down to 40. Use a FittedBox(fit: BoxFit.scaleDown) with a minimum, or measure with a TextPainter.
+• Below 40, wrap the cents to a second line.
+• Add a golden at 2.0 with a 9-digit amount.
+
+CR-05: The ObHero variants and hero typography are not built
+• Evidence:
+• OberoVariant.period and detail are declared (ob_hero. dart: 12-21), but build() never reads variant.
+• DESIGN reference line 213 requires these hero details, but the hero uses the plain formatMoney string:
+• The currency mark at 0.45 em, weight 300, raised
+• The cents at 0.5 em in text. secondary.
+• Effect:
+• T05 is marked "done", but the main Obsidian element does not match the design.
+• T06 and T10 will build on an incomplete hero.
+• Change:
+• Either build the variants and the split-number typography now, or remove the unused enum values.
+• Mark T05 as "partly done" in TASKS until the variants exist.
+CR-06: Number format details do not agree with DESIGN
+• Evidence:
+• money_text.dart:48 uses an ASCIl hyphen - . The design uses the true minus sign - (U+2212), and gains carry + (DESIGN reference line 151).
+• formatMoney has no signed mode for gain and loss.
+• Change:
+• Add formatMoney(.., sign: SignStyle.none | negativeOnly | always) , with U+2212 for minus.
+• Add a test for each mode.
+CR-07: Hidden mode reads dots aloud
+• Evidence:
+• money_text.dart:103 and ob_hero dart:99 set the semantics to "$.....".
+• A screen reader reads "dollar, dot, dot, dot.." or skips the dots, depending on the platform.
+• Change:
+• Use an |10n label "Amount hidden" for the semantics in hidden mode.
+• Keep the dots for the pixels only.
+
+CR-08: Unused dependencies, and no DECISIONS record for them
+• Evidence:
+• pubspec.yaml:14-26 adds flutter_riverpod, riverpod_annotation, go_router, drift, uuid and intl.
+• No file in lib/ imports them.
+• lib/core/ids.dart writes its own UUIDv7, so vuid is not needed.
+• docs/DECISIONS.md records only flutter_svg (T04-DEPENDENCY-FLUTTER-SVG). AGENTS 6.8 requires a record for each dependency.
+• intl: 0.18.1 will conflict with flutter_localizations on Flutter 3.35, which pins a newer intl. That conflict will block T10 (gen -l10n).
+• Change:
+• Remove vuid.
+• Remove the other packages until their owning task (T06/T07/T09), or keep them and add one DECISIONS entry for each, with licence, last release date and network statement.
+• When T10 starts, let flutter_localizations choose the intl version.
+CR-09: No Android project
+• Evidence: only ios/ exists. v1 is iPhone and Android (AGENTS 11).
+• Effect:
+• PF-01 blocks iOS personal-data persistence and the iOS release.
+• REVIEW-003 UX-3-17 suggests that the first device tests run on Android, but no Android target exists for T07, T08 and T11 to test on.
+• Change:
+• Run flutter create --platforms=android ., and put the Android files under the same lint and secrets rules.
+• Add Android lock and keystore stubs to T08.
+CR-10: Two copies of the rule documents disagree
+• Evidence:
+• The repo has. agents. md, spec.md and design.md. The parent folder has AGENTS.md, SPEC.md and DESIGN. md.
+All three pairs differ.
+• The repo agents.md points to docs/spec/SPEC_REFERENCE.md, SYSTEM_DESIGN.md and docs/screens/*.png. The repo files are actually docs/spec/spec-reference.md and docs/approved-architecture/system-design.md, and no PNG folder exists.
+• docs/TASKS. md says "The workspace is not a git working tree", which is no longer true.
+• Effect: builder agents read the repo copy and follow broken paths. A rule changed in one copy does not reach the other.
+• Change:
+• Make the repo the only source. Copy the newest parent versions in, fix the paths to the lowercase file names, and remove or archive the parent copies.
+• Update the TASKS "Workspace verification" section.
+
+CR-11: The specs still contain Needs/Wants and other review findings
+• Evidence: docs/spec/spec-calculation.md:151-162 and spec-widgets.md: 122,160 still define Needs/Wants from a category tag that the app sets. REVIEW-003 UX-3-07 and REVIEW-004 OB-FIN-16 say that this can read as a judgement.
+• Change: before T10 builds Home, decide each REVIEW-003 and REVIEW-004 finding that affects Home. Record the decisions in SPEC, or mark them "accepted as is" in DECISIONS.
+4. Minor findings
+• CR-12: Currency accepts metadata from the caller (money. money.dart:13).
+• Currency('USD', minorUnits: 3) is valid and is not equal to Currency.usd.
+• DATABASE_DESIGN 3 says that currency metadata is pinned.
+• Change: add a pinned ISO 4217 table (Currency. of ('USD' )) and make the public constructor private, or limit it to tests.
+• CR-13: The hard-coded currency marks are ambiguous (money_text. dart:17-24).
+• $ is used for USD only. In a multi-currency view, a CAD, AUD or SGD amount falls back to the code, which is good.
+But the user cannot tell $ from NT$ at a glance.
+• Change: record a rule in DECISIONS: in a view with more than one currency, show the code.
+• CR-14: toUpperCase() in components (ob_hero.dart: 86, 157).
+• Uppercase depends on locale, and screen readers can spell out uppercase words letter by letter.
+• Change: set the semantics to the original-case text.
+• CR-15: TextAlign.right is fixed in MoneyText (money_text.dart:102).
+• Right-to-left support is not in v1, but use TextAlign. end now so that support costs nothing later.
+• CR-16: Coverage output is committed ( coverage/lcov.info).
+• Change: add coverage/ to gitignore. Keep the coverage numbers as evidence in the pull request.
+• CR-17: The README is the Flutter template, and the package name is contour.
+• Change: write a short README with the setup commands (see CR-01).
+• Decide now whether the package and bundle id become worthmap. A rename after T07 also changes the native folders, the key store names and the database file paths.
+• CR-18: Money. fromMinor checks a range that an int cannot exceed (money.dart).
+• This is harmless, but the check costs one BigInt for each amount.
+• Change: remove the check from fromMinor, or keep it only in _of.
+• CR-19: The open contrast exceptions are allowed by default.
+• LIGHT-LOSS-CONTRAST (4.39:1) and T05-HERO-FILL-CONTRAST (6.97:1) pass as "documented exceptions".
+• Change: have check_contrast fail when an exception has no closed decision id. This stops more exceptions from being added without review.
+
+5. What to do next, in order
+1. CR-01: make a clean clone build.
+2. CR-03, CR-04, CR-06, CR-07: fix MoneyText and Obero, and add goldens for each state.
+3. CR-08, CR-09, CR-10, CR-16, CR-17: do the repository housekeeping in one chore change.
+4. CR-02, CR-11: make the documentation pull request for the SPEC 13, Appendix A, Needs/Wants and Home de
+Do this before any Lib/domain/ work.
+5. TO6: start the widget framework only after steps 1-2.
+6. T12: wire custom_lint early, not last. The rules "no colour literal", "one control row" and "hidden semantics' to enforce now and costly to fix after T10.

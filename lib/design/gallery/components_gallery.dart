@@ -9,6 +9,7 @@ import '../components/surfaces/glass_card.dart';
 import '../components/surfaces/screen_header.dart';
 import '../components/surfaces/widget_slot.dart';
 import '../format/money_text.dart';
+import '../format/value_presentation.dart';
 import '../icons/app_icons.dart';
 import '../theme/app_theme.dart';
 import '../tokens/space.dart';
@@ -105,8 +106,7 @@ class ComponentsGallery extends StatelessWidget {
             _heading(context, 'ObHero'),
             ObHero(
               kicker: 'Available · today',
-              amount: _amount,
-              state: ValueState.real,
+              value: ValueSpec.real(_amount),
               contextLine: 'After bills and set-asides',
               onInfo: () {},
               infoLabel: 'About available',
@@ -114,33 +114,70 @@ class ComponentsGallery extends StatelessWidget {
             const VSpace(Space.xxl),
             ObHero(
               kicker: 'Available · today',
-              amount: _amount,
-              state: ValueState.real,
+              value: ValueSpec.real(_amount),
               hidden: true,
-              noneRecordedLabel: 'None recorded',
             ),
             const VSpace(Space.xxl),
             ObHero(
               kicker: 'Net worth',
-              amount: Money.fromMinor(12980000, Currency.usd),
-              state: ValueState.real,
+              value: ValueSpec.real(Money.fromMinor(12345678900, Currency.usd)),
               variant: ObHeroVariant.detail,
               sideFigures: <HeroSideFigure>[
                 HeroSideFigure(
                   value: MoneyText(
-                    amount: _gain,
-                    state: ValueState.real,
+                    ValueSpec.real(_gain),
                     style: AppText.numberS.copyWith(color: tokens.stateGain),
                   ),
                   period: 'this month',
                 ),
                 HeroSideFigure(
                   value: MoneyText(
-                    amount: _amount,
-                    state: ValueState.real,
+                    ValueSpec.real(_amount),
                     style: AppText.numberS.copyWith(color: tokens.textPrimary),
                   ),
                   period: 'invested',
+                ),
+              ],
+            ),
+            const VSpace(Space.xxl),
+            _heading(context, 'Value states'),
+            ObHero(
+              kicker: 'Estimated',
+              value: ValueSpec.estimated(_amount, 'Est.'),
+            ),
+            const VSpace(Space.l),
+            ObHero(
+              kicker: 'Expected',
+              value: ValueSpec.expected(
+                Money.fromMinor(394900, Currency.usd),
+                'Expected',
+              ),
+            ),
+            const VSpace(Space.l),
+            const ObHero(
+              kicker: 'None recorded',
+              value: ValueSpec.noneRecorded('None recorded'),
+            ),
+            const VSpace(Space.l),
+            const ObHero(
+              kicker: 'Missing',
+              value: ValueSpec.missing('Missing since 22 Oct'),
+            ),
+            const VSpace(Space.m),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: MoneyText(
+                    ValueSpec.estimated(_amount, 'Est.'),
+                    style: AppText.numberS.copyWith(color: tokens.textPrimary),
+                  ),
+                ),
+                Expanded(
+                  child: MoneyText(
+                    const ValueSpec.noneRecorded('None recorded'),
+                    style:
+                        AppText.numberS.copyWith(color: tokens.textSecondary),
+                  ),
                 ),
               ],
             ),
@@ -205,6 +242,8 @@ class ComponentsGallery extends StatelessWidget {
           text.toUpperCase(),
           style:
               AppText.labelCaps.copyWith(color: context.tokens.textSecondary),
+          // CR-14: spoken name keeps the original case.
+          semanticsLabel: text,
         ),
       );
 }

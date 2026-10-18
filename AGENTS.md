@@ -8,15 +8,15 @@ Version 1.3 — 14 October 2026. How every AI agent and human developer works in
 |---|---|---|
 | `AGENTS.md` | Workflow, commands, rules, roles | Process and code conventions |
 | `SPEC.md` (core) and `docs/spec/SPEC_REFERENCE.md` (full detail) | Product rules, numbers, screens, data model, releases; formulas, screen behaviour, test values, Appendix A sample data | Content and behaviour |
-| `SYSTEM_DESIGN.md` | Data, workers, storage, privacy, recovery | Technical module and execution contracts (SPEC owns product meaning) |
-| `DATABASE_DESIGN.md`, `docs/architecture/database/` | Tables, constraints, codecs, queries, migrations, recovery | Physical storage within SYSTEM_DESIGN (SPEC owns financial meaning) |
+| `docs/approved-architecture/SYSTEM_DESIGN.md` | Data, workers, storage, privacy, recovery | Technical module and execution contracts (SPEC owns product meaning) |
+| `docs/approved-architecture/DATABASE_DESIGN.md`, `docs/approved-architecture/database/` | Tables, constraints, codecs, queries, migrations, recovery | Physical storage within SYSTEM_DESIGN (SPEC owns financial meaning) |
 | `DESIGN.md` (core) and `docs/design/DESIGN_REFERENCE.md` (full detail) | Laws and key tokens; every token value, component spec, chart rule and lint rule | Style and interface code |
-| `docs/screens/*.png` and `docs/screens/SCREENS.md` (screen descriptions) | Look of each screen, by id (`X10Home.png`) | Only where the documents say nothing |
+| `docs/screens/*.png` (absent in this checkout) and `docs/screens/SCREENS.md` (screen descriptions) | Look of each screen, by id (`X10Home.png`) | Only where the documents say nothing |
 
 - Read the SPEC.md sections and DESIGN.md components the task uses.
 - A citation "DESIGN n.n" means section n.n in both DESIGN.md (short core) and `docs/design/DESIGN_REFERENCE.md` (full detail). Values and specs are in the reference.
 - A citation "SPEC n.n" means section n.n in both SPEC.md (short core) and `docs/spec/SPEC_REFERENCE.md` (full detail). Both have the same authority; formulas, edge cases, test values and Appendix A are in the reference.
-- Read the matching journey in `docs/USAGE_FLOWS.md`: entry paths, save boundaries, recovery paths, acceptance cases. Its correction gates name prerequisite specification work. It does not override SPEC.md or DESIGN.md.
+- Read the matching journey in `docs/flows/USAGE_FLOWS_REFERENCE.md`: entry paths, save boundaries, recovery paths, acceptance cases. Its correction gates name prerequisite specification work. It does not override SPEC.md or DESIGN.md.
 - If sources disagree, follow "Wins for" and record the conflict in `docs/DECISIONS.md` (section 9).
 
 ## 2. Non-negotiable rules
@@ -79,7 +79,7 @@ flutter test integration_test         # on a simulator or emulator, before a pha
 
 ## 5. Workflow for every task
 
-1. Understand. Read the task, SPEC.md sections, DESIGN.md components and the Fxx journey in `docs/USAGE_FLOWS.md` (with its correction gates and component gaps). Open `docs/screens/<id>.png` and its description in `docs/screens/SCREENS.md`. If the screenshot is absent, use the figure in `contour-design.html` and record the missing reference.
+1. Understand. Read the task, SPEC.md sections, DESIGN.md components and the Fxx journey in `docs/flows/USAGE_FLOWS_REFERENCE.md` (with its correction gates and component gaps). Open `docs/screens/<id>.png` and its description in `docs/screens/SCREENS.md`. Screenshots are absent in this checkout; use `docs/screens/SCREENS.md` and record the missing reference in `docs/DECISIONS.md` (SCREEN-REFERENCES).
 2. Plan. Write a short plan in the pull request: changes, files, tests. One feature or one fix per pull request.
 3. Test first for domain logic. Use Appendix A data and SPEC.md 13 test values.
 4. Build with existing components and templates. If something is missing, follow DESIGN.md 10 (find, compose, variant, token, component).

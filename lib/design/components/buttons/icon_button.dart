@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import '../../icons/app_icons.dart';
 import '../../theme/app_theme.dart';
 import '../../tokens/tokens.g.dart';
+import '../interaction/app_interaction.dart';
 
 /// DESIGN 6.3: `IconButton` variants.
 enum AppIconButtonVariant {
@@ -44,28 +45,23 @@ class AppIconButton extends StatelessWidget {
       button: true,
       enabled: onPressed != null,
       label: semanticLabel,
-      child: MouseRegion(
-        cursor: onPressed != null
-            ? SystemMouseCursors.click
-            : SystemMouseCursors.basic,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: onPressed,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: fill,
-              shape: BoxShape.circle,
-            ),
-            child: SizedBox(
-              width: SizeTokens.touchMin,
-              height: SizeTokens.touchMin,
-              child: Center(
-                child: AppIcon(
-                  data: icon,
-                  size: SizeTokens.iconM,
-                  color:
-                      onPressed == null ? tokens.disabled : tokens.textPrimary,
-                ),
+      child: AppInteraction(
+        onActivated: onPressed,
+        enabled: onPressed != null,
+        borderRadius: BorderRadius.circular(SizeTokens.touchMin / 2),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: fill,
+            shape: BoxShape.circle,
+          ),
+          child: SizedBox(
+            width: SizeTokens.touchMin,
+            height: SizeTokens.touchMin,
+            child: Center(
+              child: AppIcon(
+                data: icon,
+                size: SizeTokens.iconM,
+                color: onPressed == null ? tokens.disabled : tokens.textPrimary,
               ),
             ),
           ),

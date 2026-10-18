@@ -72,7 +72,8 @@
 
 ### 13.12 Returns and benchmarks
 
-- Time-weighted (TWR): split the period at every external cash flow. Sub-period r = (endValue − startValue − flow) / startValue (flow at start of day). TWR = Π(1 + r) − 1. Per year only for periods over 1 year: (1 + TWR)^(365/days) − 1.
+- Time-weighted (TWR): split the period at every external cash flow. Sub-period r = endValue / (startValue + flow) − 1 (flow at start of day), the same as (endValue − startValue − flow) / (startValue + flow). TWR = Π(1 + r) − 1. Per year only for periods over 1 year: (1 + TWR)^(365/days) − 1.
+- Test (FIN-3-01): start 100, flow +100 at the start of the day, end 220 → r = 10%. The old `/ startValue` form gave 20%.
 - Money-weighted (XIRR): dated cash flows (deposits negative, withdrawals positive, end value positive). Newton–Raphson, then bisection. No solution → "Not available".
 - Dividends and interest count as return. Fees and taxes reduce return.
 - Benchmark: indexed to 100 at period start, same scale as the holdings' TWR index.

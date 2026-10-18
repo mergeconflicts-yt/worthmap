@@ -6,6 +6,7 @@ import '../../theme/section.dart';
 import '../../tokens/space.dart';
 import '../../tokens/tokens.g.dart';
 import '../../typography/app_text.dart';
+import '../interaction/app_interaction.dart';
 
 /// DESIGN 6.3: `AppButton` variants.
 enum AppButtonVariant {
@@ -127,15 +128,13 @@ class AppButton extends StatelessWidget {
       button: true,
       enabled: enabled,
       label: semanticLabel ?? label,
-      child: MouseRegion(
-        cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: onPressed,
-          child: fullWidth
-              ? SizedBox(width: double.infinity, child: button)
-              : button,
-        ),
+      child: AppInteraction(
+        onActivated: onPressed,
+        enabled: enabled,
+        borderRadius: BorderRadius.circular(RadiusTokens.pill),
+        child: fullWidth
+            ? SizedBox(width: double.infinity, child: button)
+            : button,
       ),
     );
   }

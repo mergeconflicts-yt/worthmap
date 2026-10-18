@@ -6,11 +6,16 @@
 build/
 .ios/
 .android/
+# Coverage output is evidence, not source (CR-16).
+coverage/
 
-# Drift / build_runner
+# Drift / build_runner output stays ignored.
 *.g.dart
-# NOTE: *.g.dart stays ignored. Never edit generated files (AGENTS 3).
-# Regenerate with: dart run build_runner build -d
+# tokens.g.dart is a committed custom-generator artifact: a clean clone must
+# build without running a generator (CR-01). Never edit it by hand (AGENTS 3).
+# Regenerate with `dart run tool/gen_tokens.dart`; verify with
+# `dart run tool/check_tokens.dart`.
+!lib/design/tokens/tokens.g.dart
 
 # l10n output
 lib/l10n/app_localizations*.dart
