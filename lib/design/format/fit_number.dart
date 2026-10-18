@@ -8,6 +8,10 @@ import 'package:flutter/widgets.dart';
 /// text still does not fit at [minFontSize] does it wrap, at group boundaries
 /// (after each thousands separator and after the decimal point), by inserting
 /// zero-width spaces that paint nothing.
+///
+/// N-11: the floor is an unscaled font size, so the effective floor grows
+/// with the system scale (80 px at 2.0). Confirm with the design owner that
+/// this is the intent. DECISION-PENDING: FITNUMBER-FLOOR.
 class FitNumber extends StatelessWidget {
   const FitNumber({
     required this.text,
@@ -38,8 +42,16 @@ class FitNumber extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         final double? maxWidth =
             constraints.maxWidth.isFinite ? constraints.maxWidth : null;
-        if (maxWidth == null || base <= minFontSize) {
+        if (maxWidth == null) {
           return _render(text, base);
+        }
+        // N-11: a style already at or below the floor cannot shrink further,
+        // but it can still wrap instead of clipping.
+        if (base <= minFontSize) {
+          if (_fits(context, text, base, scaler, maxWidth)) {
+            return _render(text, base);
+          }
+          return _render(_withBreaks(text), base);
         }
 
         final singleSize = _fitSingleLine(
@@ -103,14 +115,29 @@ class FitNumber extends StatelessWidget {
     double fontSize,
     TextScaler scaler,
   ) {
+    // N-11: every measuring painter is disposed; up to 19 are made per build.
     final painter = TextPainter(
       text: TextSpan(text: value, style: style.copyWith(fontSize: fontSize)),
       textDirection: Directionality.of(context),
       textScaler: scaler,
       maxLines: 1,
-    )..layout();
-    return painter.width;
+    );
+    try {
+      painter.layout();
+      return painter.width;
+    } finally {
+      painter.dispose();
+    }
   }
+
+  bool _fits(
+    BuildContext context,
+    String value,
+    double fontSize,
+    TextScaler scaler,
+    double maxWidth,
+  ) =>
+      _lineWidth(context, value, fontSize, scaler) <= maxWidth;
 
   /// Inserts a break opportunity after each thousands separator, decimal point
   /// and space so a long number can wrap without losing a digit.

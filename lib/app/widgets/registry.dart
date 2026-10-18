@@ -1,6 +1,8 @@
+import 'package:contour/design/format/value_presentation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'layout_model.dart';
+import 'read_store.dart';
 
 /// SPEC W1: a widget (a card on a screen) or a tile (an item in Quick look).
 enum WidgetKind { widget, tile }
@@ -12,7 +14,7 @@ typedef WidgetModuleBuilder = Widget Function(BuildContext context);
 /// value (or null for the "Not loaded yet" state) and can start no work.
 typedef WidgetPreviewBuilder = Widget Function(
   BuildContext context,
-  Object? resident,
+  ValueSpec? resident,
 );
 
 /// SPEC W1, W13: one catalogue entry. Default position and size are not here;
@@ -31,6 +33,7 @@ final class WidgetDescriptor {
     this.featureGate,
     this.specRule,
     this.tileParentKey,
+    this.metricKeys = const <MetricKey>[],
   });
 
   final String key;
@@ -62,6 +65,10 @@ final class WidgetDescriptor {
 
   /// For a tile, the parent placement key (`home.quickLook`).
   final String? tileParentKey;
+
+  /// N-02: the canonical metric keys this placement holds a lease on while
+  /// it is shown. Empty when the widget reads no shared metric.
+  final List<MetricKey> metricKeys;
 
   bool get isTile => kind == WidgetKind.tile;
 }

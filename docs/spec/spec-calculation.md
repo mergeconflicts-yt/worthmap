@@ -149,7 +149,7 @@ Card charge before 1 Nov: Netflix $17.99 on 18 Oct (Visa; price up from $15.49).
 
 October so far: money in $8,200 (salary, 1 Oct); spent $3,940 of $5,200; kept $4,260 (52%); 42% of the month gone; same day in September $4,005.
 
-Needs, wants and kept parts: category tag isEssential: Rent, Groceries, Utilities, Transport are needs; other categories are wants.
+Needs, wants and kept parts: Appendix A sample tags (set by the sample user) on the category tag isEssential: Rent, Groceries, Utilities, Transport are needs; other categories are wants. These tags are sample data, not app defaults (N-10).
 
 | PART | OCTOBER | % OF MONEY IN | 12-MONTH AVERAGE (MONEY IN $9,267) |
 |---|---|---|---|

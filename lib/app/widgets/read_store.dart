@@ -5,6 +5,8 @@
 /// a cache-only peek that starts no work.
 library;
 
+import 'package:contour/design/format/value_presentation.dart';
+
 /// SYSTEM_DESIGN 8.3: a canonical metric key. It excludes any placement,
 /// host surface, screen or period filter that is not part of the financial
 /// meaning.
@@ -27,18 +29,30 @@ final class MetricKey {
 enum MetricState { loading, value, missing, noneRecorded, notAvailable }
 
 /// SYSTEM_DESIGN 8.3: one immutable value, its state and its revision.
+///
+/// N-05: the value is a [ValueSpec], never an untyped object. `state` is the
+/// store state (W3.4); it maps one-to-one onto the spec state: `value` onto
+/// real, estimated, expected or oldPrice; `missing`, `noneRecorded` and
+/// `notAvailable` onto the same-named spec; `loading` carries no spec.
 final class MetricValue {
   const MetricValue({
     required this.key,
     required this.state,
     required this.revision,
-    this.value,
-  });
+    this.spec,
+  }) : assert(
+          (state == MetricState.loading) == (spec == null),
+          'Only a loading value carries no spec',
+        );
 
   final MetricKey key;
   final MetricState state;
   final int revision;
-  final Object? value;
+  final ValueSpec? spec;
+
+  /// The presentation text for this value, or null while loading.
+  ValuePresentation? get presentation =>
+      spec == null ? null : formatValueState(spec!);
 }
 
 /// SYSTEM_DESIGN 8.3: the shared read store. `acquire` and `release` are

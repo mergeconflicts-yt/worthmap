@@ -68,4 +68,53 @@ void main() {
     await subscription.cancel();
     await repo.dispose();
   });
+
+  // N-03 (W-J): Default then Done stores no row.
+  test('applyDone with InheritDefault stores no row', () async {
+    final repo = InMemoryLayoutRepository();
+    final events = <String>[];
+    final subscription = repo.changes.listen(events.add);
+    await applyDone(repo, const InheritDefault('screen:home'));
+    expect(await repo.load('screen:home'), isNull);
+    await Future<void>.delayed(Duration.zero);
+    expect(events, isEmpty);
+    await subscription.cancel();
+    await repo.dispose();
+  });
+
+  // N-03: a stamp-only Done writes once with the new version.
+  test('applyDone with SaveLayout writes the commit once', () async {
+    final repo = InMemoryLayoutRepository();
+    final events = <String>[];
+    final subscription = repo.changes.listen(events.add);
+    await applyDone(
+      repo,
+      const SaveLayout(
+        LayoutCommit(
+          surfaceKey: 'screen:home',
+          sections: <LayoutSection>[],
+          baseLayoutVersion: 4,
+          newInThisVersion: <String>{},
+        ),
+      ),
+    );
+    final loaded = await repo.load('screen:home');
+    expect(loaded, isNotNull);
+    expect(loaded!.baseLayoutVersion, 4);
+    await Future<void>.delayed(Duration.zero);
+    expect(events, <String>['screen:home']);
+    await subscription.cancel();
+    await repo.dispose();
+  });
+
+  test('clear of an absent row notifies no one', () async {
+    final repo = InMemoryLayoutRepository();
+    final events = <String>[];
+    final subscription = repo.changes.listen(events.add);
+    await repo.clear('screen:home');
+    await Future<void>.delayed(Duration.zero);
+    expect(events, isEmpty);
+    await subscription.cancel();
+    await repo.dispose();
+  });
 }

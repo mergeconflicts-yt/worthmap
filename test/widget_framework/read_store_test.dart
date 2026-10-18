@@ -1,4 +1,6 @@
 import 'package:contour/app/widgets/read_store.dart';
+import 'package:contour/core/money.dart';
+import 'package:contour/design/format/value_presentation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -9,17 +11,31 @@ void main() {
     expect(store.observeResident(key), isNull);
 
     store.publish(
-      const MetricValue(
+      MetricValue(
         key: key,
         state: MetricState.value,
         revision: 1,
-        value: 'value',
+        spec: ValueSpec.real(Money.fromMinor(19035, Currency.usd)),
       ),
     );
     expect(store.observeResident(key)?.state, MetricState.value);
+    expect(
+      store.observeResident(key)?.presentation?.text,
+      r'$190.35',
+    );
 
     store.evict(key);
     expect(store.observeResident(key), isNull);
+  });
+
+  test('a loading value carries no spec', () {
+    const loading = MetricValue(
+      key: key,
+      state: MetricState.loading,
+      revision: 1,
+    );
+    expect(loading.spec, isNull);
+    expect(loading.presentation, isNull);
   });
 
   test('acquire and release are reference counted', () {

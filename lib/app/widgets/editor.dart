@@ -2,7 +2,7 @@ import 'layout_model.dart';
 import 'registry.dart';
 
 /// SPEC W4, W7: the result of Done in edit mode. It carries keys and sizes
-/// only, the base layout version, and the keys that are new in this version.
+/// only, the base layout version, and the keys added in this session.
 final class LayoutCommit {
   const LayoutCommit({
     required this.surfaceKey,
@@ -17,6 +17,28 @@ final class LayoutCommit {
   final Set<String> newInThisVersion;
 
   bool get isEmpty => sections.isEmpty;
+}
+
+/// N-03: Done returns one of two results. `InheritDefault` means the
+/// candidate is back at the default, so the orchestrator maps it to
+/// `LayoutRepository.clear()` and no row is stored (W-J). `SaveLayout` means
+/// the orchestrator maps it to `LayoutRepository.save()`.
+sealed class LayoutDoneResult {
+  const LayoutDoneResult();
+}
+
+/// Return the surface to inheritance: store no row.
+final class InheritDefault extends LayoutDoneResult {
+  const InheritDefault(this.surfaceKey);
+
+  final String surfaceKey;
+}
+
+/// Write the commit once (sections plus a version stamp).
+final class SaveLayout extends LayoutDoneResult {
+  const SaveLayout(this.commit);
+
+  final LayoutCommit commit;
 }
 
 final class _Snapshot {
@@ -38,6 +60,10 @@ final class LayoutEditor {
     _defaultSections =
         _copy(bundle.defaultFor(surfaceKey)?.sections ?? const []);
     _candidate = _copy(saved?.sections ?? _defaultSections);
+    _openedKeys = <String>{
+      for (final section in _candidate)
+        for (final p in section.placements) p.itemKey,
+    };
   }
 
   final WidgetRegistry registry;
@@ -46,15 +72,19 @@ final class LayoutEditor {
 
   late List<LayoutSection> _candidate;
   late List<LayoutSection> _defaultSections;
+
+  /// The keys the session opened with (the saved layout, or the default).
+  /// N-04: "new in this version" is the candidate minus the default minus
+  /// these opened keys, so a move, an add-then-hide, or an earlier-release
+  /// addition is never reported as new.
+  late Set<String> _openedKeys;
   final List<_Snapshot> _undoStack = <_Snapshot>[];
-  final Set<String> _newKeys = <String>{};
 
   List<LayoutSection> get sections => _copy(_candidate);
 
   bool get canUndo => _undoStack.isNotEmpty;
 
-  bool get isDefaultScope =>
-      _eqSections(_candidate, _defaultSections) && _newKeys.isEmpty;
+  bool get isDefaultScope => _eqSections(_candidate, _defaultSections);
 
   /// True when the candidate differs from the layout the session opened with.
   bool get hasChanges => _undoStack.isNotEmpty;
@@ -71,7 +101,11 @@ final class LayoutEditor {
   }
 
   /// SPEC W3: hide always removes the placement from the shown order.
+  /// N-13: hiding an absent key changes nothing and pushes no undo snapshot.
   void hide(String itemKey) {
+    if (!contains(itemKey)) {
+      return;
+    }
     _mutate(() {
       for (final section in _candidate) {
         section.placements.removeWhere((p) => p.itemKey == itemKey);
@@ -124,7 +158,7 @@ final class LayoutEditor {
   }
 
   /// SPEC W2, W4: add a widget or tile with its file size. The host inserts it
-  /// into the add target and marks it new in this version.
+  /// into the add target.
   void add(String itemKey) {
     if (!_isKnown(itemKey)) {
       throw LayoutFormatError('Cannot add unknown key "$itemKey"');
@@ -152,7 +186,6 @@ final class LayoutEditor {
       } else {
         section.placements.add(placement);
       }
-      _newKeys.add(itemKey);
     });
   }
 
@@ -194,7 +227,6 @@ final class LayoutEditor {
   void insert(String sectionKey, LayoutPlacement placement) {
     _mutate(() {
       _sectionFor(sectionKey).placements.add(placement);
-      _newKeys.add(placement.itemKey);
     });
   }
 
@@ -202,7 +234,6 @@ final class LayoutEditor {
   void resetToDefault() {
     _mutate(() {
       _candidate = _copy(_defaultSections);
-      _newKeys.clear();
     });
   }
 
@@ -213,12 +244,16 @@ final class LayoutEditor {
       return;
     }
     _candidate = _copy(snapshot.sections);
-    _newKeys.removeWhere((key) => !contains(key));
   }
 
-  /// SPEC W4: finish the session and return the commit. The host writes it and
-  /// stamps the base layout version.
-  LayoutCommit done() {
+  /// SPEC W4: finish the session. A candidate back at the default returns the
+  /// surface to inheritance (the orchestrator clears the stored row, W-J). Any
+  /// other candidate returns one commit; the orchestrator writes it once, even
+  /// when only the version stamp changed.
+  LayoutDoneResult done() {
+    if (_eqSections(_candidate, _defaultSections)) {
+      return InheritDefault(surfaceKey);
+    }
     final defaultKeys = <String>{
       for (final section in _defaultSections)
         for (final p in section.placements) p.itemKey,
@@ -226,14 +261,17 @@ final class LayoutEditor {
     final newInThisVersion = <String>{
       for (final section in _candidate)
         for (final p in section.placements)
-          if (!defaultKeys.contains(p.itemKey)) p.itemKey,
-      ..._newKeys,
+          if (!defaultKeys.contains(p.itemKey) &&
+              !_openedKeys.contains(p.itemKey))
+            p.itemKey,
     };
-    return LayoutCommit(
-      surfaceKey: surfaceKey,
-      sections: _copy(_candidate),
-      baseLayoutVersion: bundle.layoutVersion,
-      newInThisVersion: newInThisVersion,
+    return SaveLayout(
+      LayoutCommit(
+        surfaceKey: surfaceKey,
+        sections: _copy(_candidate),
+        baseLayoutVersion: bundle.layoutVersion,
+        newInThisVersion: newInThisVersion,
+      ),
     );
   }
 }

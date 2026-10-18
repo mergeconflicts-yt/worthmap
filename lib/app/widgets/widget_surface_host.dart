@@ -2,6 +2,7 @@ import 'package:contour/design/design.dart';
 import 'package:flutter/widgets.dart';
 
 import 'layout_model.dart';
+import 'read_store.dart';
 import 'resolver.dart';
 
 /// SPEC W13, W-D: resolves a section title key to a user word. The registry
@@ -24,7 +25,8 @@ class WidgetSurfaceHost extends StatelessWidget {
   const WidgetSurfaceHost({
     required this.surface,
     required this.titleFor,
-    this.unavailableLabel = 'Unavailable',
+    required this.unavailableLabel,
+    this.store,
     this.editing = false,
     this.toolRowBuilder,
     this.emptyState,
@@ -34,9 +36,14 @@ class WidgetSurfaceHost extends StatelessWidget {
   final ResolvedSurface surface;
   final SectionTitleResolver titleFor;
 
-  /// The word for a key this release does not know or does not show. It comes
-  /// from l10n in T10.
+  /// N-09: the word for a key this release does not know or does not show.
+  /// Required, so it comes from l10n in T10 (T06-L10N-CONSTANTS).
   final String unavailableLabel;
+
+  /// N-02: the shared read store. Each shown placement acquires its metric
+  /// keys on mount and releases them on unmount, so a hide releases its
+  /// lease at once. Null only in tests that check layout without leases.
+  final SharedReadStore? store;
 
   final bool editing;
   final PlacementToolRowBuilder? toolRowBuilder;
@@ -94,32 +101,20 @@ class WidgetSurfaceHost extends StatelessWidget {
     return rows;
   }
 
-  Widget _halfRow(List<Widget> cells) {
-    if (cells.length == 1) {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Expanded(child: cells.first),
-          const HSpace(Space.card),
-          const Expanded(child: SizedBox.shrink()),
-        ],
-      );
-    }
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Expanded(child: cells[0]),
-        const HSpace(Space.card),
-        Expanded(child: cells[1]),
-      ],
-    );
-  }
+  Widget _halfRow(List<Widget> cells) => WidgetGrid(cells: cells);
 
   Widget _cell(BuildContext context, ResolvedPlacement placement) {
     final descriptor = placement.descriptor;
     final Widget content;
     if (descriptor == null || placement.unavailable) {
-      content = _unavailable(context);
+      content = UnavailableCard(label: unavailableLabel);
+    } else if (store != null && descriptor.metricKeys.isNotEmpty) {
+      content = _LeasedPlacement(
+        key: ValueKey<String>(placement.itemKey),
+        store: store!,
+        keys: descriptor.metricKeys,
+        child: descriptor.builder(context),
+      );
     } else {
       content = descriptor.builder(context);
     }
@@ -132,13 +127,45 @@ class WidgetSurfaceHost extends StatelessWidget {
       child: content,
     );
   }
+}
 
-  Widget _unavailable(BuildContext context) {
-    return GlassCard(
-      child: Text(
-        unavailableLabel,
-        style: AppText.body.copyWith(color: context.tokens.textPrimary),
-      ),
-    );
+/// N-02: one lease per shown placement. It acquires its metric keys in
+/// `initState` and releases them in `dispose`, so hiding the placement (in
+/// edit mode or by layout change) releases its reference at once. A shared
+/// request stays alive while another placement or the hero holds it.
+class _LeasedPlacement extends StatefulWidget {
+  const _LeasedPlacement({
+    required this.store,
+    required this.keys,
+    required this.child,
+    super.key,
+  });
+
+  final SharedReadStore store;
+  final List<MetricKey> keys;
+  final Widget child;
+
+  @override
+  State<_LeasedPlacement> createState() => _LeasedPlacementState();
+}
+
+class _LeasedPlacementState extends State<_LeasedPlacement> {
+  @override
+  void initState() {
+    super.initState();
+    for (final key in widget.keys) {
+      widget.store.acquire(key);
+    }
   }
+
+  @override
+  void dispose() {
+    for (final key in widget.keys) {
+      widget.store.release(key);
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }

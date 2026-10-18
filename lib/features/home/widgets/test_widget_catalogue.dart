@@ -1,4 +1,5 @@
 import 'package:contour/app/widgets/layout_model.dart';
+import 'package:contour/app/widgets/read_store.dart';
 import 'package:contour/app/widgets/registry.dart';
 import 'package:contour/design/design.dart';
 import 'package:flutter/widgets.dart';
@@ -34,12 +35,15 @@ List<WidgetDescriptor> testWidgetCatalogue() => <WidgetDescriptor>[
         nameKey: 'test.alpha.name',
         allowedSizes: const <WidgetSize>{WidgetSize.full, WidgetSize.half},
         specRule: 'W-A',
+        metricKeys: const <MetricKey>[MetricKey('test.alpha')],
         builder: (context) =>
             _card(context, title: 'Test alpha', body: 'Alpha body'),
         previewBuilder: (context, resident) => _card(
           context,
           title: 'Test alpha',
-          body: resident?.toString() ?? testNotLoadedLabel,
+          body: resident == null
+              ? testNotLoadedLabel
+              : formatValueState(resident).text,
         ),
       ),
       WidgetDescriptor(
@@ -48,12 +52,15 @@ List<WidgetDescriptor> testWidgetCatalogue() => <WidgetDescriptor>[
         nameKey: 'test.beta.name',
         allowedSizes: const <WidgetSize>{WidgetSize.full},
         specRule: 'W-A',
+        metricKeys: const <MetricKey>[MetricKey('test.beta')],
         builder: (context) =>
             _card(context, title: 'Test beta', body: 'Beta body'),
         previewBuilder: (context, resident) => _card(
           context,
           title: 'Test beta',
-          body: resident?.toString() ?? testNotLoadedLabel,
+          body: resident == null
+              ? testNotLoadedLabel
+              : formatValueState(resident).text,
         ),
       ),
       WidgetDescriptor(
@@ -69,7 +76,9 @@ List<WidgetDescriptor> testWidgetCatalogue() => <WidgetDescriptor>[
         previewBuilder: (context, resident) => _card(
           context,
           title: 'Test own',
-          body: resident?.toString() ?? testNotLoadedLabel,
+          body: resident == null
+              ? testNotLoadedLabel
+              : formatValueState(resident).text,
         ),
       ),
       WidgetDescriptor(
@@ -83,7 +92,9 @@ List<WidgetDescriptor> testWidgetCatalogue() => <WidgetDescriptor>[
         previewBuilder: (context, resident) => _card(
           context,
           title: 'Test gamma',
-          body: resident?.toString() ?? testNotLoadedLabel,
+          body: resident == null
+              ? testNotLoadedLabel
+              : formatValueState(resident).text,
         ),
       ),
       WidgetDescriptor(
@@ -98,7 +109,9 @@ List<WidgetDescriptor> testWidgetCatalogue() => <WidgetDescriptor>[
         previewBuilder: (context, resident) => _card(
           context,
           title: 'Test tile',
-          body: resident?.toString() ?? testNotLoadedLabel,
+          body: resident == null
+              ? testNotLoadedLabel
+              : formatValueState(resident).text,
         ),
       ),
     ];

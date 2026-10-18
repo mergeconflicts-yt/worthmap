@@ -42,15 +42,20 @@ class WidgetSlot extends StatelessWidget {
         ],
         Opacity(
           opacity: 0.72,
-          child: IgnorePointer(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(color: tokens.borderChip),
-                borderRadius: BorderRadius.circular(RadiusTokens.card + 6),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(Space.s),
-                child: child,
+          // N-12: edit-mode content is inert for screen readers too, not only
+          // for touch. The tool row above stays accessible.
+          child: ExcludeSemantics(
+            excluding: true,
+            child: IgnorePointer(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border.all(color: tokens.borderChip),
+                  borderRadius: BorderRadius.circular(RadiusTokens.card + 6),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(Space.s),
+                  child: child,
+                ),
               ),
             ),
           ),

@@ -9,11 +9,16 @@ final class StoredLayout {
     required this.surfaceKey,
     required this.sections,
     required this.baseLayoutVersion,
+    this.newInThisVersion = const <String>{},
   });
 
   final String surfaceKey;
   final List<LayoutSection> sections;
   final int baseLayoutVersion;
+
+  /// N-03: the session-added keys are stored deliberately, so the Add sheet
+  /// can use them. T07 must persist this set with the row.
+  final Set<String> newInThisVersion;
 
   SurfaceLayout toSurfaceLayout() =>
       SurfaceLayout(surfaceKey: surfaceKey, sections: sections);
@@ -35,6 +40,18 @@ abstract interface class LayoutRepository {
   Stream<String> get changes;
 }
 
+/// N-03: maps a Done result to the store. `InheritDefault` clears the stored
+/// row so a later release default still reaches the user (W-J). `SaveLayout`
+/// writes the commit once, even when only the version stamp changed.
+Future<void> applyDone(LayoutRepository repo, LayoutDoneResult result) async {
+  switch (result) {
+    case InheritDefault(:final surfaceKey):
+      await repo.clear(surfaceKey);
+    case SaveLayout(:final commit):
+      await repo.save(commit);
+  }
+}
+
 /// A Phase 1 in-memory repository. Keys and sizes only; no personal data.
 final class InMemoryLayoutRepository implements LayoutRepository {
   InMemoryLayoutRepository();
@@ -52,14 +69,17 @@ final class InMemoryLayoutRepository implements LayoutRepository {
       surfaceKey: commit.surfaceKey,
       sections: commit.sections,
       baseLayoutVersion: commit.baseLayoutVersion,
+      newInThisVersion: commit.newInThisVersion,
     );
     _changes.add(commit.surfaceKey);
   }
 
   @override
   Future<void> clear(String surfaceKey) async {
-    _rows.remove(surfaceKey);
-    _changes.add(surfaceKey);
+    // Clearing an absent row writes nothing and notifies no one.
+    if (_rows.remove(surfaceKey) != null) {
+      _changes.add(surfaceKey);
+    }
   }
 
   @override

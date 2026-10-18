@@ -60,4 +60,41 @@ void main() {
       });
     }
   }
+
+  // N-11: a style already below the floor still wraps instead of clipping.
+  testWidgets('a small style wraps a long amount in a narrow box',
+      (tester) async {
+    const text = r'$1,234,567.89';
+    const width = 100.0;
+    await tester.pumpWidget(
+      const MediaQuery(
+        data: MediaQueryData(),
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: Center(
+            child: SizedBox(
+              width: width,
+              child: FitNumber(
+                text: text,
+                style: TextStyle(fontSize: 13),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    final textWidget = tester.widget<Text>(find.byType(Text));
+    final painter = TextPainter(
+      text: TextSpan(text: textWidget.data, style: textWidget.style),
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: width);
+    var widestLine = 0.0;
+    for (final metrics in painter.computeLineMetrics()) {
+      if (metrics.width > widestLine) {
+        widestLine = metrics.width;
+      }
+    }
+    painter.dispose();
+    expect(widestLine, lessThanOrEqualTo(width + 0.5));
+  });
 }

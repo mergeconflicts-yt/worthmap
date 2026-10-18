@@ -1,4 +1,5 @@
 import 'package:contour/app/widgets/layout_model.dart';
+import 'package:contour/app/widgets/read_store.dart';
 import 'package:contour/app/widgets/resolver.dart';
 import 'package:contour/app/widgets/widget_surface_host.dart';
 import 'package:contour/design/design.dart';
@@ -27,7 +28,11 @@ void main() {
     );
     await tester.pumpWidget(
       wrap(
-        WidgetSurfaceHost(surface: surface, titleFor: (key) => key),
+        WidgetSurfaceHost(
+          surface: surface,
+          titleFor: (key) => key,
+          unavailableLabel: 'Unavailable',
+        ),
       ),
     );
     expect(find.text('section.today'), findsOneWidget);
@@ -45,7 +50,11 @@ void main() {
     );
     await tester.pumpWidget(
       wrap(
-        WidgetSurfaceHost(surface: surface, titleFor: (key) => key),
+        WidgetSurfaceHost(
+          surface: surface,
+          titleFor: (key) => key,
+          unavailableLabel: 'Unavailable',
+        ),
       ),
     );
     final rows = find.ancestor(
@@ -76,6 +85,7 @@ void main() {
         WidgetSurfaceHost(
           surface: surface,
           titleFor: (key) => key,
+          unavailableLabel: 'Unavailable',
           emptyState: const Text('EMPTY'),
         ),
       ),
@@ -94,6 +104,7 @@ void main() {
         WidgetSurfaceHost(
           surface: surface,
           titleFor: (key) => key,
+          unavailableLabel: 'Unavailable',
           editing: true,
           toolRowBuilder: (context, placement) =>
               Text('TOOL ${placement.itemKey}'),
@@ -135,5 +146,59 @@ void main() {
       ),
     );
     expect(find.text('GONE'), findsOneWidget);
+  });
+
+  // N-02: a shown placement holds a lease; hiding it releases the lease.
+  testWidgets('placements acquire metric leases and release them on hide',
+      (tester) async {
+    final store = InMemoryReadStore();
+    const alpha = MetricKey('test.alpha');
+    final surface = resolver.resolve(
+      surfaceKey: 'screen:home',
+      editing: false,
+      isReleased: (_) => true,
+    );
+    await tester.pumpWidget(
+      wrap(
+        WidgetSurfaceHost(
+          surface: surface,
+          titleFor: (key) => key,
+          unavailableLabel: 'Unavailable',
+          store: store,
+        ),
+      ),
+    );
+    expect(store.subscriberCount(alpha), 1);
+
+    const emptied = ResolvedSurface(
+      surfaceKey: 'screen:home',
+      isExplicitEmpty: false,
+      sections: <ResolvedSection>[
+        ResolvedSection(
+          key: 'more',
+          titleKey: 'section.more',
+          placements: <ResolvedPlacement>[
+            ResolvedPlacement(
+              itemKey: 'test.gamma',
+              canonicalKey: 'test.gamma',
+              size: WidgetSize.half,
+              descriptor: null,
+              unavailable: true,
+            ),
+          ],
+        ),
+      ],
+    );
+    await tester.pumpWidget(
+      wrap(
+        WidgetSurfaceHost(
+          surface: emptied,
+          titleFor: (key) => key,
+          unavailableLabel: 'Unavailable',
+          store: store,
+        ),
+      ),
+    );
+    expect(store.subscriberCount(alpha), 0);
   });
 }

@@ -136,6 +136,33 @@ void main() {
       expect(p.semanticsLabel, 'Amount hidden Est.');
       expect(p.semanticsLabel, isNot(contains('4,123')));
     });
+
+    // N-05: Not available and Loading present their labels.
+    test('not available shows its reason label', () {
+      final p = formatValueState(
+        const ValueSpec.notAvailable('Not available in this release'),
+      );
+      expect(p.text, 'Not available in this release');
+      expect(p.semanticsLabel, 'Not available in this release');
+    });
+
+    test('loading shows its interim label', () {
+      final p = formatValueState(const ValueSpec.loading('Loading'));
+      expect(p.text, 'Loading');
+      expect(p.semanticsLabel, 'Loading');
+    });
+
+    // N-14: every state label must be non-empty.
+    test('an empty marker on an amount state is rejected', () {
+      expect(
+        () => formatValueState(ValueSpec.estimated(amount, '')),
+        throwsArgumentError,
+      );
+      expect(
+        () => formatValueState(ValueSpec.expected(amount, '')),
+        throwsArgumentError,
+      );
+    });
   });
 
   group('MoneyText', () {

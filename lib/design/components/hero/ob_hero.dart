@@ -169,9 +169,10 @@ class ObHero extends StatelessWidget {
         figure.value,
         if (figure.period != null)
           Text(
-            figure.period!,
+            // N-16: one rule everywhere. Uppercase is visual in the component;
+            // the semantics keep the original case (CR-14).
+            figure.period!.toUpperCase(),
             style: AppText.labelCaps.copyWith(color: tokens.textSecondary),
-            // CR-14: the period is already caps in the source; keep it spoken.
             semanticsLabel: figure.period,
           ),
       ],

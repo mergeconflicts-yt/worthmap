@@ -9,13 +9,22 @@ enum ValueState {
   noneRecorded,
   missing,
   oldPrice,
+
+  /// N-05: the read store has no value for this key in this release
+  /// (W3.4 Not available). [ValueSpec.notAvailable] carries the reason label.
+  notAvailable,
+
+  /// N-05: the read store is still calculating (W3.4 Loading). The label is
+  /// interim wording until l10n (T10). DECISION-PENDING: T06-L10N-CONSTANTS.
+  loading,
 }
 
 /// DESIGN 4, 8; SPEC 4.9: one value and its state.
 ///
 /// Build it only through the named constructors. Then an amount can never be
-/// paired with [ValueState.noneRecorded] or [ValueState.missing], and those two
-/// states always carry a label. An unknown value can therefore never render
+/// paired with [ValueState.noneRecorded], [ValueState.missing],
+/// [ValueState.notAvailable] or [ValueState.loading], and those four states
+/// always carry a label. An unknown value can therefore never render
 /// blank or as a numeric zero (SPEC 4.3).
 final class ValueSpec {
   const ValueSpec._(this.state, this.amount, this.label);
@@ -45,6 +54,16 @@ final class ValueSpec {
   /// totals (SPEC 4.9); [label] is that "Est." word from l10n.
   const ValueSpec.oldPrice(Money amount, String label)
       : this._(ValueState.oldPrice, amount, label);
+
+  /// N-05: no value for this key in this release. [label] is the reason
+  /// phrase from l10n (T10).
+  const ValueSpec.notAvailable(String label)
+      : this._(ValueState.notAvailable, null, label);
+
+  /// N-05: the value is still calculating. [label] is interim wording
+  /// ("Loading") until l10n (T10).
+  const ValueSpec.loading(String label)
+      : this._(ValueState.loading, null, label);
 
   final ValueState state;
 
@@ -91,6 +110,8 @@ ValuePresentation formatValueState(
   switch (spec.state) {
     case ValueState.noneRecorded:
     case ValueState.missing:
+    case ValueState.notAvailable:
+    case ValueState.loading:
       final label = spec.label;
       if (label == null || label.isEmpty) {
         throw ArgumentError(
@@ -126,6 +147,10 @@ ValuePresentation _presentAmount(
   String? mark,
   String? hiddenLabel,
 }) {
+  // N-14: every state label must be non-empty, not only the unknown states.
+  if (marker != null && marker.isEmpty) {
+    throw ArgumentError('State label must not be empty');
+  }
   final String visible;
   if (hidden) {
     final symbol = showSymbol ? (mark ?? currencyMark(amount.currency)) : '';

@@ -102,6 +102,21 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   replace `docs/screens/<id>.png` or the gallery HTML. Keep this item open
   until per-screen captures return.
 
+### FITNUMBER-FLOOR
+
+- N-11: the `FitNumber` 40 pt floor is an unscaled font size, so the effective
+  floor grows with the system text scale (80 px at 2.0). Preferred: confirm
+  with the design owner that this is the intent. Code marks it
+  `DECISION-PENDING: FITNUMBER-FLOOR` and keeps the behaviour.
+
+### HERO-MARKER-STYLE
+
+- N-15: `formatValueState` appends the "Est." / "Expected" marker to the hero
+  number text, so the hero paints it at 64 pt in the hero style. Preferred:
+  ask the design owner for the marker style (probably a caption style after
+  the number, which needs a `Text.rich` hero). No code change until the owner
+  decides. DECISION-PENDING: HERO-MARKER-STYLE.
+
 ### CR-17-PACKAGE-NAME
 
 - The Dart package, bundle id and iOS folder are `contour`; the git folder is
@@ -109,6 +124,13 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   T07 also changes the native folders, key-store names and the database file
   paths (CR-17). Preferred: fix the product name before T07, then rename in one
   chore change. DECISION-PENDING: CR-17-PACKAGE-NAME.
+- N-08: the Android application id is the Flutter default `com.contour.contour`
+  (`android/app/build.gradle.kts`); the iOS bundle id matches. N-08 blocks T07
+  and T08 on the final name and reverse-domain id (see TASKS T07). The
+  `portfolio_manager/` parent copies named in the review are absent in this
+  checkout (N-07), so there is nothing to replace here.
+- 2026-10-18: owner chose to keep `contour` for now. The rename stays
+  deferred; T07 and T08 stay blocked on this item until the final name lands.
 
 ### G14-FIN-DEFINITIONS
 
@@ -120,6 +142,12 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   no `lib/domain/numbers` task before they close. An independent check confirms
   13.2 and 13.4 match their stated formulas; the remaining items still need the
   review detail and dated fixtures. DECISION-PENDING: G14-FIN-DEFINITIONS.
+- N-06: the REVIEW-003 detail files (`REVIEW-003-finance.md`, `REVIEW-003-ux.md`,
+  the two REVIEW-004 files) are absent in this checkout, so they cannot be
+  copied into `docs/reviews/`. The agent review quotes two rival pairs: 13.2
+  locks `3,796,960` against `3,561,098` (compounding convention), and 13.4 gives
+  `86,389,640` against the test value `94,529,640`. Recorded here so the docs
+  pull request can adjudicate when the source files arrive. Gate stays open.
 
 ## Decided
 
@@ -374,3 +402,50 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   validators and the architecture manifest. T07 must translate SCHEMA.sql
   into Drift, not use it as a production migration. PF-01 and product
   correction gates stay open.
+
+### PF-01-ANDROID
+
+- N-01: the release manifest sets `android:allowBackup="false"` and
+  `android:dataExtractionRules="@xml/data_extraction_rules"`, and
+  `res/xml/data_extraction_rules.xml` excludes every domain (`root`, `file`,
+  `database`, `sharedpref`, `external`) for both `cloud-backup` and
+  `device-transfer`. The release manifest holds no INTERNET permission;
+  only the debug and profile manifests do. `test/privacy/` checks both
+  files. Deviation from the review: `android:fullBackupContent="false"` was
+  not set because that attribute takes a resource reference, not a boolean;
+  `allowBackup="false"` plus the rules file already opts out of Auto Backup
+  and device transfer.
+
+### T06-N-FIXES
+
+- N-02 (W3.7): `WidgetDescriptor.metricKeys` declares the canonical keys a
+  placement leases. `WidgetSurfaceHost` takes the store and wraps each shown
+  placement in a lease widget that acquires in `initState` and releases in
+  `dispose`; a hide releases at once. Test widgets `test.alpha`/`test.beta`
+  carry keys; a host test asserts acquire on show and zero subscribers on
+  hide.
+- N-03: `LayoutEditor.done()` returns `InheritDefault` (candidate back at
+  the default) or `SaveLayout` (one commit). `applyDone` maps them to
+  `clear()` and `save()`; `StoredLayout` keeps `newInThisVersion`
+  deliberately for T07. W-J tests: Default then Done stores no row;
+  stamp-only Done writes once. Clearing an absent row notifies no one.
+- N-04: `_newKeys` session tracking is removed. `done()` reports candidate
+  keys minus default keys minus keys present at session open, so a move, an
+  add-then-hide, or an earlier-release addition is never new. Tests cover
+  all three.
+- N-05: `MetricValue` carries a `ValueSpec` (null only while loading) with a
+  `presentation` getter; `Object? value` is removed. New
+  `ValueSpec.notAvailable` and `ValueSpec.loading` states with required
+  labels. `WidgetPreviewBuilder` takes `ValueSpec?`.
+- N-09: the half-pair grid is `WidgetGrid` in `lib/design/layout/` and the
+  fallback is `UnavailableCard` in `lib/design/components/`; both are
+  exported from `lib/design/design.dart`. The host label is required (l10n
+  in T10).
+- N-12: edit-mode slot content is wrapped in `ExcludeSemantics` as well as
+  `IgnorePointer`; the tool row stays accessible.
+- N-13: `hide()` on an absent key returns early with no undo snapshot.
+- N-14: empty labels are rejected for every state, not only the unknown
+  ones.
+- N-16: the hero side-figure period uses the one rule (visual uppercase,
+  original-case semantics). Components goldens were re-baselined for this
+  intended change only; the new baselines were inspected.

@@ -67,7 +67,12 @@ void main() {
     final section = editor.sections.single;
     expect(section.key, 'main');
     expect(section.placements.single.size, WidgetSize.half);
-    expect(editor.done().newInThisVersion, contains('test.alpha'));
+    final result = editor.done();
+    expect(result, isA<SaveLayout>());
+    expect(
+      (result as SaveLayout).commit.newInThisVersion,
+      contains('test.alpha'),
+    );
   });
 
   test('add is a no-op when the widget is already present', () {
@@ -91,7 +96,9 @@ void main() {
       surfaceKey: 'screen:home',
     );
     editor.hide('test.own');
-    final commit = editor.done();
+    final result = editor.done();
+    expect(result, isA<SaveLayout>());
+    final commit = (result as SaveLayout).commit;
     expect(commit.surfaceKey, 'screen:home');
     expect(commit.baseLayoutVersion, 4);
     expect(commit.isEmpty, isFalse);
@@ -147,7 +154,28 @@ void main() {
     );
     spending.insert('main', taken);
     expect(spending.contains('test.alpha'), isTrue);
-    expect(spending.done().newInThisVersion, contains('test.alpha'));
+    // Cross-surface: the key is new to the spending surface.
+    final moved = spending.done();
+    expect(moved, isA<SaveLayout>());
+    expect(
+      (moved as SaveLayout).commit.newInThisVersion,
+      contains('test.alpha'),
+    );
+  });
+
+  // N-04: a move between sections of one surface is not a new key.
+  test('take and insert on one surface is not new', () {
+    final editor = home();
+    final taken = editor.take('test.alpha');
+    expect(taken, isNotNull);
+    editor.insert('today', taken!);
+    expect(editor.contains('test.alpha'), isTrue);
+    final result = editor.done();
+    expect(result, isA<SaveLayout>());
+    expect(
+      (result as SaveLayout).commit.newInThisVersion,
+      isNot(contains('test.alpha')),
+    );
   });
 
   test('hasChanges reports any session change', () {
@@ -155,5 +183,64 @@ void main() {
     expect(editor.hasChanges, isFalse);
     editor.hide('test.own');
     expect(editor.hasChanges, isTrue);
+  });
+
+  // N-03 (W-J): Default then Done returns the surface to inheritance.
+  test('done at the default returns InheritDefault', () {
+    expect(home().done(), isA<InheritDefault>());
+  });
+
+  // N-04: add then hide reports no new key (it leaves the default).
+  test('add then hide returns to inheritance', () {
+    final editor = LayoutEditor(
+      registry: registry,
+      bundle: bundle,
+      surfaceKey: 'screen:spending',
+    );
+    editor.add('test.beta');
+    editor.hide('test.beta');
+    expect(editor.done(), isA<InheritDefault>());
+  });
+
+  // N-04: a widget added in an earlier release is not new again at Done.
+  test('an earlier-release addition is not new', () {
+    final saved = SurfaceLayout(
+      surfaceKey: 'screen:home',
+      sections: <LayoutSection>[
+        section(
+          'today',
+          <LayoutPlacement>[placed('test.own', WidgetSize.full)],
+        ),
+        section(
+          'more',
+          <LayoutPlacement>[
+            placed('test.alpha', WidgetSize.half),
+            placed('test.gamma', WidgetSize.half),
+            placed('test.beta', WidgetSize.full),
+          ],
+        ),
+      ],
+    );
+    final editor = LayoutEditor(
+      registry: registry,
+      bundle: bundle,
+      surfaceKey: 'screen:home',
+      saved: saved,
+    );
+    editor.hide('test.gamma');
+    final result = editor.done();
+    expect(result, isA<SaveLayout>());
+    expect(
+      (result as SaveLayout).commit.newInThisVersion,
+      isNot(contains('test.beta')),
+    );
+  });
+
+  // N-13: hiding an absent key changes nothing and pushes no undo snapshot.
+  test('hide of an absent key is a no-op', () {
+    final editor = home();
+    editor.hide('ghost');
+    expect(editor.canUndo, isFalse);
+    expect(editor.hasChanges, isFalse);
   });
 }
