@@ -29,14 +29,17 @@ final class ImportController extends ChangeNotifier {
   ImportController({
     required ImportGateway gateway,
     required ImportFileIntake intake,
+    ImportPasswordVault? passwords,
     PdfImporter importer = const PdfImporter(),
     this.onUndone,
   })  : _gateway = gateway,
         _intake = intake,
+        _passwords = passwords,
         _importer = importer;
 
   final ImportGateway _gateway;
   final ImportFileIntake _intake;
+  final ImportPasswordVault? _passwords;
   final PdfImporter _importer;
 
   /// Called once after a successful undo (the caller shows the toast).
@@ -130,23 +133,36 @@ final class ImportController extends ChangeNotifier {
   }
 
   /// Opens a locked file with a password. A wrong password keeps X64 open.
-  Future<void> submitPassword(String password) async {
+  ///
+  /// [remember] stores the password in the vault for this file name. The
+  /// dialog offers the choice; a saved password opens the next copy without a
+  /// question.
+  Future<void> submitPassword(String password, {bool remember = false}) async {
     if (_busy || password.isEmpty) return;
     _busy = true;
     notifyListeners();
     try {
-      await _read(password: password);
+      await _read(password: password, remember: remember);
     } finally {
       _busy = false;
       notifyListeners();
     }
   }
 
-  Future<void> _read({required String? password}) async {
+  Future<void> _read({String? password, bool remember = false}) async {
     final file = _file;
     if (file == null) return;
+    var attempt = password;
+    var fromSaved = false;
+    if (attempt == null || attempt.isEmpty) {
+      final saved = await _passwords?.read(file.name);
+      if (saved != null && saved.isNotEmpty) {
+        attempt = saved;
+        fromSaved = true;
+      }
+    }
     try {
-      var outcome = _importer.read(file.bytes, password: password);
+      var outcome = _importer.read(file.bytes, password: attempt);
       SavedLayout? layout;
       for (final saved in _layouts) {
         if (saved.fingerprint == outcome.fingerprint) {
@@ -164,15 +180,26 @@ final class ImportController extends ChangeNotifier {
         );
         outcome = _importer.read(
           file.bytes,
-          password: password,
+          password: attempt,
           template: template,
         );
+      }
+      if (attempt != null && attempt.isNotEmpty && !fromSaved && remember) {
+        await _passwords?.save(file.name, attempt);
       }
       _layout = layout;
       _outcome = outcome;
       _passwordError = null;
       _step = ImportStep.preview;
     } on PdfImportError catch (error) {
+      if (fromSaved &&
+          (error.code == PdfImportErrorCode.wrongPassword ||
+              error.code == PdfImportErrorCode.locked)) {
+        await _passwords?.clear(file.name);
+        _step = ImportStep.password;
+        _passwordError = null;
+        return;
+      }
       switch (error.code) {
         case PdfImportErrorCode.locked:
           _step = ImportStep.password;

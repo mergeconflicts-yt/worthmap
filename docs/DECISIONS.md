@@ -162,8 +162,12 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   (V 1, 2 and 4 with `/CFM /V2`), with user and owner password checks.
   AES-128 (`AESV2`) and AES-256 (`AESV3`, revisions 5 and 6) return
   `unsupportedEncryption`, and X88 states that this version cannot open the
-  protection. The password goes to the dialog only; this slice does not store
-  it in secure storage (`P3-PASSWORD-STORE`).
+  protection. X64 offers "Remember for this layout": the password goes to the
+  platform secure store under a SHA-256 key of the file name, so the key ring
+  holds no personal text. A wrong saved password is cleared and the dialog
+  returns. A saved password opens the next copy without a question. The
+  password never reaches a log, an error or a screen message
+  (`SecureImportPasswordStore`).
 
 - Statement rows. A row needs a date and an amount. Sign words (`DR`, `CR`,
   parentheses, trailing minus), thousands and decimal separators, and day-first

@@ -144,6 +144,7 @@ final class ContourRouter {
     HistoryGateway? history,
     ImportGateway? imports,
     ImportFileIntake? importFiles,
+    ImportPasswordVault? importPasswords,
     String? initialLocation,
     Widget? gallery,
     bool demoEntries = false,
@@ -164,7 +165,8 @@ final class ContourRouter {
         _repeating = repeating ?? const UnavailableRepeatingGateway(),
         _history = history ?? const UnavailableHistoryGateway(),
         _imports = imports ?? const UnavailableImportGateway(),
-        _importFiles = importFiles ?? const UnavailableFileIntake();
+        _importFiles = importFiles ?? const UnavailableFileIntake(),
+        _importPasswords = importPasswords;
 
   final LockGate _gate;
 
@@ -212,6 +214,9 @@ final class ContourRouter {
 
   /// The local file intake for X63. Unavailable until a verified binding.
   final ImportFileIntake _importFiles;
+
+  /// The X64 password vault. Null keeps the password in the dialog only.
+  final ImportPasswordVault? _importPasswords;
 
   /// The first route. The demo composition starts on the gallery.
   final String _initialLocation;
@@ -574,6 +579,7 @@ final class ContourRouter {
               accounts: _accounts,
               onClose: () => context.pop(),
               onOpenInbox: () => context.push(AppRoute.inbox.path),
+              passwords: _importPasswords,
             ),
           ),
         ),

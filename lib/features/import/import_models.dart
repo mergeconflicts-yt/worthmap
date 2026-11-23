@@ -186,3 +186,31 @@ final class UnavailableFileIntake implements ImportFileIntake {
   Future<ImportedFile?> pickPdf() async =>
       throw const ImportIntakeError(ImportFailure.notWired);
 }
+
+/// The PDF password vault port (X64 "Remember for this layout").
+abstract interface class ImportPasswordVault {
+  Future<String?> read(String scope);
+
+  Future<void> save(String scope, String password);
+
+  Future<void> clear(String scope);
+}
+
+/// A session-only vault for the demo composition and widget tests.
+final class MemoryImportPasswordVault implements ImportPasswordVault {
+  final Map<String, String> _values = <String, String>{};
+
+  @override
+  Future<String?> read(String scope) async => _values[scope];
+
+  @override
+  Future<void> save(String scope, String password) async {
+    if (scope.isEmpty || password.isEmpty) return;
+    _values[scope] = password;
+  }
+
+  @override
+  Future<void> clear(String scope) async {
+    _values.remove(scope);
+  }
+}

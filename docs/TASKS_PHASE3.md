@@ -35,17 +35,20 @@ PDF only, per the owner decision recorded in DECISIONS `P3-PDF-SUBSET`.
     bank formats.
   - P3-16 to P3-19: staging, publication, history, withdrawal and template
     storage over the reference import tables. No schema change.
+  - P3-20: the PDF password vault over `SecureStorageApi`, keyed by a SHA-256
+    hash of the file name, with the X64 "Remember for this layout" toggle.
+    Tests: `test/features/import/import_password_test.dart` (8, including a
+    fully RC4-encrypted statement).
   - P3-25, P3-26 and P3-28 units: X63 hub, X64 password, X65 preview, X66 Teach
     once, X68 done and X88 error, their widget tests and 16 goldens.
 - Deferred with no route, tile or switch:
   - P3-02, P3-21, P3-22 (file picker and share intake), P3-03, P3-31 (broker
     and position imports), P3-04, P3-23, P3-24, P3-30 (OCR, QR and receipt
-    photo), P3-09 to P3-12 (OFX, QIF, CAMT.053, MT940), P3-20 (PDF password
-    storage), P3-27 (CSV mapping), P3-29 (Inbox producer handover), P3-32
-    (full phase acceptance).
+    photo), P3-09 to P3-12 (OFX, QIF, CAMT.053, MT940), P3-27 (CSV mapping),
+    P3-29 (Inbox producer handover), P3-32 (full phase acceptance).
 - Open planning gaps:
-  `P3-PASSWORD-STORE`, `P3-BALANCE-ROWS`, `P3-TEMPLATE-TABLE`,
-  `P3-INTAKE-BINDING`, `P3-CATEGORY-SUGGESTION`, `P3-HISTORY-OPEN`.
+  `P3-BALANCE-ROWS`, `P3-TEMPLATE-TABLE`, `P3-INTAKE-BINDING`,
+  `P3-CATEGORY-SUGGESTION`, `P3-HISTORY-OPEN`.
 
 ## Start state (Phase 2 accepted 2026-11-23)
 

@@ -31,6 +31,7 @@ import '../../data/repositories/transfers.dart';
 import '../../data/repositories/write_plan.dart';
 import '../../domain/periods/budget_month.dart';
 import '../../domain/periods/period_range.dart';
+import '../../features/import/import_models.dart';
 import '../account_draft_store.dart';
 import '../accounts_gateway.dart';
 import '../history_gateway.dart';
@@ -560,6 +561,7 @@ final class DemoComposition {
       history: historyGateway,
       imports: importGateway,
       importFiles: const SyntheticFileIntake(),
+      importPasswords: MemoryImportPasswordVault(),
       initialLocation: const String.fromEnvironment(
         'DEMO_ROUTE',
         defaultValue: '/x03',

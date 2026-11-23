@@ -27,6 +27,7 @@ class X63Import extends StatefulWidget {
     required this.accounts,
     required this.onClose,
     required this.onOpenInbox,
+    this.passwords,
     this.controller,
     super.key,
   });
@@ -36,6 +37,7 @@ class X63Import extends StatefulWidget {
   final AccountsGateway accounts;
   final VoidCallback onClose;
   final VoidCallback onOpenInbox;
+  final ImportPasswordVault? passwords;
   final ImportController? controller;
 
   @override
@@ -44,9 +46,14 @@ class X63Import extends StatefulWidget {
 
 class _X63ImportState extends State<X63Import> {
   late final ImportController _controller = widget.controller ??
-      ImportController(gateway: widget.gateway, intake: widget.intake);
+      ImportController(
+        gateway: widget.gateway,
+        intake: widget.intake,
+        passwords: widget.passwords,
+      );
 
   final TextEditingController _password = TextEditingController();
+  final ValueNotifier<bool> _remember = ValueNotifier<bool>(true);
   List<AccountSummary> _accounts = const <AccountSummary>[];
   AccountSummary? _account;
   bool _dialogOpen = false;
@@ -102,19 +109,18 @@ class _X63ImportState extends State<X63Import> {
       barrierDismissible: false,
       onPrimary: () => Navigator.of(context).pop(true),
       onSecondary: () => Navigator.of(context).pop(false),
-      child: AppField(
-        label: l.importPasswordField,
-        semanticLabel: l.importPasswordField,
+      child: _PasswordForm(
         controller: _password,
-        obscureText: true,
-        autofocus: true,
-        onSubmitted: (_) => Navigator.of(context).maybePop(),
+        remember: _remember,
       ),
     );
     _dialogOpen = false;
     if (!mounted) return;
     if (confirmed == true) {
-      await _controller.submitPassword(_password.text);
+      await _controller.submitPassword(
+        _password.text,
+        remember: _remember.value,
+      );
       _password.clear();
       if (!mounted) return;
       if (_controller.step == ImportStep.password) {
@@ -132,6 +138,7 @@ class _X63ImportState extends State<X63Import> {
       _controller.dispose();
     }
     _password.dispose();
+    _remember.dispose();
     super.dispose();
   }
 
@@ -192,6 +199,43 @@ class _X63ImportState extends State<X63Import> {
             );
         }
       },
+    );
+  }
+}
+
+/// X64: the password field and the "Remember" toggle.
+class _PasswordForm extends StatelessWidget {
+  const _PasswordForm({required this.controller, required this.remember});
+
+  final TextEditingController controller;
+  final ValueNotifier<bool> remember;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return ValueListenableBuilder<bool>(
+      valueListenable: remember,
+      builder: (BuildContext context, bool value, _) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          AppField(
+            label: l.importPasswordField,
+            semanticLabel: l.importPasswordField,
+            controller: controller,
+            obscureText: true,
+            autofocus: true,
+            onSubmitted: (_) => Navigator.of(context).maybePop(),
+          ),
+          const VSpace(Space.s),
+          ToggleRow(
+            name: l.importPasswordRemember,
+            description: l.importPasswordRememberHelper,
+            value: value,
+            onChanged: (next) => remember.value = next,
+            semanticLabel: l.importPasswordRemember,
+          ),
+        ],
+      ),
     );
   }
 }
