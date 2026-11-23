@@ -146,10 +146,9 @@ Section colour marks only: the selected period chip, the selected segment tab, t
 | TOKEN | OBSIDIAN DARK | OBSIDIAN LIGHT | GLYPH |
 |---|---|---|---|
 | `data.signed.gain` | #3DF2B0 (13.9:1 on page) | #076B49 (5.9:1) | ▲ `glyph.gain` |
-| `data.signed.loss` | #FF7A8A (8.0:1) | #C8324B (4.7:1) | ▼ `glyph.loss` |
+| `data.signed.loss` | #FF7A8A (8.0:1) | #C2263A (4.85:1) | ▼ `glyph.loss` |
 
 - Gain and loss always carry a sign (+/−) and, in charts and pills, the glyph. Colour is never the only signal.
-- Open: some figures use #C2263A for Light loss text. The token is #C8324B. Unify the figures at regeneration.
 
 **Flow groups (calendar, timelines, cash flow).** Shape first, colour second.
 
@@ -681,7 +680,7 @@ Stop at the first step that works.
   - Deeper section fills (2.3), so white `text.onSection` reaches 4.5:1 or more.
   - The ink role is split (2.2).
   - Data text uses Light text tints; marks use Light mark values (2.4, DATA-LIGHT).
-  - Hero number fill: dark #FFFFFF → #9C9EA8, Light #16171B → #4B4E57 (both stops 7:1 or more on the page).
+  - Hero number fill: dark #FFFFFF → #9C9EA8, Light #16171B → #4A4D56 (both stops 7:1 or more on the page).
 - Both themes are checked in the gallery and goldens. If a screen fails in one theme, fix **tokens**, never a screen.
 
 ---
@@ -727,7 +726,7 @@ Agents have no design tool. They build from the Obsidian figures in contour-desi
 - **Quiet lists.** Rows: icon or colour mark, name, one grey line, value. At large text, labels wrap and amounts move under them. Tables keep full amounts in a scroll region with a scroll cue.
 - **One tab bar.** Floating bar (`elevation.nav`, blur allowed), four sections and one Add in `action.neutral.fill`. At large text it reflows and keeps one Add.
 - **No decoration.** No images or illustrations. The only patterns are data marks.
-- **Bounded gradient rule.** Gradients only for: (a) the page spotlight, metal card and rim, scroll-edge fades, all static; (b) `action.selected.fill`, with `text.onSection` at 4.5:1 or more on both stops; (c) the hero number fill, only if both stops reach 7:1 on the page (dark #FFFFFF → #9C9EA8; Light #16171B → #4B4E57). Lint `no_gradient_on_data`.
+- **Bounded gradient rule.** Gradients only for: (a) the page spotlight, metal card and rim, scroll-edge fades, all static; (b) `action.selected.fill`, with `text.onSection` at 4.5:1 or more on both stops; (c) the hero number fill, only if both stops reach 7:1 on the page (dark #FFFFFF → #9C9EA8; Light #16171B → #4A4D56). Lint `no_gradient_on_data`.
 - **Calm motion and glow.** No loop, pulse, wave, shimmer or spinner (2.10). Glow only on end points (GLOW-001).
 
 ### 14.2 Anatomy of the templates

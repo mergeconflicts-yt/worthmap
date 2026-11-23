@@ -1,4 +1,5 @@
 import 'package:contour/design/design.dart';
+import 'package:contour/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,7 +20,8 @@ Future<void> loadContourFonts() async {
   await display.load();
 }
 
-/// Wraps [child] in the app theme, a section and a text scale, as a screen does.
+/// Wraps [child] in the app theme, a section, a text scale and the English
+/// localizations, as a screen does.
 Widget goldenApp({
   required ThemeData theme,
   required Section section,
@@ -29,6 +31,8 @@ Widget goldenApp({
   return MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: theme,
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
     home: SectionScope(
       section: section,
       child: Builder(

@@ -238,7 +238,7 @@ Wrong numbers destroy trust. Everything in this section is required.
 
 ### 4.6 Glance priority
 
-Order on Home and at the top of each category screen: consequence first, then frequency. (Home now puts the position first; open question GLANCE-ORDER, 6.2.)
+Order on Home and at the top of each category screen: consequence first, then frequency. (The user's main number is first on Home; a saved layout replaces the order below it; 5.5.)
 
 1. **Needs action:** facts with a date or a missing step (payment due, renewal, filing date, items to check, low expected balance). Neutral, never alarms.
 2. **Available money:** cash you can use, what is due, next income.
@@ -275,6 +275,34 @@ Order on Home and at the top of each category screen: consequence first, then fr
 | Old price | Price older than the last market close (offline) | Status banner and "Est." on totals |
 | Hidden | Amounts hidden by the user | "$·⋯·" (currency mark stays); percentages stay visible. Charts keep their shape and hide text and amount labels. Spoken labels are masked too |
 
+### 4.10 Transfer costs and fees
+
+- Principal and fee are separate postings. The two principal postings of a transfer move value between the user's own accounts. They are neither money in nor money out, and they change net worth only when the two accounts differ in net-worth scope.
+- A charged fee is a cost. Post it once, in the paying account's currency, for the amount actually charged. It is money out: it reduces cash and net worth, and it counts in Spent and therefore in Kept. It is not part of the transfer principal and never a second copy of the transfer amount.
+- Only the charged amount posts. A percentage or a preview shown before Save is a calculation, not a posting. A repeated Save returns the first result (F05-D).
+- The exchange spread is a comparison only. The difference between the rate received and the mid-market rate is shown ("plus $5.96 from the rate difference"). It is never posted, never added to the fee and never counted as money out. "What this transfer costs" may add both for comparison; the saved cost is the fee alone, and its caption says so.
+- Capitalised fees stay in cost basis. A fee or tax included in an investment's cost basis is part of Invested (4.5), and a sale fee reduces proceeds. It is not money out and does not change net worth by itself, because the value moved into or out of the asset.
+- No category unless set. A fee carries the fee kind and no category until the user sets one. It is never folded into the transfer's category or the user's chosen transfer amount. The spending breakdown accounts for every money-out amount, so an uncategorised fee is not lost from Spent.
+- Fees count against limits. Spent includes fees (4.4), so a fee counts against the sum of the user's limits. It has no limit of its own unless its category has one. The app shows the arithmetic, not a warning (2).
+- One fee per event. A transfer, card repayment or occurrence settlement posts at most one fee; a second fee is a second event. A fee is never merged with or duplicated from the transfer amount.
+- Boundary transfer. When one account counts in net worth and the other does not, the principal changes net worth without changing Kept. The printed four-part bridge has no part for this, so the attribution shows Missing until a part is defined (DECISIONS P2-TRANSFER-BOUNDARY). The transfer, the account balances and net worth stay correct.
+
+### 4.11 Refunds, reimbursements and money owed to you
+
+- Two different cases. A refund is money a merchant returns for an earlier purchase. A reimbursement is money another party pays back for a payment the user made. Neither is income, and neither is a second copy of the original amount.
+- Refund rule. A confirmed refund reduces spending in the original category, in the refund month by default. The setting "Refunds" (Settings > Money) chooses the refund month or the purchase month. The reduction applies to the period totals; the original payment is not rewritten. An unmatched positive amount from a merchant becomes an Inbox decision (4.2).
+- Reimbursable payment. A payment marked Reimbursable is not personal spending from its own date. The money owed back is an expectation. The confirmed repayment is a positive posting linked to the payment, excluded from income, and it reduces the expectation once.
+- Refund expected. A payment marked Refund expected stays in spending. The expectation tracks the money coming back. The confirmed refund applies the period rule above.
+- One reason per payment. Reimbursable and Refund expected are exclusive. Turning one on clears the other and its open expectation; the payment amount, date and category do not change.
+- Expectation record. An expectation is a known incoming amount with an optional date, a kind (reimbursement, refund, deposit, other money owed) and, for a reimbursement or a refund, a link to its payment. It is Expected: it is never cash you can use, never income and never in net worth. "Owed to you" lists it with its basis and count (4.3, 4.9).
+- Expectations without a payment. A deposit held by another party, or other money owed, is an expectation with no linked payment. It follows the same Expected rules.
+- Partial receipt. Each confirmed repayment or refund reduces the remaining expectation once. A receipt never exceeds the remaining amount; a larger receipt keeps its unallocated part, and no remainder becomes zero silently (8.17).
+- Cancel an expectation. While no money is confirmed, the user can cancel an expectation. A reimbursable payment then counts as personal spending from its own date, and a refund expectation closes with spending unchanged. The change is recorded; it is not a silent reclassification.
+- Reverse a confirmed receipt. A reversal is a compensating posting dated when it happens. It reopens the expectation with the remainder and never rewrites a past period (8.18).
+- Passed dates are facts. An expectation whose date has passed keeps its date and its Expected state. It is never labelled overdue, late or missed (2).
+- No double count. The original payment, the expectation and each confirmed receipt keep separate identities and typed links, so one amount is never counted twice in spending, income or "Owed to you".
+- Test values. Appendix A's "Owed to you" is $2,640: a work reimbursement of $640 and a rent deposit of $2,000. Both are Expected, and neither is in net worth.
+
 ## 5. Information architecture and navigation
 
 ### 5.1 Tab bar
@@ -288,8 +316,8 @@ Order on Home and at the top of each category screen: consequence first, then fr
 | Plan | amber-orange | Plan, sub-tab Calendar (X50Calendar) |
 
 - Floating tab bar, 64 pt, icon-only Add pill. The active tab shows its section colour. Sizes and colours: DESIGN 2.7 `size.tabBar`.
-- Home header: Hide amounts, Inbox (count badge), Settings. Home has no Search.
-- Search opens from the Spending header (X15Search). All payments has its own search field. Tools open from the Plan header.
+- Home header: Hide amounts, Inbox (count badge), Settings. A Search field sits below the Home title (5.5).
+- Search also opens from the Spending header (X15Search). All payments has its own search field. Tools open from the Plan header.
 
 ### 5.2 Sub-tabs (one control row)
 
@@ -330,6 +358,21 @@ Order on Home and at the top of each category screen: consequence first, then fr
 | 5b. Investments | X43, X43j, X44, X43c (class), X43b (market), X43d (sector), X43e, X43f, X43g, X43h, X45, X89 |
 | 6. Plan | X50, X50b, X51, X52, X53, X55, X56, X57, X58, X59, X59b |
 | 7. Monthly close and settings | X70, X71, X80, X81, X82, X83, X84, X85, X86 |
+
+### 5.5 Entry points and action order
+
+- One filled action per screen (3.3). Precedence: (1) an unresolved decision that blocks the screen's task; (2) the screen's task action (Save, Confirm selected, Show results, Create account); (3) every other action in neutral or ghost style. A blocking decision owns the filled action until it is resolved; the task action is secondary until then.
+- Inbox (X60). While a "needs a decision" item is unresolved, that decision's affirmative choice is the filled action and its other choice is secondary. Confirm is secondary while any decision is unresolved. When none remain, Confirm selected becomes the filled action; the confirm bar stays after the list in the scroll flow (DESIGN 6.6). An item sheet (X61) keeps its own Confirm as the item action.
+- Add context. The tab bar Add follows 5.3. A screen that knows a narrower context overrides its tab default for its own Add:
+  - Repeating (X34) and a repeating detail (X35): the schedule editor (C02).
+  - A calendar day sheet (X51): a payment form dated to that day; the repeating choice inside the form is explicit and opens C02 only after that choice.
+  - Home and the Spending root: the expense form. Wealth, Goals and Protect: the chooser with the context option first (5.3). Plan > Tax (v1.2): the repeating option first.
+  - A screen without the tab bar has at most one header add action, with the same context rule. No screen shows two add controls.
+- Long-press Add starts voice input in the payment form on every screen that shows the Add control, including Repeating. The override changes the tap only.
+- Disabled entries. A feature that is not released, not available on the platform or not permitted is absent from navigation, the Add chooser, deep links and shortcuts. A direct link to an unavailable target returns to the nearest available parent with a factual status; it never enables the feature (shared contract 6).
+- Search entry. Search sits below the Home title (X10) and in the Spending header (X30); All payments (X37) has its own search field. Search opens X15 and runs on this phone only. No other header carries a search control.
+- Main number. Settings > Screens and widgets > Main number on Home (X13) chooses the hero number: Available until [date], Net worth (default), Spent this month, Cash you can use now. The choice replaces the hero number and its basis line. The net-worth target line, the 12-month change figure and the 12-month chart belong to net worth and appear only when net worth is the main number. The hero is not a widget: hide, reorder and add never change it (W1–W3).
+- Glance order. The main number is first. Below it, the default layout follows 4.6: needs action, available money, this month, overall position, progress. A saved layout replaces that default order and keeps every card available (W4, W13).
 
 ## 6. Screen specifications
 
@@ -427,13 +470,13 @@ One line, on-device rules, no AI service.
 
 ### 8.4 Receipt photo (OCR)
 
-- Camera or local image → verified on-device OCR (iOS Apple Vision; Android audited bundled engine from the foundation spike). No telemetry, model download or cloud fallback.
+- Camera or local image → verified on-device OCR (iOS Apple Vision; Android audited bundled engine from the foundation spike; engine policy 8.19). No telemetry, model download or cloud fallback.
 - Read total (largest amount near total words, local language), date, merchant (first lines), currency. Outline read fields; tap another line to change one.
 - Keep the image (encrypted) only if "Keep the receipt image" is on.
 
 ### 8.5 QR and barcode receipts
 
-- Verified local decoder (iOS platform; Android audited bundled). No network SDK or model download.
+- Verified local decoder (iOS platform; Android audited bundled; engine policy 8.19). No network SDK or model download.
 - Parsers: `canParse(payload)`, `parse(payload)`. v1: generic URL with amount/date parameters, EPC QR (SEPA), one national e-receipt. New parsers are data or plug-ins, never core changes.
 - No match: offer the receipt photo.
 
@@ -462,13 +505,13 @@ One line, on-device rules, no AI service.
 - Near duplicate (same amount and currency, ±2 days, merchant similarity ≥ 0.8) → Inbox "Same purchase twice?". File hash seen before → ask first.
 - Merchant normalisation: upper case; strip card and store numbers, dates, network words, extra spaces; show a clean name ("WHOLEFDS MKT 10231" → "Whole Foods").
 - Category order: user rules (priority), learned rules, default keyword rules, none. After 2 changes for one merchant, offer a rule once.
-- Generate repeating items and vests on start and daily where the OS allows. `autoCreate = false` → Inbox item.
+- Generate repeating items and vests on start and daily where the OS allows. Generation never writes an actual payment: an occurrence stays Expected until a confirmation or an accepted match (8.17). `autoCreate = false` routes the proposal to the Inbox.
 - Same merchant, amount ±10%, 3+ months → Inbox "Add as repeating?".
 - **Price changes:** a different repeating amount is recorded and shown ("Netflix $15.49 to $17.99") in needs-attention facts and on the item.
 
 ### 8.10 Voice input
 
-- **On device only.** iOS: `SFSpeechRecognizer` with `requiresOnDeviceRecognition = true` or the newer on-device API. Android 12+: check availability, then `SpeechRecognizer.createOnDeviceSpeechRecognizer`; the offline preference flag is not enough. Other devices: typed entry unless an audited bundled engine exists.
+- **On device only** (8.19). iOS: `SFSpeechRecognizer` with `requiresOnDeviceRecognition = true` or the newer on-device API. Android 12+: check availability, then `SpeechRecognizer.createOnDeviceSpeechRecognizer`; the offline preference flag is not enough. Other devices: typed entry unless an audited bundled engine exists.
 - Unavailable: "Voice input is not available on this device for [language]. You can type instead." No server fallback.
 - Audio never saved; transcript kept only until Save or Cancel. Ask permission at first Speak tap, after explainer X87.
 - **Parsing =** quick add parser plus: spoken numbers ("forty", "twelve fifty", "1.2k"); currency words ("dollars", "bucks", "euros", "rupees"); merchant after "at"/"from" (fuzzy match); category after "for"/"on"; dates ("last Friday", "two days ago"); account after "with", "using", "on my"; "got", "received", "salary" → Income.
@@ -509,6 +552,84 @@ Every record can be added and edited by hand; this is the fallback for everythin
 ### 8.15 Watched folder (v1.1, optional)
 
 - Watch only an app-owned local staging folder, never cloud or document-provider folders. New PDF/CSV bytes enter the Inbox when the unlocked app opens.
+
+### 8.16 Drafts
+
+- A draft keeps the structured inputs of one form. It survives Back, Close, lock, background and process death, so no typed work is lost. It holds no audio, transcript, raw file bytes, file name, PDF password, email text or attachment content; a "filled from your voice" or "please check" marker on a field is a draft state, not source text (8.10, 10.5; F04).
+- Identity. Each draft has its own ID, a form type, a schema version and the revisions of the records it references. The form type names the editor: payment, transfer, account, scheduled payment, category or rule, and later editors by the same rule. Drafts never share an ID and none replaces another.
+- Opening a form. A form with a kept draft of its type offers that draft, most recent first. The draft selector (C11) lists every kept draft and resumes the selected one. A new draft starts only by explicit choice; a capture path never replaces a kept draft silently. On resume the referenced records are checked again: a record that no longer exists shows its factual state and its field asks again (F03 recovery).
+- Fields kept. Only the form's editable inputs. Derived facts, outcomes and imported source rows are never draft fields.
+
+| EDITOR | DRAFT FIELDS |
+|---|---|
+| Payment (X20, X25) | type (expense or income), amount, currency, date, account, category, tags, note, merchant text, split parts, check markers |
+| Transfer (X26) | From, To, amount, date, fee |
+| Account (C01) | name, type, currency, institution, isLiability, isLiquid, includeInNetWorth, ownership percent, minimum balance, overdraft limit, colour, opening balance and its date |
+| Scheduled payment (C02) | name, kind, amount, currency, account, category, recurrence, start and end date, auto-create, autopay, trial end, renewal date, cancellation address |
+| Category or rule (C03) | name, parent, kind, colour, icon, isEssential; for a rule the match type, pattern, category, priority and origin |
+
+- Durability. The editor writes the draft when a field value is committed: a field loses focus, a sheet returns Done, or amount entry ends (keypad dismissed or another field takes focus). It also writes before the app leaves the foreground or locks. A keystroke or keypad digit still inside the editor is not a separate write. After the last write, process death keeps the draft.
+- Back and Close keep the draft and show "Draft kept". Back from a child sheet keeps the parent draft and drops only that sheet's edits. An explicit Discard deletes the payload and any temporary attachment material, writes no financial record, and returns to the caller unchanged.
+- Save. Save validates the current values and the referenced records. A validation failure keeps the editable draft and writes nothing. A submission freezes the payload, its digest and the expected record revisions with one operation ID, and marks the draft submitted; repeat taps return the same operation. The commit deletes the payload and temporary material in the same transaction and marks the draft committed with its operation ID. A proven rollback returns it to editing, and the next Save uses a new operation ID. An unknown outcome stays submitted until the original operation ID is resolved through its receipt (SYSTEM_DESIGN 6; DATABASE_DESIGN 6).
+- No expiry. A draft stays until Save commits or the user discards it. Age, count and background time never remove it.
+- Bounds. One payload stays within the schema bound (256 KiB). A larger payload is a validation failure next to the affected field: nothing is written and the editor stays open.
+- App and schema versions. A draft carries the schema version of its form. After an upgrade it migrates to the current form schema, or it keeps its payload and shows its unsupported state with Discard only (DATABASE_DESIGN 10).
+- Lock, background and restore. Lock and background keep the draft, stop capture hardware and clear the transcript (F04). A restore invalidates drafts of the old database generation; they are not offered (SYSTEM_DESIGN 5.2, 13.2).
+- Delete all data removes drafts with the rest of the records (11).
+- Draft values are personal data. They never appear in a log, an error message or a diagnostic (2, 10.5).
+
+### 8.17 Occurrences, matching and confirmation
+
+- Terms. An Expected occurrence is a dated payment that a rule or a user expects. A match candidate is a staged record that may be the same payment as an existing one. A decision is the user's explicit choice about a candidate or an occurrence. An obligation is the amount expected on a date with one stable identity; a settlement is an accepted payment applied to it (DATABASE_DESIGN 4.3).
+- Source identity. Every incoming record carries a stable source identity: namespace, account scope and source row identity. A repeat of a known identity returns its staged, accepted or tombstoned result; it never creates a second payment or a second Inbox item. A content fingerprint (8.9) is a candidate, never proof (DATABASE_DESIGN 6).
+- Candidates. Equal content, a near duplicate (same amount and currency, ±2 days, merchant similarity 0.8 or more) or a possible transfer pair is a candidate. The app never merges, links or deletes on similarity alone. An undecided candidate stays unticked, and its affected items wait (F07-A).
+- Linked pairs. A transfer pair links two confirmed postings once. A confirmation reuses an existing confirmed posting, never copies an existing pair, and leaves an uncertain counterpart unresolved (F05-B).
+- One proposal per occurrence. A schedule produces one Expected occurrence per slot, with `(schedule_id, occurrence_key)` as its identity. A due occurrence appears at most once in the Inbox. Re-running the generator, reopening the app or a retry never adds a second proposal (F09-A).
+- Generation is never an actual. The generator writes Expected proposals only. A payment becomes actual by an explicit confirmation of the occurrence or by accepting a matching payment. No rule, timer or background job creates a confirmed payment (DATABASE_DESIGN 4.3).
+- Review path. The schedule option "Add it to the Inbox to confirm" chooses where a due proposal waits: in the Inbox, or as a ready proposal with one confirm action on its own detail. Both routes use the same confirmation command and the same checks. No setting creates an actual payment without a confirmation, so the earlier caption "Off: added automatically" does not apply.
+- Unpaid remainder. A confirmed payment settles the obligation once. Unpaid = obligation − accepted settlements (1,240 − 500 = 740); the forecast and "due before next income" read the unpaid amount and never subtract the original again (F05-C). A partial payment keeps the occurrence open with its remainder.
+- Over-payment. A settlement never exceeds the remaining obligation. A larger payment keeps its unallocated part; no remainder becomes zero silently. A cross-currency settlement stays unavailable until conversion evidence is defined (v1.1).
+- Decisions. Accept, edit, skip, match and cancel each append an explicit, dated decision. Each is one action. A decision is durable; an undo adds a compensating decision and keeps the occurrence identity.
+- Rule edits. A changed rule keeps every occurrence identity: unchanged slots keep their proposal, changed slots need a review before submission, and matched, confirmed or partly settled occurrences keep their identity and settlements. Amount or date similarity never proves an unchanged slot.
+- One obligation, many aliases. A card statement, a recurring rule and a one-off entry can point to one obligation. The forecast, the calendar and "due before next income" read it once, and a statement payment reduces cash and the statement remainder once (F05-C).
+- One-off future payments. A dated payment that happens once is created with recurrence off and keeps its own obligation identity. It is not a rule with one occurrence, it never generates a second occurrence, and it stays Expected until a confirmation or an accepted match.
+- Price changes. A different actual amount records a dated price change ("was $15.49"). Editing an estimate never rewrites an earlier actual payment (8.9).
+- Confirmation is atomic. A confirmation writes the payment, its links, its decisions and the ChangeLog in one transaction. A repeated confirmation returns the first result (F07-D); if one selected row fails, nothing is accepted (F07-C).
+- Expected is never in a total. Until confirmation, an occurrence changes no balance, no spending total and no net worth (4.3, 4.9).
+
+### 8.18 Undo and activity history
+
+- Scope. Undo reverses one confirmed financial event or one confirmed batch: a payment (create, edit or delete), a transfer with its fee, a split change, a confirmed occurrence decision or a settlement, and an Inbox confirmation batch. A settings, layout, category or rule change is corrected by editing it again; Activity history lists it as a change, but Undo does not reverse it.
+- Undo is a new command. It has its own operation ID and receipt, writes compensating records and a ChangeLog entry, and never rewrites an old row or replays stored JSON. An edit is undone by restoring the earlier values as a new revision. The original record keeps its identity.
+- Whole event or batch. One command reverses every effect of the event or batch: linked postings, splits, tags, attachments, decisions and settlements. A batch is never partly undone.
+- Toast. After a commit the app shows one toast that names the event and offers one Undo for 5 seconds (DESIGN 6.6). The toast appears only after a confirmed write; a failed or unconfirmed write shows neither success nor Undo. After it closes, the same action stays in Activity history.
+- History access. Settings > App > Activity history (C06) lists confirmed events and batches, newest first: what happened, when, the affected records and the state (reversible, reversed, blocked). One entry opens its records and the one action its state allows. History is local and holds no raw source text.
+- No age limit in history. The 5 seconds apply to the toast only. An entry stays while its records exist, and a reversed entry keeps its place next to its compensating record.
+- Dependencies. If a later authoritative record depends on the target (a settlement, an allocation, a saved close or a later edit), Undo does not proceed and writes nothing. The entry opens the dependency sheet, which names each blocking record and its reason. The user opens that record, resolves it with its own controls, and starts Undo again, or cancels. Undo never edits or deletes a dependent record on the user's behalf, and it never overwrites a newer value.
+- Identities. Undo keeps source identities reserved and keeps soft-deleted records as history. A repeated Undo of the same event returns the first result and writes nothing new.
+- Occurrences. Undoing a confirmed occurrence decision adds a compensating decision and keeps the occurrence identity; it never reopens a suppressed proposal by dropping a pointer (8.17).
+- Attachment files. A soft-deleted record keeps the files that Undo, history and recovery need; explicit deletion removes them after those references go (DATABASE_DESIGN 10).
+- Editor Undo is separate. The widget editor's Undo reverses one edit-session action before Done and writes nothing (W5; DATABASE_DESIGN 5.1). It is not an entry in Activity history.
+- Staging is not Undo. "Undo this import" (X68) removes staged rows before any confirmation and changes no financial record; it is not an entry in Activity history.
+- Privacy. Activity history is personal data on this phone. It never appears in a log, an error message or a network request.
+
+### 8.19 Local capture engines
+
+- Rule. Speech, text recognition, QR and barcode decoding, and any later capture engine, run on the phone. No engine sends audio, images, text, identifiers or metrics to a server, downloads a model at run time, or falls back to a remote service.
+- Verified engine. An engine counts as verified only when all of these hold:
+  - it exposes an on-device mode and the app uses that mode;
+  - it works with every network interface off, on each supported OS version, in a recorded test;
+  - its telemetry or metrics are off or absent; an SDK that cannot disable them is rejected;
+  - its dependency passes the licence and release rules and its network statement is in `docs/DECISIONS.md`;
+  - availability is checked by an explicit API, never by a user preference flag alone.
+- Named engines. iOS speech uses `SFSpeechRecognizer` with on-device recognition. Android 12+ speech uses the on-device `SpeechRecognizer` after its availability check; Android 8–11 keeps typed entry unless an audited bundled engine is verified. Text recognition uses Apple Vision on iOS and an audited bundled engine on Android. QR and barcode use the platform decoder on iOS and an audited bundled decoder on Android. ML Kit is excluded because its terms include network metrics (SYSTEM_DESIGN 10).
+- Unavailable. When the engine or the language is unavailable, the app says so in one sentence and keeps typed or file entry: "Voice input is not available on this device for [language]. You can type instead." It does not retry in the background, does not prompt again and does not use a server.
+- Permission. The explainer (X87) comes before the OS prompt and only on the first use. A denial keeps manual entry; Settings may offer the permission again. No automatic prompt after a denial.
+- Data. Audio is never saved. The transcript is held only until Save, Cancel, leaving the capture, background or lock. Images are deleted after parsing unless the user keeps the receipt image. An engine receives only the capture content, never account names, balances or other records.
+- Output. Recognition fills draft fields with a check marker per field. An uncertain field stays editable and is marked. Low confidence never invents a value: no amount leaves the keypad active, and no category is guessed.
+- Feature availability. A capture source that needs an unavailable engine is absent or shown as unavailable in Settings. It never blocks the manual form.
+- Evidence per engine. The task that adds an engine records its name and version, its availability check, the network-off test log, its telemetry statement and its dependency entry. Without these, the engine does not ship.
+- No degraded mode. An engine that cannot meet these conditions is removed, not replaced by a remote call.
 
 ## 9. Data model
 

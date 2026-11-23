@@ -52,7 +52,7 @@
 | color.text.secondary | #A3A6AF | #5A5D67 |
 | color.text.control | #C9CBD3 | #3C3F48 |
 | data.signed.gain ▲ | #3DF2B0 | #076B49 |
-| data.signed.loss ▼ | #FF7A8A | #C8324B |
+| data.signed.loss ▼ | #FF7A8A | #C2263A |
 
 - The rim is only on a top-level GlassCard. Never on tiles, rows or controls. No card in a card.
 

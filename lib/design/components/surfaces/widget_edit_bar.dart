@@ -1,3 +1,4 @@
+import 'package:contour/l10n/generated/app_localizations.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../icons/app_icons.dart';
@@ -6,8 +7,8 @@ import '../../tokens/space.dart';
 import '../../tokens/tokens.g.dart';
 import '../buttons/app_button.dart';
 
-/// DESIGN 6.7, SPEC W4: the edit-mode control row. The words come from l10n
-/// (T10); a feature passes them in.
+/// DESIGN 6.7, SPEC W4: the edit-mode control row. The words come from l10n;
+/// a feature passes them in (the parameters are the component API).
 final class WidgetEditBarLabels {
   const WidgetEditBarLabels({
     required this.add,
@@ -16,6 +17,18 @@ final class WidgetEditBarLabels {
     required this.resetDefault,
     required this.done,
   });
+
+  /// AGENTS 6.9: the l10n lookups (T06-L10N-CONSTANTS closed 2026-11-22).
+  factory WidgetEditBarLabels.of(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return WidgetEditBarLabels(
+      add: l.widgetEditAdd,
+      cancel: l.widgetEditCancel,
+      undo: l.widgetEditUndo,
+      resetDefault: l.widgetEditReset,
+      done: l.widgetEditDone,
+    );
+  }
 
   final String add;
   final String cancel;

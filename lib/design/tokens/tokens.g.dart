@@ -63,6 +63,8 @@ abstract final class ColorTokensDark {
 
   static const Color roleBorderChip = Color(0x1FFFFFFF);
 
+  static const Color roleBorderDraft = Color(0x38FFFFFF);
+
   static const Color roleFocusRing = Color(0xFFFFFFFF);
 
   static const Color roleStateGain = Color(0xFF3DF2B0);
@@ -237,11 +239,13 @@ abstract final class ColorTokensLight {
 
   static const Color roleBorderChip = Color(0x1A16171B);
 
+  static const Color roleBorderDraft = Color(0x4016171B);
+
   static const Color roleFocusRing = Color(0xFF16171B);
 
   static const Color roleStateGain = Color(0xFF076B49);
 
-  static const Color roleStateLoss = Color(0xFFC8324B);
+  static const Color roleStateLoss = Color(0xFFC2263A);
 
   static const Color roleStateNeutral = Color(0xFF5A5D67);
 
@@ -283,7 +287,7 @@ abstract final class ColorTokensLight {
 
   static const Color dataSignedGain = Color(0xFF076B49);
 
-  static const Color dataSignedLoss = Color(0xFFC8324B);
+  static const Color dataSignedLoss = Color(0xFFC2263A);
 
   static const Color dataFlowSpending = Color(0xFFB0164F);
 
@@ -493,7 +497,7 @@ abstract final class GradientTokensLight {
 
   static const GradientSpec roleTextHeroFill = GradientSpec(
     angle: 90.0,
-    colors: <Color>[Color(0xFF16171B), Color(0xFF4B4E57)],
+    colors: <Color>[Color(0xFF16171B), Color(0xFF4A4D56)],
     stops: <double>[0.0, 1.0],
   );
 

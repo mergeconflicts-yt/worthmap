@@ -2,16 +2,16 @@ import 'package:contour/app/widgets/layout_model.dart';
 import 'package:contour/app/widgets/read_store.dart';
 import 'package:contour/app/widgets/registry.dart';
 import 'package:contour/design/design.dart';
+import 'package:contour/l10n/generated/app_localizations.dart';
 import 'package:flutter/widgets.dart';
 
 /// Phase 1 test widgets (SPEC W8). They exercise the framework with the same
 /// host; the approved X03 catalogue is open (WIDGET-X03-DEFAULT). They never
 /// enter a release layout.
 ///
-/// The words "Not loaded yet" and "None recorded" come from l10n in a later
-/// task (T10). They are constants here so the framework tests are exact.
+/// AGENTS 6.9: the preview cache-miss words come from l10n
+/// (T06-L10N-CONSTANTS closed 2026-11-22).
 // DECISION-PENDING: WIDGET-X03-DEFAULT
-const String testNotLoadedLabel = 'Not loaded yet';
 
 Widget _card(
   BuildContext context, {
@@ -42,7 +42,7 @@ List<WidgetDescriptor> testWidgetCatalogue() => <WidgetDescriptor>[
           context,
           title: 'Test alpha',
           body: resident == null
-              ? testNotLoadedLabel
+              ? AppLocalizations.of(context).widgetNotLoadedYet
               : formatValueState(resident).text,
         ),
       ),
@@ -59,7 +59,7 @@ List<WidgetDescriptor> testWidgetCatalogue() => <WidgetDescriptor>[
           context,
           title: 'Test beta',
           body: resident == null
-              ? testNotLoadedLabel
+              ? AppLocalizations.of(context).widgetNotLoadedYet
               : formatValueState(resident).text,
         ),
       ),
@@ -77,7 +77,7 @@ List<WidgetDescriptor> testWidgetCatalogue() => <WidgetDescriptor>[
           context,
           title: 'Test own',
           body: resident == null
-              ? testNotLoadedLabel
+              ? AppLocalizations.of(context).widgetNotLoadedYet
               : formatValueState(resident).text,
         ),
       ),
@@ -93,7 +93,7 @@ List<WidgetDescriptor> testWidgetCatalogue() => <WidgetDescriptor>[
           context,
           title: 'Test gamma',
           body: resident == null
-              ? testNotLoadedLabel
+              ? AppLocalizations.of(context).widgetNotLoadedYet
               : formatValueState(resident).text,
         ),
       ),
@@ -110,7 +110,7 @@ List<WidgetDescriptor> testWidgetCatalogue() => <WidgetDescriptor>[
           context,
           title: 'Test tile',
           body: resident == null
-              ? testNotLoadedLabel
+              ? AppLocalizations.of(context).widgetNotLoadedYet
               : formatValueState(resident).text,
         ),
       ),

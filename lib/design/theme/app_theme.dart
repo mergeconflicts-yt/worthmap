@@ -48,6 +48,7 @@ class ContourTokens extends ThemeExtension<ContourTokens> {
     required this.iconSecondary,
     required this.borderDivider,
     required this.borderChip,
+    required this.borderDraft,
     required this.focusRing,
     required this.scrim,
     required this.stateGain,
@@ -85,6 +86,7 @@ class ContourTokens extends ThemeExtension<ContourTokens> {
         iconSecondary: ColorTokensDark.roleIconSecondary,
         borderDivider: ColorTokensDark.roleBorderDivider,
         borderChip: ColorTokensDark.roleBorderChip,
+        borderDraft: ColorTokensDark.roleBorderDraft,
         focusRing: ColorTokensDark.roleFocusRing,
         scrim: ColorTokensDark.roleOverlayScrim,
         stateGain: ColorTokensDark.roleStateGain,
@@ -153,6 +155,7 @@ class ContourTokens extends ThemeExtension<ContourTokens> {
         iconSecondary: ColorTokensLight.roleIconSecondary,
         borderDivider: ColorTokensLight.roleBorderDivider,
         borderChip: ColorTokensLight.roleBorderChip,
+        borderDraft: ColorTokensLight.roleBorderDraft,
         focusRing: ColorTokensLight.roleFocusRing,
         scrim: ColorTokensLight.roleOverlayScrim,
         stateGain: ColorTokensLight.roleStateGain,
@@ -220,6 +223,7 @@ class ContourTokens extends ThemeExtension<ContourTokens> {
   final Color iconSecondary;
   final Color borderDivider;
   final Color borderChip;
+  final Color borderDraft;
   final Color focusRing;
   final Color scrim;
   final Color stateGain;

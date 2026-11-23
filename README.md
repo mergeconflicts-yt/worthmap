@@ -36,3 +36,27 @@ a dependency until that task adds it (CR-08).
 
 See AGENTS.md section 3. Rules live in `AGENTS.md`, `spec.md` and `design.md`;
 full detail is in `docs/`.
+
+## Run the demo (debug only)
+
+A debug build starts on Home with synthetic, in-memory data (PF-01: no
+persistence).
+
+```
+flutter run
+```
+
+Home has a **Go to** card with Spending and Add a payment. The other screens
+are in the demo menu at `/dev/gallery` (debug only), or open one directly:
+
+```
+flutter run --dart-define=DEMO_ROUTE=/x30
+```
+
+The seed writes through the normal command path, so the screens read real
+repositories over a temporary SQLite database in memory. Nothing is saved to
+disk and no key is used. The final Home is a Phase 4 screen; this build shows
+the first-run Home with the demo entries.
+
+A release build starts the normal app with the factual unavailable gateways;
+the release composition still waits for DB-A, PF-01 and the tab shell.

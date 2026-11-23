@@ -15,7 +15,7 @@ enum ValueState {
   notAvailable,
 
   /// N-05: the read store is still calculating (W3.4 Loading). The label is
-  /// interim wording until l10n (T10). DECISION-PENDING: T06-L10N-CONSTANTS.
+  /// interim wording until l10n (T10). T06-L10N-CONSTANTS closed 2026-11-22 (DECISIONS "Decided").
   loading,
 }
 
@@ -90,7 +90,7 @@ final class ValuePresentation {
 }
 
 /// The interim wording for a hidden amount. AGENTS 6.9 wants this from l10n;
-/// T10 replaces it. DECISION-PENDING: T06-L10N-CONSTANTS.
+/// T10 replaces it. T06-L10N-CONSTANTS closed 2026-11-22 (DECISIONS "Decided").
 const String amountHiddenLabel = 'Amount hidden';
 
 /// DESIGN 4, 8; SPEC 4.9: the one place that turns a [ValueSpec] into text.

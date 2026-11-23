@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import 'hidden_amounts.dart';
 import 'money_format.dart';
 import 'value_presentation.dart';
 
@@ -12,10 +13,11 @@ import 'value_presentation.dart';
 class MoneyText extends StatelessWidget {
   const MoneyText(
     this.value, {
-    this.hidden = false,
+    this.hidden,
     this.showSymbol = true,
     this.mark,
     this.hiddenLabel,
+    this.prefix,
     this.sign = SignStyle.negativeOnly,
     this.style,
     super.key,
@@ -23,7 +25,9 @@ class MoneyText extends StatelessWidget {
 
   /// The value and its state.
   final ValueSpec value;
-  final bool hidden;
+
+  /// The component override; null follows [HiddenAmountsScope].
+  final bool? hidden;
   final TextStyle? style;
   final String? mark;
   final bool showSymbol;
@@ -35,21 +39,27 @@ class MoneyText extends StatelessWidget {
   /// [amountHiddenLabel].
   final String? hiddenLabel;
 
+  /// A word before the amount, for example "Owes " on a card balance. It is
+  /// part of the pixels and of the spoken name, and it masks with the amount.
+  final String? prefix;
+
   @override
   Widget build(BuildContext context) {
+    final hiddenNow = HiddenAmountsScope.resolve(context, hidden);
     final presentation = formatValueState(
       value,
-      hidden: hidden,
+      hidden: hiddenNow,
       showSymbol: showSymbol,
       mark: mark,
       hiddenLabel: hiddenLabel,
       sign: sign,
     );
+    final prefixText = prefix ?? '';
     return Text(
-      presentation.text,
+      '$prefixText${presentation.text}',
       style: style,
       textAlign: TextAlign.end,
-      semanticsLabel: presentation.semanticsLabel,
+      semanticsLabel: '$prefixText${presentation.semanticsLabel}',
     );
   }
 }

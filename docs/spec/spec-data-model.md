@@ -36,7 +36,7 @@
 - Transaction: accountId, date, amountMinor (negative = out), currency, merchantRaw, merchantName, note, categoryId (nullable), kind (expense, income, transfer, refund, fee, loanIn, saleProceeds), transferPairId, refundOfId, isReimbursable, reimbursementStatus (none, expected, received), source, sourceRef, importBatchId, dedupeHash, isEstimated.
 - TransactionSplit: transactionId, categoryId, amountMinor, note; splits sum to the amount.
 - TransactionLine (receipt items): transactionId, description, quantity, amountMinor.
-- TransferFx: transactionId (sender), sentMinor, sentCurrency, receivedMinor, receivedCurrency, rate, midRate, feeMinor, service. Fee is also a fee transaction.
+- TransferFx: transactionId (sender), sentMinor, sentCurrency, receivedMinor, receivedCurrency, rate, midRate, feeMinor, service. Fee is also a fee transaction and money out (4.10).
 - Category: name, parentId, kind (expense, income), colour, icon, sortOrder, archived, isEssential (user tag).
 - CategoryRule: matchType (merchantEquals, merchantContains, regex, amountRange), pattern, categoryId, priority, createdFrom (user, learned, default), hitCount.
 - Tag, TransactionTag.
@@ -103,11 +103,12 @@
 
 DATABASE_DESIGN owns constraints, checks, query limits, retention, migration and recovery. It does not replace open finance definitions in gates G01–G14.
 
-- Recurring occurrences (DATABASE_DESIGN 4.3): proposals and locators are operational rows. A user accept, edit, skip, match or cancel appends an authored decision and selects an auditable pointer, in the same transaction as any obligation or settlement. Generation never posts actuals or changes a decided occurrence. Scheduled occurrences are stable across rule edits. Expected is not actual. One canonical obligation with typed settlement allocations prevents double subtraction across statement and rule aliases.
+- Recurring occurrences (8.17; DATABASE_DESIGN 4.3): proposals and locators are operational rows. A user accept, edit, skip, match or cancel appends an authored decision and selects an auditable pointer, in the same transaction as any obligation or settlement. Generation never posts actuals or changes a decided occurrence. Scheduled occurrences are stable across rule edits. Expected is not actual. One canonical obligation with typed settlement allocations prevents double subtraction across statement and rule aliases. Money owed to you uses the same incoming-obligation and settlement records (4.11).
 - One Confirm (DATABASE_DESIGN 6): ≤ 5,000 source rows, 100,000 row effects, 16 MiB plan. Over the limit: drafts stay, nothing is written, the user picks a smaller set. Never split silently into partial commits.
 - FinancialEvent groups one command's cash, investment, lot and settlement effects. Transaction is the one canonical cash posting.
 - OperationIntent (with bounded immutable input chunks) records a command; OperationReceipt proves commit. Retries reuse identity and digest; a changed command gets a new ID after the old outcome resolves.
 - SourceIdentity: unique by non-null namespace, source-account scope and row identity. A content hash is only a candidate. Undo and delete keep source identity.
 - Balance and position observations keep original evidence; corrections append; selected pointers keep provenance.
 - CloseRevision and immutable input references keep saved history. DependencyRevision, conservative dirty envelopes and staged/published generations govern derived results.
-- Draft versions, import staging and source claims survive interruption. Save or Discard removes payloads only after the outcome is known.
+- Draft versions (8.16), import staging and source claims survive interruption. Save or Discard removes payloads only after the outcome is known.
+- Undo (8.18) is a compensating command over a whole event or batch. It never rewrites history, never overwrites a later edit and never frees a source identity.

@@ -19,6 +19,7 @@ coverage/
 
 # l10n output
 lib/l10n/app_localizations*.dart
+lib/l10n/generated/
 .i18n/
 
 # IDE
@@ -43,3 +44,11 @@ local.properties
 design-mockups/
 heic/
 .commandcode/
+
+# Golden images are local test output, not source. The harness, tests and
+# generated `*_golden.dart` stay tracked; the PNG baselines do not.
+test/golden/**/*.png
+test/golden/**/failures/
+
+# custom_lint writes this on a plugin error.
+custom_lint.log

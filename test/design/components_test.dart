@@ -224,7 +224,45 @@ void main() {
   });
 
   group('ObHero', () {
+    testWidgets('draws the split number: mark, units and cents',
+        (tester) async {
+      await tester.pumpWidget(
+        goldenHelper(
+          ObHero(
+            kicker: 'Available · today',
+            value: ValueSpec.real(Money.fromMinor(412365, Currency.usd)),
+          ),
+        ),
+      );
+
+      final heroSize = AppText.numberHeroLight.fontSize!;
+      final mark = tester.widget<Text>(find.text(r'$'));
+      final units = tester.widget<Text>(find.text('4,123'));
+      final cents = tester.widget<Text>(find.text('.65'));
+
+      expect(mark.style!.fontSize, closeTo(heroSize * 0.45, 0.01));
+      expect(mark.style!.fontWeight, FontWeight.w300);
+      expect(units.style!.fontSize, heroSize);
+      expect(cents.style!.fontSize, closeTo(heroSize * 0.5, 0.01));
+      expect(cents.style!.color, ColorTokensDark.roleTextSecondary);
+    });
+
+    testWidgets('keeps the full amount in the spoken label', (tester) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        goldenHelper(
+          ObHero(
+            kicker: 'Available · today',
+            value: ValueSpec.real(Money.fromMinor(412365, Currency.usd)),
+          ),
+        ),
+      );
+      expect(find.bySemanticsLabel(r'$4,123.65'), findsOneWidget);
+      handle.dispose();
+    });
+
     testWidgets('masks the number when hidden', (tester) async {
+      final handle = tester.ensureSemantics();
       await tester.pumpWidget(
         goldenHelper(
           ObHero(
@@ -234,10 +272,14 @@ void main() {
           ),
         ),
       );
-      expect(find.text(r'$······'), findsOneWidget);
+      expect(find.text(hiddenMask), findsOneWidget);
+      expect(find.text(r'$'), findsOneWidget);
+      expect(find.bySemanticsLabel('Amount hidden'), findsOneWidget);
+      handle.dispose();
     });
 
-    testWidgets('shows the Estimated marker', (tester) async {
+    testWidgets('shows the Estimated marker in the caption style',
+        (tester) async {
       await tester.pumpWidget(
         goldenHelper(
           ObHero(
@@ -249,7 +291,41 @@ void main() {
           ),
         ),
       );
-      expect(find.text(r'$4,123.65 Est.'), findsOneWidget);
+      final marker = tester.widget<Text>(find.text('Est.'));
+      expect(marker.style!.fontSize, AppText.caption.fontSize);
+      expect(find.bySemanticsLabel(r'$4,123.65 Est.'), findsOneWidget);
+    });
+  });
+
+  group('WidgetSlot', () {
+    testWidgets('editing draws the dashed outline outside the card',
+        (tester) async {
+      await tester.pumpWidget(
+        goldenHelper(
+          const WidgetSlot(
+            variant: WidgetSlotVariant.editing,
+            child: SizedBox(width: 100, height: 50),
+          ),
+        ),
+      );
+
+      final paint = tester.widget<CustomPaint>(
+        find.descendant(
+          of: find.byType(WidgetSlot),
+          matching: find.byType(CustomPaint),
+        ),
+      );
+      final painter = paint.painter! as DashedOutlinePainter;
+      expect(painter.color, ColorTokensDark.roleBorderDraft);
+      expect(painter.strokeWidth, 1);
+      expect(painter.radius, RadiusTokens.card + DashedOutline.gap);
+      expect(
+        find.descendant(
+          of: find.byType(WidgetSlot),
+          matching: find.byType(ExcludeSemantics),
+        ),
+        findsOneWidget,
+      );
     });
   });
 }

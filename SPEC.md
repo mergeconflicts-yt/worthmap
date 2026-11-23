@@ -146,10 +146,12 @@ Wrong numbers destroy trust. Everything in this section is required.
 
 ### Other number rules
 
-- Glance priority (4.6): needs action → available money → this month → overall position → progress. Open question GLANCE-ORDER: Home now puts net worth first (6.2).
+- Glance priority (4.6): needs action → available money → this month → overall position → progress. The main number is first; a saved layout replaces the order below it (5.5).
 - What changed (4.7): net worth change = You kept + Markets + Currency + Values; the parts add up; a missing part is "Missing", never a residual. Shown only in About this number. Open question NW-ABOUT-ENTRY: the entry point to `X40bAboutNumber`.
 - Cash flow forecast (4.8): each account's expected balance day by day until the next income; card spending reaches cash only at the statement payment; show the lowest expected balance and its date.
 - Value states (4.9): Real, Estimated, Expected, None recorded, Missing, Old price, Hidden ("$⋯⋯").
+- Transfer costs (4.10): the principal is not money in or money out; a charged fee is money out, posted once; the exchange spread is a comparison only; a capitalised investment fee stays in cost basis.
+- Refunds and expectations (4.11): a refund reduces spending in its recognition period; a reimbursable payment is not personal spending; money owed to you is Expected, never income or net worth.
 - Full detail: docs/spec/SPEC_REFERENCE.md §4.
 
 ## 5. Information architecture and navigation
@@ -157,6 +159,7 @@ Wrong numbers destroy trust. Everything in this section is required.
 - Tab bar (5.1): Home (`X10Home`), Spending (`X30SpendingOut`), Add (centre; long-press = voice), Wealth (`X40WealthOverview`), Plan (`X50Calendar`).
 - Sub-tabs (5.2): only Plan has sub-tabs (Calendar, Goals, Protect, Tax). Spending and Wealth have none. A sub-tab appears only when its release ships (v1: Calendar; v1.1: Goals, Protect; v1.2: Tax).
 - Add (5.3): Home and Spending open the expense form (`X20AddExpense`); other tabs open the chooser (`X29AddChooser`) with the context option first.
+- Entry and action order (5.5): one filled action per screen; an unresolved Inbox decision owns it; the Add tap follows 5.3 with the Repeating and calendar-day overrides; search sits below the Home title; the main number is chosen in Settings > Screens and widgets.
 - Screen map (5.4): the list of valid screen ids is in the reference.
 - Full detail: docs/spec/SPEC_REFERENCE.md §5.
 
@@ -206,9 +209,13 @@ DESIGN.md is the implementation guide and wins on style. All values come from `l
 
 - Input ladder (8.1): use the highest level available: 1. Automatic (0 taps: repeating, vests, values, prices; v1.1 notifications, FinanceKit, watched folder); 2. One tap (shared statements, QR, receipt photo, screenshot); 3. One sentence (voice, quick add); 4. Form (about 3 taps).
 - All sources feed the Inbox (or the form). Each fact is stored once and used everywhere (8.2).
+- Drafts (8.16): a form keeps its structured fields across Back, Close, lock and process death; Discard deletes them; Save clears them after commit. No expiry, no silent overwrite. Audio, transcripts and raw files are never kept.
+- Expected payments (8.17): a rule or a match makes a payment Expected; one confirmation or one accepted match makes it actual. Content alone never proves a duplicate, and generation never writes an actual payment.
+- Undo (8.18): a confirmed event or batch can be reversed from a 5-second toast or from Activity history; a later dependent record blocks it until resolved; old values are never written over newer edits.
+- Local engines (8.19): speech, text recognition and QR/barcode run on the phone. An engine with telemetry, a model download or a cloud fallback is not used. An unsupported device keeps typed or file entry.
 - Parsing, OCR, QR and voice run on the device only. Audio is never saved. Parsers never write to the database.
 - No email connection of any kind; local attachments use the normal import path (8.12). Never request SMS permission.
-- Full detail (parser grammar, voice test sentences, dedupe, templates): docs/spec/SPEC_REFERENCE.md §8.
+- Full detail (parser grammar, voice test sentences, dedupe, drafts, matching, templates): docs/spec/SPEC_REFERENCE.md §8.
 
 ## 9. Data model
 

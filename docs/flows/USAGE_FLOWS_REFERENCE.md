@@ -100,7 +100,7 @@ flowchart TD
 1. Home, Spending, Wealth and Plan are navigation destinations. Add opens a form or chooser; it is not a fifth tab stack.
 2. Child views open above their caller. Back returns with period, filters, selected account, scroll position and focus intact. A tab switch restores that tab's last state. Re-selecting the active tab returns to its root (FLOW-001).
 3. Sheets keep the parent route. A read-only sheet closes to the same number or row. In edit sheets, Done copies changes into the parent draft; Back/Cancel discards only that sheet's edits.
-4. Context Add follows SPEC 5.3: Home/Spending → expense; Wealth → asset/account first; Goals → goal first; Protect → policy first; Calendar/Tax → repeating payment first. The Repeating override needs `G05`.
+4. Context Add follows SPEC 5.3: Home/Spending → expense; Wealth → asset/account first; Goals → goal first; Protect → policy first; Calendar/Tax → repeating payment first. The Repeating and calendar-day overrides are in SPEC 5.5.
 5. The host route sets Add context and section. Returns opened from Wealth keeps Wealth context. Do not reset Add context because a child has another colour.
 6. Apply release, feature, platform and permission checks at every entry: tab, header link, Add option, import type, deep link, notification, shortcut, background source. A disabled feature is absent from navigation. A direct unavailable target returns to its nearest available parent with a factual status; it never enables the feature.
 7. A pending share/deep link waits behind unlock. Validate its identifiers again after unlock. It may navigate or open a draft; it never replays Save, Confirm or Delete. Route state holds only local identifiers and intent; never amounts, merchants, credentials or file content in URLs or logs.
@@ -109,19 +109,19 @@ flowchart TD
 
 - The active modal owns focus; its dimmed parent Add control is inactive.
 - Form-field choices create no extra control rows.
-- Under `G05`, Inbox has one filled content action: resolve the outstanding decision first, Confirm secondary. Confirm becomes primary after blocking decisions are resolved.
+- SPEC 5.5: Inbox has one filled content action: resolve the outstanding decision first, Confirm secondary. Confirm becomes primary after blocking decisions are resolved.
 
 ### Drafts, saving and cancellation
 
 - A parser produces a draft with per-field confidence. It writes no actual transaction, holding, balance or payment.
 - Manual, quick-add, voice and receipt forms: **Save** is the confirmation. They commit directly; no second Inbox step.
 - Statement/broker transaction preview **Send to Inbox** publishes staged drafts and batch metadata. No actual totals change. **Confirm** later commits accepted records. F12 holdings observations and F16 structured documents use their specified direct review confirmation, with the same source identity and command safeguards (EXECUTION_SAFETY2.1).
-- `G12`: Back/Close keeps structured fields locally and shows "Draft kept". Reopening the same form resumes them. Explicit Discard deletes the draft. A type switch or another capture never silently overwrites an existing draft.
+- SPEC 8.16: Back/Close keeps structured fields locally and shows "Draft kept". Reopening the same form offers the kept draft; the draft selector (C11) lists every kept draft. Explicit Discard deletes the draft. A type switch or another capture never silently overwrites an existing draft.
 - Audio is never saved. Clear voice transcripts after Save/Cancel, on leaving capture, and on background/lock. Stop microphone/camera on background or lock. After unlock, resume structured fields, never capture hardware. Temporary source files follow their parsing/deletion lifecycle; they are not in draft storage.
 - Show validation next to the affected input. Missing optional category or note does not block Save. A split reconciles exactly. A missing required amount/account is never filled with zero.
 - On confirmed Save: disable duplicate submission, validate current references, commit all linked changes and ChangeLog in one repository transaction, then clear the draft. On validation failure or a proven rollback before commit, keep the editable draft and write nothing of that operation. If the commit outcome is unknown, freeze the submitted payload and resolve the original operation ID through its receipt before editing or retrying. A proven commit retries the submitted draft even if a later read-store notification, read or background rebuild fails. Preserve the receipt and accepted facts; retry only read/derived work, with Updating or unavailable state until recovery.
 - A retry uses the same operation identity. It never creates a second transaction or repeats a batch. Show success and Undo only after commit. Test a lost reply, a failed read after commit and a failed background rebuild: each retains one receipt and one fact set; no accepted payment becomes a new editable submission or receives a new operation ID.
-- Undo reverses the whole event/batch. If later edits depend on it, keep those edits and open an explicit resolution flow; never silently replay stale values. Persistent access needs `G06` and C06.
+- Undo reverses the whole event/batch. If later edits depend on it, keep those edits and open an explicit resolution flow; never silently replay stale values. Persistent access and the full rules: SPEC 8.18 (C06).
 
 ### States that every flow must handle
 
@@ -169,7 +169,7 @@ Phase 1 also builds the independent widget registry, surface host, layout reposi
 1. `X10Home` reads current aggregates. A number → `X40bAboutNumber`; Available → `X14ToUseBreakdown`. Close returns to the same position.
 2. Attention card → its card, forecast, Inbox or repeating item. Wealth summary → `X40WealthOverview`. Month totals → their Spending view.
 3. Hide amounts → `X12HomeHidden`, a global presentation state kept across sheets and tabs. Unhide restores display, not data.
-4. `G05` (FLOW-001 placement): Settings > Screens and widgets > Main number on Home → `X13MainNumberSheet`; selection updates the preference; option set gated by `G05`. Search below the Home title → `X15Search` (local) → `X39TransactionDetail` or account detail; Back keeps the query.
+4. SPEC 5.5 (FLOW-001 placement): Settings > Screens and widgets > Main number on Home → `X13MainNumberSheet`; four options with net worth as the default; selection updates the preference. Search below the Home title → `X15Search` (local) → `X39TransactionDetail` or account detail; Back keeps the query.
 5. First days of a month: `X11HomeMonthStart` links to `X70MonthClose`. Under `G10`, "closed" only after a completed close.
 6. Edit widgets, or Settings > Screens and widgets > this screen, opens the same surface editor. Hide/reorder/add, section moves, cross-section widget moves and Tiles edits change one private candidate. Sizes and titles come from the installed bundled file. Add widget places each widget at the size and position from the file's add block; previews observe only already loaded shared values, remain inert and obey hidden amounts; a cold preview shows "Not loaded yet" and starts no query. Move up/down at a section boundary moves a widget into the next section; empty sections show in edit mode. Removed sections keep distinct keys and no title, with known children still editable; dormant children cannot be lost through a parent edit. A layout saved by a newer app version is read-only; Default stays available. Undo reverses one action; Cancel restores the candidate's initial state without writing. Home Default includes Quick look tiles. Done commits all touched preferences atomically; no financial recalculation.
 
@@ -192,7 +192,7 @@ Unknown/unreleased keys are retained and not shown. Conflicts or uncertain repli
 5. Save: validate required fields and source account. One transaction writes payment, split/tag links and ChangeLog. Edit changes the existing event.
 6. Return to caller; refresh account/spending/Home; show Undo.
 
-**Recovery:** missing account → C01 or account picker → same draft. No category is allowed. Back/Close/discard per `G12`.
+**Recovery:** missing account → C01 or account picker → same draft. No category is allowed. Back/Close/discard per SPEC 8.16.
 
 **Checks:** F03-A uncategorised payment saves; F03-B split saves once after repeated taps; F03-C edit does not duplicate; F03-D Undo restores balances and split links.
 
@@ -202,12 +202,12 @@ Unknown/unreleased keys are retained and not shown. Conflicts or uncertain repli
 
 **Entry:** Speak, long-press Add, Scan QR, photo.
 
-1. Speak/long-press Add → `X87MicPermission` (first use) → OS request. With permission and a verified local recognizer → `X24VoiceListening`.
+1. Speak/long-press Add → `X87MicPermission` (first use) → OS request. With permission and a verified local recognizer (SPEC 8.19) → `X24VoiceListening`.
 2. Stop or silence → `X25VoiceFilled`, the F03 payment draft. Uncertain fields marked. No amount → keypad stays active. Save per F03. A second detected amount is offered only after the first Save.
 3. Scan QR → `X27ScanQR` after camera permission. Supported receipt payloads fill the payment review. Unknown payload → receipt-photo path. Never open a QR URL automatically.
 4. Photo/picked image → `X28ReceiptReview`. Correct fields; choose to keep an encrypted image or not. Save commits one payment and, if selected, its attachment link.
 
-**Recovery:** denied permission, unsupported language or parser failure keeps manual entry. Never save audio. Without retention, delete temporary receipt content after parsing. With retention, the encrypted attachment is durable only with confirmed Save; Cancel/Discard still deletes the temporary image. Back keeps structured fields (`G12`), never an orphan image.
+**Recovery:** denied permission, unsupported language or parser failure keeps manual entry. Never save audio. Without retention, delete temporary receipt content after parsing. With retention, the encrypted attachment is durable only with confirmed Save; Cancel/Discard still deletes the temporary image. Back keeps structured fields (SPEC 8.16), never an orphan image.
 
 **Checks:** F04-A voice offline; F04-B denial fallback; F04-C no actual record before Save; F04-D encrypted retention and cancellation cleanup, including retention toggled on before cancel.
 
@@ -218,9 +218,9 @@ Unknown/unreleased keys are retained and not shown. Conflicts or uncertain repli
 **Entry:** Transfer in form/chooser, Inbox candidate, card statement.
 
 1. Transfer → `X26Transfer`: different owned From/To accounts, amount, date. Cross-currency → `X26bTransferFX` only when released.
-2. Save writes linked debit and credit together. Neither principal side is income or spending. A charged fee is separate; `G13` settles its class; calculated FX spread is informational.
+2. Save writes linked debit and credit together. Neither principal side is income or spending. A charged fee is separate and is money out (SPEC 4.10); the calculated FX spread is informational.
 3. Imported sides: review in `X60Inbox`/`X61InboxItemSheet`. Confirm creates each new posting once, reuses a confirmed posting, links both sides atomically, never copies an existing pair. Uncertain counterpart stays unresolved.
-4. Card repayment = transfer linked to the statement obligation. `G02`: partial payment reduces cash and the statement remainder once.
+4. Card repayment = transfer linked to the statement obligation. SPEC 8.17: partial payment reduces cash and the statement remainder once.
 
 **Recovery:** a missing rate blocks derived conversions, not entry of documented sent/received amounts. Never invent a mid-rate.
 
@@ -263,10 +263,10 @@ flowchart LR
 **Entry:** Home Inbox button, Import done.
 
 1. `X60Inbox`; empty → `X62InboxEmpty`. Source filter changes the list, not records.
-2. Resolve transfer/duplicate/refund decisions before confirming affected items. Accept/reject of a match stages the decision; only Confirm writes the actual event. Ambiguous items stay unticked.
+2. Resolve transfer/duplicate/refund decisions before confirming affected items (SPEC 8.17). Accept/reject of a match stages the decision; only Confirm writes the actual event. Ambiguous items stay unticked.
 3. Row → `X61InboxItemSheet`: edit fields/category and return, or Confirm the item. A category change can offer a rule; the rule exists only after separate explicit acceptance.
 4. Confirm ticked: preflight ≤ 5,000 selected source rows, ≤ 100,000 logical row effects, ≤ 16 MiB prepared plan. Over a limit: drafts and selection unchanged; user picks a smaller set; no hidden splitting. Validate the whole batch against the current database. One repository transaction writes records, relationships, Inbox decisions and ChangeLog. Never partly accept a failed batch.
-5. Refresh affected views. Unticked items stay. None left → empty state. Undo reverses the complete batch.
+5. Refresh affected views. Unticked items stay. None left → empty state. Undo reverses the complete batch (SPEC 8.18).
 
 **Recovery:** source deletion removes a staged item only; deleting a confirmed event uses F08. Repeated Confirm/retry creates no second event.
 
@@ -283,7 +283,7 @@ flowchart LR
 3. All payments → `X37Transactions`. `X38FilterSheet` applies only on Show; Clear resets inputs; Back keeps the last applied filter.
 4. Payment → `X39TransactionDetail`. Edit reuses F03 with its ID. Delete → `X39bDeleteDialog`; confirm soft-deletes event and linked effects atomically → caller with Undo.
 5. `X33EditLimits` Save writes limits only. Recalculate the budget period; payment history unchanged.
-6. Reimbursable / Refund expected records an expectation; no incoming cash. Confirmed reimbursement links to the original payment, reduces its expected unpaid balance, and is excluded from income. Confirmed refund reduces spending in the original category under the selected refund recognition period. Partial settlement, attribution and reversal stay behind `G14`.
+6. Reimbursable / Refund expected records an expectation; no incoming cash. Confirmed reimbursement links to the original payment, reduces its expected unpaid balance, and is excluded from income. Confirmed refund reduces spending in the original category under the selected refund recognition period (SPEC 4.11). Partial receipt, attribution and reversal follow SPEC 4.11.
 
 **Checks:** F08-A filter/Back keeps context; F08-B cancelled delete leaves data; F08-C delete/Undo changes totals once; F08-D known zero, Missing and net refund differ; F08-E limits leave balances; F08-F an expectation creates no receipt, and a confirmed settlement changes its linked balance once.
 
@@ -294,8 +294,8 @@ flowchart LR
 **Entry:** `X84Rules`, `X34Repeating`.
 
 1. `X84Rules`: Categories or Rules. Add/edit via C03. Save validates and writes the rule with ChangeLog. No silent reclassification; retrospective application needs an explicit reviewed batch.
-2. `X34Repeating` → `X35RepeatingDetail`. `G05`: Add opens C02 with schedule context. A saved schedule creates no completed payment.
-3. Each due occurrence is generated once. `G02`: it stays Expected, with at most one Inbox item. Accepted matching payments settle its unpaid remainder.
+2. `X34Repeating` → `X35RepeatingDetail`. SPEC 5.5: Add opens C02 with schedule context. A saved schedule creates no completed payment.
+3. Each due occurrence is generated once. SPEC 8.17: it stays Expected, with at most one Inbox item. Accepted matching payments settle its unpaid remainder.
 4. Stop repeating ends generation from the effective date; confirmed history stays. A provider cancellation address is inert local text: no launch, copy or share. Stop does not cancel the provider subscription. The X35 browser link is obsolete.
 5. A changed actual amount creates a dated price-change fact after matching. Editing an estimate never rewrites older actual payments.
 
@@ -383,7 +383,7 @@ flowchart LR
 
 **Entry:** Plan > Calendar.
 
-1. `X50Calendar`: day → `X51DaySheet`; close returns to the same month/day. Dated Add → one-off payment draft with that date; recurrence needs an explicit choice. `G02`/FLOW-001: a future one-off saves as Expected; no actual balance change before confirmation. Calendar Add chooser follows SPEC 5.3; its repeating option uses C02.
+1. `X50Calendar`: day → `X51DaySheet`; close returns to the same month/day. Dated Add → one-off payment draft with that date; recurrence needs an explicit choice. SPEC 8.17 / FLOW-001: a future one-off saves as Expected; no actual balance change before confirmation. Calendar Add chooser follows SPEC 5.3; its repeating option uses C02.
 2. Cash-flow card → `X50bCashFlow`. Rows → card, loan or repeating detail; Back keeps the horizon.
 3. Forecast and Available use the same unsettled cash events. A card charge is spending on its charge date but affects cash once, through the statement payment.
 4. A scheduled item is Expected; edits change projections only. Actual payment goes through F03/F07.
@@ -496,16 +496,16 @@ These are implementation contracts, not screenshot IDs. Use existing templates a
 | Contract | Entry and result | Template and prerequisite |
 |---|---|---|
 | C01 Account or asset editor | First-run/account picker or X42 type chooser → validated account, observation and type details → caller. Type/currency/account ID are explicit arguments. | FormScreen; deposit reference X42b; SPEC 6.6 required fields; `G01`. |
-| C02 Scheduled payment editor | Explicit repeating choice from Calendar/day/Repeating Add → schedule draft → Save schedule → caller. A one-off future payment uses the shared payment form with recurrence off and an Expected state. | FormScreen; X20 form and X35 detail content; `G02`, `G05`. |
+| C02 Scheduled payment editor | Explicit repeating choice from Calendar/day/Repeating Add → schedule draft → Save schedule → caller. A one-off future payment uses the shared payment form with recurrence off and an Expected state. | FormScreen; X20 form and X35 detail content; SPEC 8.17, 5.5. |
 | C03 Category or rule editor | X21 or X84 → category/rule draft → Save → caller. Retrospective application is a separate reviewed batch. | FormScreen or AppSheet; SPEC 9.3. |
 | C04 Investment event editor and reconciliation | Holding/account/import discrepancy → dated event draft and linked effects → confirm → originating account/holding. | FormScreen plus reviewed difference list; `G03`. Define every supported transaction type before exposing it. |
 | C05 Policy and claim editors | Protect/detail/Add → structured draft → Save linked records → caller. | FormScreen; X69b gives policy fields; SPEC 9.6. |
-| C06 Activity history and Undo resolution | Success toast/history → inspect event/batch → Undo or resolve dependencies → refreshed caller. | DetailScreen with AppSheet for conflict detail; `G06`. No arbitrary overwrite. |
+| C06 Activity history and Undo resolution | Success toast/history → inspect event/batch → Undo or resolve dependencies → refreshed caller. | DetailScreen with AppSheet for conflict detail; SPEC 8.18. No arbitrary overwrite. |
 | C07 Generic selectors and metric tables | Account/date/period/benchmark/group selection or Show as table → selected value/view state → caller. | AppSheet/AppTable with existing controls. Currency allocation is a state, not a screenshot ID. |
 | C08 Tax date, limit, debt and calculator forms | Tax/Tools/Wealth → validated inputs → explicit record or preset Save, as labelled. | FormScreen; separate a calculation preview from an actual record; `G09`, `G14`. |
 | C09 Restore and destructive confirmation | Backup/privacy action → factual consequence preview → explicit confirm or cancel. | AppDialog, or AppSheet plus AppDialog; `G11`. |
 | C10 Settings and permission forms | Settings/source action → settings or OS permission result → same settings/source row. Includes provider setup, manual quote/FX input, local recovery retention/status, lock and Home preferences. | FormScreen/AppSheet; denied/unavailable states keep local fallback; secrets in secure storage. `G05`, `G07`, `G08`, `G11` apply to their settings. |
-| C11 Structured draft lifecycle | Resume existing form, select a draft, or Discard → editable draft or caller. | Existing form/sheet components plus encrypted draft storage; `G12`. No automatic expiry; distinct draft IDs; schema migration and restore invalidation per SYSTEM_DESIGN 5.2. |
+| C11 Structured draft lifecycle | Resume existing form, select a draft, or Discard → editable draft or caller. | Existing form/sheet components plus encrypted draft storage; SPEC 8.16. No automatic expiry; distinct draft IDs; schema migration and restore invalidation per SYSTEM_DESIGN 5.2. |
 | C12 Account and asset-group list | Investments Accounts or a grouped Wealth row → scoped account list → X41 or the account detail → same list. | DetailScreen; keep group/scope and caller context; no implicit account creation. |
 
 ## Implementation handoff

@@ -10,8 +10,9 @@ import 'package:flutter/widgets.dart';
 /// zero-width spaces that paint nothing.
 ///
 /// N-11: the floor is an unscaled font size, so the effective floor grows
-/// with the system scale (80 px at 2.0). Confirm with the design owner that
-/// this is the intent. DECISION-PENDING: FITNUMBER-FLOOR.
+/// with the system scale (80 px at 2.0). FITNUMBER-FLOOR closed 2026-11-22
+/// (DECISIONS "Decided"): the unscaled floor is the intent; a floor that
+/// scaled with the system would stop being a floor at large scales.
 class FitNumber extends StatelessWidget {
   const FitNumber({
     required this.text,

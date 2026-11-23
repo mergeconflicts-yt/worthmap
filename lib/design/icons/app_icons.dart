@@ -53,6 +53,9 @@ abstract final class AppIcons {
   static const AppIconData house = AppIconData('$_base/house.svg');
   static const AppIconData car = AppIconData('$_base/car.svg');
   static const AppIconData safe = AppIconData('$_base/vault.svg');
+  static const AppIconData phone = AppIconData('$_base/smartphone.svg');
+  static const AppIconData calendar = AppIconData('$_base/calendar.svg');
+  static const AppIconData check = AppIconData('$_base/check.svg');
 
   /// Every icon, for the gallery.
   static const Map<String, AppIconData> all = <String, AppIconData>{
@@ -89,6 +92,9 @@ abstract final class AppIcons {
     'house': house,
     'car': car,
     'safe': safe,
+    'phone': phone,
+    'calendar': calendar,
+    'check': check,
   };
 }
 

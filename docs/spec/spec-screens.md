@@ -31,10 +31,10 @@
 **Home (`X10Home`, final)**
 
 - One short board. The person can change its widgets (WIDGETS-001). Each number shows once. A number opens its breakdown; a card opens its screen.
-- Net worth is the hero (DESIGN-HTML-011). This order differs from 4.6: open question GLANCE-ORDER (SPEC-SYNC-001).
+- The hero is the main number chosen in Settings > Screens and widgets (SPEC 5.5); net worth is the default (DESIGN-HTML-011). The cards below follow 4.6 as the default order, and a saved layout replaces it.
 
 1. **Header**: date and currency; Hide amounts, Inbox (count badge, count in label), Settings. A Search field below the title → `X15Search`. "Today" is a screen-reader heading only. Open question AS-OF-DATE: the prototype hides the date line; until decided, keep date and currency.
-2. **Net worth hero**: no (i) button; a tap on the number → `X40bAboutNumber`. One change figure, 12 months ("+$16,900 · 12 months"); no daily change. Target line when a target exists (6.8) → Goals. 12-month line → Wealth.
+2. **Hero (main number)**: net worth by default; no (i) button; a tap on the number → `X40bAboutNumber`. For net worth: one change figure over 12 months ("+$16,900 · 12 months"), no daily change; target line when a target exists (6.8) → Goals; 12-month line → Wealth. Another main number brings its own basis line and no net-worth target or 12-month chart (SPEC 5.5).
 3. **Quick look**: sideways tiles (name, value, one fact). A tile shows only when its kind is recorded. No tile → card hidden.
     - **Cash**: cash you can use, "available now" → `X41dCashBank`.
     - **Card bill**: nearest due date only, never a sum across dates ("$1,240 · Visa · 22 Oct"). More cards: "+N more · $X by [last due date]" → Wealth > You owe. One card → `X48CardDetail`.

@@ -3,15 +3,14 @@ import 'package:flutter/widgets.dart';
 import '../../theme/app_theme.dart';
 import '../../tokens/space.dart';
 import '../../tokens/tokens.g.dart';
+import 'dashed_outline.dart';
 
 /// DESIGN 6.7: `WidgetSlot` variants.
 enum WidgetSlotVariant { normal, editing }
 
 /// DESIGN 6.7, WIDGETS-001: wraps each tab-screen card with its title. In
-/// editing mode it shows an outline and a tool row and its content is inert.
-///
-/// Placeholder for Phase 1 (T05): the dashed outline and the drag handle need a
-/// component painter (DECISION-PENDING: WIDGETSLOT-DASH, T06).
+/// editing mode it shows a 1 pt dashed outline 6 pt outside the card and a
+/// tool row, and its content is inert.
 class WidgetSlot extends StatelessWidget {
   const WidgetSlot({
     required this.child,
@@ -47,15 +46,10 @@ class WidgetSlot extends StatelessWidget {
           child: ExcludeSemantics(
             excluding: true,
             child: IgnorePointer(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  border: Border.all(color: tokens.borderChip),
-                  borderRadius: BorderRadius.circular(RadiusTokens.card + 6),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(Space.s),
-                  child: child,
-                ),
+              child: DashedOutline(
+                color: tokens.borderDraft,
+                radius: RadiusTokens.card + DashedOutline.gap,
+                child: child,
               ),
             ),
           ),

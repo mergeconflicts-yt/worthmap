@@ -1,0 +1,3432 @@
+{
+  "@@locale": "en",
+  "appTitle": "Contour",
+  "@appTitle": {
+    "description": "The product name. It is not a financial label."
+  },
+  "x01Kicker": "CONTOUR",
+  "@x01Kicker": {
+    "description": "X01 Welcome kicker (label.caps)."
+  },
+  "x01Title": "Know your money in 3 seconds.",
+  "@x01Title": {
+    "description": "X01 Welcome title (titleScreen)."
+  },
+  "x01Line": "Enter almost nothing. Your financial records stay on your phone.",
+  "@x01Line": {
+    "description": "X01 Welcome hero line."
+  },
+  "x01PhoneRowName": "Your data stays on this phone",
+  "@x01PhoneRowName": {
+    "description": "X01 phone row name."
+  },
+  "x01PhoneRowLine": "No account. No sign-up. No servers.",
+  "@x01PhoneRowLine": {
+    "description": "X01 phone row grey line."
+  },
+  "x01EyeRowName": "You choose what the app reads",
+  "@x01EyeRowName": {
+    "description": "X01 eye row name."
+  },
+  "x01EyeRowLine": "Files you share, and sources you turn on.",
+  "@x01EyeRowLine": {
+    "description": "X01 eye row grey line."
+  },
+  "x01ShieldRowName": "Encrypted backups you own",
+  "@x01ShieldRowName": {
+    "description": "X01 shield row name."
+  },
+  "x01ShieldRowLine": "Recovery copies stay on this phone.",
+  "@x01ShieldRowLine": {
+    "description": "X01 shield row grey line."
+  },
+  "x01CurrencyCardTitle": "Your main currency",
+  "@x01CurrencyCardTitle": {
+    "description": "X01 currency card title."
+  },
+  "x01CurrencyCardMeta": "required",
+  "@x01CurrencyCardMeta": {
+    "description": "X01 currency card meta."
+  },
+  "x01CurrencyName": "US dollar (USD)",
+  "@x01CurrencyName": {
+    "description": "X01 currency row name. Phase 1 shows the phone region default."
+  },
+  "x01CurrencyLine": "From your phone's region. You can change it later.",
+  "@x01CurrencyLine": {
+    "description": "X01 currency row grey line."
+  },
+  "x01CurrencySpoken": "Your main currency: US dollar (USD). Change",
+  "@x01CurrencySpoken": {
+    "description": "X01 currency row semantic label."
+  },
+  "x01Start": "Start",
+  "@x01Start": {
+    "description": "X01 primary button."
+  },
+  "x01Caption": "Everything else is optional. You can add accounts, import files, and turn on the app lock from Home.",
+  "@x01Caption": {
+    "description": "X01 caption under the button."
+  },
+  "x02Locked": "Locked",
+  "@x02Locked": {
+    "description": "X02 Lock title."
+  },
+  "x02Line": "Face ID starts when the app opens. Amounts stay hidden until you unlock.",
+  "@x02Line": {
+    "description": "X02 Lock line."
+  },
+  "x02Unlock": "Unlock with Face ID",
+  "@x02Unlock": {
+    "description": "X02 primary unlock button."
+  },
+  "x02UsePasscode": "Use passcode",
+  "@x02UsePasscode": {
+    "description": "X02 ghost passcode button."
+  },
+  "x02Spoken": "App lock. No amount shows until you unlock.",
+  "@x02Spoken": {
+    "description": "X02 screen semantic label."
+  },
+  "x02UnlockPrompt": "Unlock Contour to show your amounts.",
+  "@x02UnlockPrompt": {
+    "description": "The native biometric/device-credential challenge prompt (T08)."
+  },
+  "x03Today": "Today",
+  "@x03Today": {
+    "description": "X03 first-run Home header title."
+  },
+  "x03DateLine": "{date} · {currency}",
+  "@x03DateLine": {
+    "description": "X03 date line (today and main currency).",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "x03HeroKicker": "NET WORTH",
+  "@x03HeroKicker": {
+    "description": "X03 hero kicker (metric name only)."
+  },
+  "x03HeroLine": "Add your main account to see this number.",
+  "@x03HeroLine": {
+    "description": "X03 hero context line."
+  },
+  "x03HeroDash": "—",
+  "@x03HeroDash": {
+    "description": "X03 hero unknown state: an em dash, never zero (SPEC 4.9)."
+  },
+  "x03GetStartedTitle": "Get started",
+  "@x03GetStartedTitle": {
+    "description": "X03 Get started card title."
+  },
+  "x03GetStartedMeta": "0 of 5",
+  "@x03GetStartedMeta": {
+    "description": "X03 Get started card meta."
+  },
+  "x03GetStartedSpoken": "Get started: 0 of 5 steps done.",
+  "@x03GetStartedSpoken": {
+    "description": "X03 Get started meter spoken label."
+  },
+  "x03Step1": "Add your main account",
+  "@x03Step1": {
+    "description": "X03 step 1 name."
+  },
+  "x03Step1Line": "Balance only, 20 seconds",
+  "@x03Step1Line": {
+    "description": "X03 step 1 grey line."
+  },
+  "x03Step2": "Share a bank statement",
+  "@x03Step2": {
+    "description": "X03 step 2 name."
+  },
+  "x03Step2Line": "PDF or CSV from your bank app",
+  "@x03Step2Line": {
+    "description": "X03 step 2 grey line."
+  },
+  "x03Step3": "Add your first expense",
+  "@x03Step3": {
+    "description": "X03 step 3 name."
+  },
+  "x03Step3Line": "Type, speak, or scan",
+  "@x03Step3Line": {
+    "description": "X03 step 3 grey line."
+  },
+  "x03Step4": "Turn on the app lock",
+  "@x03Step4": {
+    "description": "X03 step 4 name."
+  },
+  "x03Step4Line": "Face ID or passcode",
+  "@x03Step4Line": {
+    "description": "X03 step 4 grey line."
+  },
+  "x03Step5": "Set up local recovery",
+  "@x03Step5": {
+    "description": "X03 step 5 name."
+  },
+  "x03Step5Line": "Encrypted, on this phone",
+  "@x03Step5Line": {
+    "description": "X03 step 5 grey line."
+  },
+  "x03StepsCaption": "Each step is optional. Skip any step and come back later.",
+  "@x03StepsCaption": {
+    "description": "X03 Get started caption."
+  },
+  "x03Next30Title": "Next 30 days",
+  "@x03Next30Title": {
+    "description": "X03 Next 30 days card title."
+  },
+  "x03Next30Meta": "none recorded",
+  "@x03Next30Meta": {
+    "description": "X03 Next 30 days card meta (SPEC 4.9 none recorded)."
+  },
+  "x03Next30Line": "Payments show here when you add an account, a card or a repeating payment.",
+  "@x03Next30Line": {
+    "description": "X03 Next 30 days empty-state line."
+  },
+  "x03InboxAction": "Inbox, 0 items",
+  "@x03InboxAction": {
+    "description": "X03 header Inbox action semantic label."
+  },
+  "x03SettingsAction": "Settings",
+  "@x03SettingsAction": {
+    "description": "X03 header Settings action semantic label."
+  },
+  "x80Title": "Settings",
+  "@x80Title": {
+    "description": "X80 Settings header title."
+  },
+  "x80SubLine": "on this phone",
+  "@x80SubLine": {
+    "description": "X80 Settings header sub-line."
+  },
+  "x80HeroKicker": "SETTINGS",
+  "@x80HeroKicker": {
+    "description": "X80 hero kicker."
+  },
+  "x80HeroLine": "Everything is on this phone.",
+  "@x80HeroLine": {
+    "description": "X80 hero value line."
+  },
+  "x80HeroContext": "Encrypted. No account. No server.",
+  "@x80HeroContext": {
+    "description": "X80 hero context line."
+  },
+  "x80CardCapture": "Capture",
+  "@x80CardCapture": {
+    "description": "X80 Capture card title."
+  },
+  "x80CaptureSources": "Capture sources",
+  "@x80CaptureSources": {
+    "description": "X80 Capture sources row."
+  },
+  "x80CaptureSourcesValue": "3 on",
+  "@x80CaptureSourcesValue": {
+    "description": "X80 Capture sources value."
+  },
+  "x80Categories": "Categories and rules",
+  "@x80Categories": {
+    "description": "X80 Categories row."
+  },
+  "x80CategoriesValue": "16 categories · 24 rules",
+  "@x80CategoriesValue": {
+    "description": "X80 Categories value."
+  },
+  "x80ImportLayouts": "Import layouts",
+  "@x80ImportLayouts": {
+    "description": "X80 Import layouts row."
+  },
+  "x80ImportLayoutsValue": "3 saved",
+  "@x80ImportLayoutsValue": {
+    "description": "X80 Import layouts value."
+  },
+  "x80CardMoney": "Money",
+  "@x80CardMoney": {
+    "description": "X80 Money card title."
+  },
+  "x80MainCurrency": "Main currency",
+  "@x80MainCurrency": {
+    "description": "X80 Main currency row."
+  },
+  "x80Accounts": "Accounts",
+  "@x80Accounts": {
+    "description": "X80 Accounts row."
+  },
+  "x80MonthStart": "Month starts on",
+  "@x80MonthStart": {
+    "description": "X80 Month starts row."
+  },
+  "x80MonthStartValue": "1st",
+  "@x80MonthStartValue": {
+    "description": "X80 Month starts value."
+  },
+  "x80NumberFormat": "Number format",
+  "@x80NumberFormat": {
+    "description": "X80 Number format row."
+  },
+  "x80NumberFormatValue": "1,234.56",
+  "@x80NumberFormatValue": {
+    "description": "X80 Number format value."
+  },
+  "x80CardScreens": "Screens and widgets",
+  "@x80CardScreens": {
+    "description": "X80 Screens and widgets card title."
+  },
+  "x80ScreensMeta": "tab screens",
+  "@x80ScreensMeta": {
+    "description": "X80 Screens card meta."
+  },
+  "x80MainNumberRow": "Main number on Home",
+  "@x80MainNumberRow": {
+    "description": "X80 Main number row."
+  },
+  "x80MainNumberValue": "Net worth",
+  "@x80MainNumberValue": {
+    "description": "X80 Main number value."
+  },
+  "x80CardSafety": "Safety",
+  "@x80CardSafety": {
+    "description": "X80 Safety card title."
+  },
+  "x80AppLock": "App lock",
+  "@x80AppLock": {
+    "description": "X80 App lock row."
+  },
+  "x80AppLockValue": "Face ID",
+  "@x80AppLockValue": {
+    "description": "X80 App lock value."
+  },
+  "x80Recovery": "Recovery on this phone",
+  "@x80Recovery": {
+    "description": "X80 Recovery row."
+  },
+  "x80RecoveryValue": "Last snapshot",
+  "@x80RecoveryValue": {
+    "description": "X80 Recovery value (no snapshot yet)."
+  },
+  "x80PrivacyRow": "Privacy and network",
+  "@x80PrivacyRow": {
+    "description": "X80 Privacy row."
+  },
+  "x80PrivacyValue": "Prices only",
+  "@x80PrivacyValue": {
+    "description": "X80 Privacy value."
+  },
+  "x80PrivacySpoken": "Open Privacy and network",
+  "@x80PrivacySpoken": {
+    "description": "X80 Privacy row semantic label."
+  },
+  "x80Back": "Back to Home",
+  "@x80Back": {
+    "description": "X80 back button label."
+  },
+  "x80RowOpen": "Open",
+  "@x80RowOpen": {
+    "description": "Semantic suffix for tappable Settings rows."
+  },
+  "x86Title": "Privacy and network",
+  "@x86Title": {
+    "description": "X86 Privacy and network header title."
+  },
+  "x86SubLine": "Settings",
+  "@x86SubLine": {
+    "description": "X86 header sub-line."
+  },
+  "x86HeroKicker": "PRIVACY AND NETWORK",
+  "@x86HeroKicker": {
+    "description": "X86 hero kicker."
+  },
+  "x86HeroLine": "This app talks to 1 service.",
+  "@x86HeroLine": {
+    "description": "X86 hero value line (count only, no amounts)."
+  },
+  "x86HeroContext": "Only after you turned it on.",
+  "@x86HeroContext": {
+    "description": "X86 hero context line."
+  },
+  "x86NetworkTitle": "Network",
+  "@x86NetworkTitle": {
+    "description": "X86 Network card title."
+  },
+  "x86NetworkMeta": "turned on",
+  "@x86NetworkMeta": {
+    "description": "X86 Network card meta."
+  },
+  "x86PriceService": "Price service",
+  "@x86PriceService": {
+    "description": "X86 Price service row."
+  },
+  "x86PriceServiceLine": "Sends public symbols only. Never amounts, holdings or account names.",
+  "@x86PriceServiceLine": {
+    "description": "X86 Price service grey line."
+  },
+  "x86TurnOff": "Turn off all network",
+  "@x86TurnOff": {
+    "description": "X86 network toggle name."
+  },
+  "x86TurnOffLine": "Prices stop. Everything else works. Asks you to confirm.",
+  "@x86TurnOffLine": {
+    "description": "X86 network toggle description."
+  },
+  "x86TurnOffSpoken": "Turn off all network. Currently on.",
+  "@x86TurnOffSpoken": {
+    "description": "X86 network toggle semantic label."
+  },
+  "x86OnPhoneTitle": "On this phone",
+  "@x86OnPhoneTitle": {
+    "description": "X86 On this phone card title."
+  },
+  "x86Database": "Database",
+  "@x86Database": {
+    "description": "X86 Database row."
+  },
+  "x86DatabaseValue": "Encrypted",
+  "@x86DatabaseValue": {
+    "description": "X86 Database value."
+  },
+  "x86Speech": "Speech recognition",
+  "@x86Speech": {
+    "description": "X86 Speech row."
+  },
+  "x86OnPhoneValue": "On this phone only",
+  "@x86OnPhoneValue": {
+    "description": "X86 on-phone value."
+  },
+  "x86TextRecognition": "Text recognition",
+  "@x86TextRecognition": {
+    "description": "X86 Text recognition row."
+  },
+  "x86RecoverySnapshots": "Recovery snapshots",
+  "@x86RecoverySnapshots": {
+    "description": "X86 Recovery snapshots row."
+  },
+  "x86DeleteAll": "Delete all data",
+  "@x86DeleteAll": {
+    "description": "X86 destructive button."
+  },
+  "x86DeleteAllCaption": "Asks you to confirm. Removes records, snapshots, keys and cached prices from this phone.",
+  "@x86DeleteAllCaption": {
+    "description": "X86 delete-all caption."
+  },
+  "x86RowRead": "Read",
+  "@x86RowRead": {
+    "description": "Semantic suffix for informational rows."
+  },
+  "deleteAllSheetSpoken": "Delete all data. Requires two confirmations.",
+  "@deleteAllSheetSpoken": {
+    "description": "Delete-all confirm sheet semantic label."
+  },
+  "deleteAllSheetTitle": "Delete all data?",
+  "@deleteAllSheetTitle": {
+    "description": "Delete-all confirm sheet title."
+  },
+  "deleteAllSheetLine": "This removes records, snapshots, keys and cached prices from this phone. It cannot be undone.",
+  "@deleteAllSheetLine": {
+    "description": "Delete-all confirm sheet line."
+  },
+  "deleteAllSheetConfirm": "Delete all data",
+  "@deleteAllSheetConfirm": {
+    "description": "Delete-all confirm sheet explicit verb (second confirmation)."
+  },
+  "deleteAllSheetCancel": "Cancel",
+  "@deleteAllSheetCancel": {
+    "description": "Delete-all confirm sheet cancel."
+  },
+  "widgetNotLoadedYet": "Not loaded yet",
+  "@widgetNotLoadedYet": {
+    "description": "Resident-only Add preview cache-miss state (WIDGET_FRAMEWORK 3.1)."
+  },
+  "widgetUnavailable": "Widget unavailable",
+  "@widgetUnavailable": {
+    "description": "Slot failure presentation with a required label (N-09)."
+  },
+  "widgetEditAdd": "Add",
+  "@widgetEditAdd": {
+    "description": "Edit-mode control row: Add."
+  },
+  "widgetEditCancel": "Cancel",
+  "@widgetEditCancel": {
+    "description": "Edit-mode control row: Cancel."
+  },
+  "widgetEditUndo": "Undo",
+  "@widgetEditUndo": {
+    "description": "Edit-mode control row: Undo."
+  },
+  "widgetEditReset": "Reset to default",
+  "@widgetEditReset": {
+    "description": "Edit-mode control row: Reset to default."
+  },
+  "widgetEditDone": "Done",
+  "@widgetEditDone": {
+    "description": "Edit-mode control row: Done."
+  },
+  "accountKicker": "ADD · ACCOUNT",
+  "@accountKicker": {
+    "description": "C01 account editor kicker."
+  },
+  "accountTitle": "New account",
+  "@accountTitle": {
+    "description": "C01 account editor title."
+  },
+  "accountSave": "Save account",
+  "@accountSave": {
+    "description": "C01 primary save action."
+  },
+  "accountClose": "Close",
+  "@accountClose": {
+    "description": "C01 close action."
+  },
+  "accountCardTitle": "Account",
+  "@accountCardTitle": {
+    "description": "C01 details card title."
+  },
+  "accountBalanceLabel": "Balance today",
+  "@accountBalanceLabel": {
+    "description": "C01 opening balance label."
+  },
+  "accountBalanceMissing": "Missing",
+  "@accountBalanceMissing": {
+    "description": "SPEC 4.9: no balance entered yet."
+  },
+  "accountBalanceMissingSpoken": "Balance today, not entered",
+  "@accountBalanceMissingSpoken": {
+    "description": "C01 empty balance spoken name."
+  },
+  "accountDelete": "Delete",
+  "@accountDelete": {
+    "description": "Keypad delete key."
+  },
+  "accountDecimal": "Decimal point",
+  "@accountDecimal": {
+    "description": "Keypad decimal key spoken name."
+  },
+  "accountNameLabel": "Name",
+  "@accountNameLabel": {
+    "description": "C01 account name label."
+  },
+  "accountNameHint": "For example Checking",
+  "@accountNameHint": {
+    "description": "C01 account name hint."
+  },
+  "accountNameSemantic": "Account name",
+  "@accountNameSemantic": {
+    "description": "C01 account name spoken name."
+  },
+  "accountTypeLabel": "Account type",
+  "@accountTypeLabel": {
+    "description": "C01 account type group label."
+  },
+  "accountTypeBank": "Bank account",
+  "@accountTypeBank": {
+    "description": "C01 type choice."
+  },
+  "accountTypeCash": "Cash",
+  "@accountTypeCash": {
+    "description": "C01 type choice."
+  },
+  "accountTypeCard": "Credit card",
+  "@accountTypeCard": {
+    "description": "C01 type choice."
+  },
+  "accountTypeSemantic": "Account type: {type}",
+  "@accountTypeSemantic": {
+    "description": "C01 type choice spoken name.",
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "accountCurrencySemantic": "Currency: {code}. Opens the list.",
+  "@accountCurrencySemantic": {
+    "description": "C01 currency pill spoken name.",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "accountCurrencyTitle": "Currency",
+  "@accountCurrencyTitle": {
+    "description": "C01 currency sheet title."
+  },
+  "accountCurrencySpoken": "Choose a currency",
+  "@accountCurrencySpoken": {
+    "description": "C01 currency sheet spoken name."
+  },
+  "accountDateTitle": "Balance date",
+  "@accountDateTitle": {
+    "description": "C01 date sheet title."
+  },
+  "accountDateSpoken": "Choose the balance date",
+  "@accountDateSpoken": {
+    "description": "C01 date sheet spoken name."
+  },
+  "accountDateDay": "Day",
+  "@accountDateDay": {
+    "description": "C01 date sheet day field."
+  },
+  "accountDateMonth": "Month",
+  "@accountDateMonth": {
+    "description": "C01 date sheet month field."
+  },
+  "accountDateYear": "Year",
+  "@accountDateYear": {
+    "description": "C01 date sheet year field."
+  },
+  "accountDateUse": "Use date",
+  "@accountDateUse": {
+    "description": "C01 date sheet confirm."
+  },
+  "accountDateLabel": "Balance date",
+  "@accountDateLabel": {
+    "description": "C01 opening balance date label."
+  },
+  "accountDateHelper": "The balance includes this date.",
+  "@accountDateHelper": {
+    "description": "G01-A: the anchor is inclusive."
+  },
+  "accountDateInvalid": "Enter a date as YYYY-MM-DD.",
+  "@accountDateInvalid": {
+    "description": "C01 invalid date helper."
+  },
+  "accountCashToggle": "Counts as cash you can use",
+  "@accountCashToggle": {
+    "description": "C01 liquid toggle."
+  },
+  "accountCashOn": "On: available for payments",
+  "@accountCashOn": {
+    "description": "C01 liquid toggle description."
+  },
+  "accountCashOff": "Off: not counted as cash",
+  "@accountCashOff": {
+    "description": "C01 liquid toggle description."
+  },
+  "accountNetWorthToggle": "Include in net worth",
+  "@accountNetWorthToggle": {
+    "description": "C01 net worth toggle."
+  },
+  "accountNetWorthOn": "On: counted in net worth",
+  "@accountNetWorthOn": {
+    "description": "C01 net worth toggle description."
+  },
+  "accountNetWorthOff": "Off: not counted in net worth",
+  "@accountNetWorthOff": {
+    "description": "C01 net worth toggle description."
+  },
+  "accountCardLimitUnavailable": "The credit limit is not saved in this version.",
+  "@accountCardLimitUnavailable": {
+    "description": "P21: card limit waits for the card_details table."
+  },
+  "accountOwes": "Owes",
+  "@accountOwes": {
+    "description": "SPEC 6.6: a card balance is owed, not negative."
+  },
+  "accountUnavailable": "Account setup is not connected in this build.",
+  "@accountUnavailable": {
+    "description": "P21 unwired vault composition state."
+  },
+  "accountDraftDiscard": "Discard draft",
+  "@accountDraftDiscard": {
+    "description": "SPEC 8.16: explicit discard of the account draft."
+  },
+  "accountDraftUnsupported": "A saved draft from an older version cannot be opened. Discard it.",
+  "@accountDraftUnsupported": {
+    "description": "P01: unsupported draft payload state."
+  },
+  "accountSaveFailed": "The account was not saved. Your entries stay here.",
+  "@accountSaveFailed": {
+    "description": "C01 failed save line; keeps the draft."
+  },
+  "accountPickerTitle": "Choose an account",
+  "@accountPickerTitle": {
+    "description": "C01 account picker sheet title."
+  },
+  "accountPickerSpoken": "Choose an account",
+  "@accountPickerSpoken": {
+    "description": "C01 account picker spoken name."
+  },
+  "accountPickerEmpty": "None recorded",
+  "@accountPickerEmpty": {
+    "description": "SPEC 4.9: no accounts yet."
+  },
+  "accountPickerAdd": "Add an account",
+  "@accountPickerAdd": {
+    "description": "C01 account picker add action."
+  },
+  "accountLineBank": "Bank account",
+  "@accountLineBank": {
+    "description": "Account row type line."
+  },
+  "accountLineCash": "Cash",
+  "@accountLineCash": {
+    "description": "Account row type line."
+  },
+  "accountLineCard": "Credit card",
+  "@accountLineCard": {
+    "description": "Account row type line."
+  },
+  "chartShowAsTable": "Show as table",
+  "@chartShowAsTable": {
+    "description": "DESIGN 7.1: the chart disclosure that opens the exact values."
+  },
+  "chartHideTable": "Hide table",
+  "@chartHideTable": {
+    "description": "DESIGN 7.1: closes the chart table again."
+  },
+  "chartAverageShort": "AVG",
+  "@chartAverageShort": {
+    "description": "DESIGN 7.2: the short average label on a period bar chart."
+  },
+  "chartNoneRecorded": "None recorded",
+  "@chartNoneRecorded": {
+    "description": "DESIGN 7.1: an empty chart data set (SPEC 4.9 known zero)."
+  },
+  "paymentSave": "Save",
+  "@paymentSave": {
+    "description": "X20 Save with no amount yet."
+  },
+  "paymentSaveWithAmount": "Save {amount}",
+  "@paymentSaveWithAmount": {
+    "description": "X20: the Save label carries the amount.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentClose": "Close",
+  "@paymentClose": {
+    "description": "X20 close action; keeps the draft."
+  },
+  "paymentSpeak": "Speak",
+  "@paymentSpeak": {
+    "description": "X20 voice source button (P24)."
+  },
+  "paymentScanQr": "Scan QR",
+  "@paymentScanQr": {
+    "description": "X20 QR source button (Phase 3)."
+  },
+  "paymentReceiptPhoto": "Receipt photo",
+  "@paymentReceiptPhoto": {
+    "description": "X20 receipt photo button (Phase 3)."
+  },
+  "paymentImportFile": "Import a file",
+  "@paymentImportFile": {
+    "description": "X20 import button (Phase 3)."
+  },
+  "paymentTypeLabel": "Type",
+  "@paymentTypeLabel": {
+    "description": "X20 control row name."
+  },
+  "paymentTypeExpense": "Expense",
+  "@paymentTypeExpense": {
+    "description": "X20 type choice."
+  },
+  "paymentTypeIncome": "Income",
+  "@paymentTypeIncome": {
+    "description": "X20 type choice."
+  },
+  "paymentTypeTransfer": "Transfer",
+  "@paymentTypeTransfer": {
+    "description": "X20 type choice (X26, P23)."
+  },
+  "paymentKickerExpense": "New expense · {currency}",
+  "@paymentKickerExpense": {
+    "description": "X20 kicker with the payment currency.",
+    "placeholders": {
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentKickerIncome": "New income · {currency}",
+  "@paymentKickerIncome": {
+    "description": "X20 kicker with the payment currency.",
+    "placeholders": {
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentMerchantLabel": "Where or what?",
+  "@paymentMerchantLabel": {
+    "description": "X20 merchant field label."
+  },
+  "paymentMerchantHint": "For example Starbucks",
+  "@paymentMerchantHint": {
+    "description": "X20 merchant field hint."
+  },
+  "paymentDelete": "Delete",
+  "@paymentDelete": {
+    "description": "Keypad delete key."
+  },
+  "paymentDecimal": "Decimal point",
+  "@paymentDecimal": {
+    "description": "Keypad decimal key spoken name."
+  },
+  "paymentAmountNotFilled": "Amount, not filled yet",
+  "@paymentAmountNotFilled": {
+    "description": "X24/X25 empty amount spoken name."
+  },
+  "paymentChooseAccount": "Choose account",
+  "@paymentChooseAccount": {
+    "description": "X20 account pill before a choice."
+  },
+  "paymentCurrencySpoken": "Currency: {code}. Opens details",
+  "@paymentCurrencySpoken": {
+    "description": "X20 currency pill spoken name.",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentDateSpoken": "Date: {label}. Opens details",
+  "@paymentDateSpoken": {
+    "description": "X20 date pill spoken name.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentAccountPillSpoken": "Paid with: {name}. Opens details",
+  "@paymentAccountPillSpoken": {
+    "description": "X20 account pill spoken name.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentSplitPill": "Split",
+  "@paymentSplitPill": {
+    "description": "X20 split pill before any part."
+  },
+  "paymentSplitPillCount": "Split · {count}",
+  "@paymentSplitPillCount": {
+    "description": "X20 split pill with its part count.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentSplitSpoken": "{label}. Opens the split editor",
+  "@paymentSplitSpoken": {
+    "description": "X20 split pill spoken name.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentDateToday": "Today",
+  "@paymentDateToday": {
+    "description": "X22 date chip."
+  },
+  "paymentDateYesterday": "Yesterday",
+  "@paymentDateYesterday": {
+    "description": "X22 date chip."
+  },
+  "paymentDateTwoDaysAgo": "2 days ago",
+  "@paymentDateTwoDaysAgo": {
+    "description": "X22 date chip."
+  },
+  "paymentDateChipSpoken": "{label}, {date}",
+  "@paymentDateChipSpoken": {
+    "description": "X22 date chip spoken name.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentCategoryChipSpoken": "Category: {name}",
+  "@paymentCategoryChipSpoken": {
+    "description": "X20 category chip spoken name.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentAllCategories": "All categories",
+  "@paymentAllCategories": {
+    "description": "X20 dashed category chip."
+  },
+  "paymentAllCategoriesSpoken": "All categories. Opens the category sheet",
+  "@paymentAllCategoriesSpoken": {
+    "description": "X20 dashed chip spoken name."
+  },
+  "paymentUnavailable": "Payments are not connected in this build.",
+  "@paymentUnavailable": {
+    "description": "P22 unwired vault composition state."
+  },
+  "paymentInvalid": "Choose an account and an amount above zero.",
+  "@paymentInvalid": {
+    "description": "F03: a payment needs an account and an amount."
+  },
+  "paymentSaveFailed": "The payment was not saved. Your entries stay here.",
+  "@paymentSaveFailed": {
+    "description": "F03 failed save; keeps the draft."
+  },
+  "paymentNoAccount": "No account yet. Add an account to save a payment.",
+  "@paymentNoAccount": {
+    "description": "F03 recovery: missing account."
+  },
+  "paymentDraftDiscard": "Discard draft",
+  "@paymentDraftDiscard": {
+    "description": "SPEC 8.16: explicit discard."
+  },
+  "paymentDraftUnsupported": "A saved draft from an older version cannot be opened. Discard it.",
+  "@paymentDraftUnsupported": {
+    "description": "P01 unsupported draft payload state."
+  },
+  "paymentSavedToast": "Payment saved",
+  "@paymentSavedToast": {
+    "description": "SPEC 8.18: toast after a confirmed create."
+  },
+  "paymentEditedToast": "Payment changed",
+  "@paymentEditedToast": {
+    "description": "SPEC 8.18: toast after a confirmed edit."
+  },
+  "paymentUndo": "Undo",
+  "@paymentUndo": {
+    "description": "SPEC 8.18: one Undo in the toast."
+  },
+  "paymentSplitLeftLine": "{count} parts, {amount} left to split",
+  "@paymentSplitLeftLine": {
+    "description": "X20 factual line while a split is not exact.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentSplitPartsCount": "Parts: {count}",
+  "@paymentSplitPartsCount": {
+    "description": "The X20 split line with its part count.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentSplitPartsMeta": "{count}",
+  "@paymentSplitPartsMeta": {
+    "description": "X23 parts card meta: the part count only.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentCategorySearch": "Find a category",
+  "@paymentCategorySearch": {
+    "description": "X21 search field label."
+  },
+  "paymentCategoryEmpty": "No categories yet.",
+  "@paymentCategoryEmpty": {
+    "description": "X21 empty state (known zero)."
+  },
+  "paymentCategoryNoMatch": "No category matches.",
+  "@paymentCategoryNoMatch": {
+    "description": "X21 search result empty state."
+  },
+  "paymentCategoryNew": "New category",
+  "@paymentCategoryNew": {
+    "description": "X21 add action (C03, P28)."
+  },
+  "paymentCategoryTitle": "Category",
+  "@paymentCategoryTitle": {
+    "description": "X21 sheet title."
+  },
+  "paymentCategorySpoken": "Choose a category",
+  "@paymentCategorySpoken": {
+    "description": "X21 sheet spoken name."
+  },
+  "paymentCategorySelected": "{name}, selected",
+  "@paymentCategorySelected": {
+    "description": "X21 selected tile spoken name.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentDetailsSheetTitle": "Details",
+  "@paymentDetailsSheetTitle": {
+    "description": "X22 sheet title."
+  },
+  "paymentDetailsSheetSpoken": "Date, account, currency",
+  "@paymentDetailsSheetSpoken": {
+    "description": "X22 sheet spoken name."
+  },
+  "paymentPaidWith": "Paid with",
+  "@paymentPaidWith": {
+    "description": "X22 account row."
+  },
+  "paymentPaidWithSpoken": "Paid with: {name}. Opens the account picker",
+  "@paymentPaidWithSpoken": {
+    "description": "X22 account row spoken name.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentCurrencyLabel": "Currency",
+  "@paymentCurrencyLabel": {
+    "description": "X22 currency row."
+  },
+  "paymentCurrencySheetSpoken": "Choose a currency",
+  "@paymentCurrencySheetSpoken": {
+    "description": "X22 currency sheet name."
+  },
+  "paymentTagsLabel": "Tags",
+  "@paymentTagsLabel": {
+    "description": "X22 tags row."
+  },
+  "paymentTagsSpoken": "Tags: {text}",
+  "@paymentTagsSpoken": {
+    "description": "X22 tags row spoken name.",
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentTagsNone": "None",
+  "@paymentTagsNone": {
+    "description": "SPEC 4.9: no tags chosen."
+  },
+  "paymentTagsCount": "{count} selected",
+  "@paymentTagsCount": {
+    "description": "X22 tag count.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentTagsEmpty": "No tags yet.",
+  "@paymentTagsEmpty": {
+    "description": "X22 tag sheet empty state."
+  },
+  "paymentDone": "Done",
+  "@paymentDone": {
+    "description": "X22 sheet confirm."
+  },
+  "paymentTodayMeta": "Today {date}",
+  "@paymentTodayMeta": {
+    "description": "X22 month card meta.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentMonthPrevious": "Previous month",
+  "@paymentMonthPrevious": {
+    "description": "X22 month navigation."
+  },
+  "paymentMonthNext": "Next month",
+  "@paymentMonthNext": {
+    "description": "X22 month navigation."
+  },
+  "paymentWeekdayMon": "Mo",
+  "@paymentWeekdayMon": {
+    "description": "X22 weekday header."
+  },
+  "paymentWeekdayTue": "Tu",
+  "@paymentWeekdayTue": {
+    "description": "X22 weekday header."
+  },
+  "paymentWeekdayWed": "We",
+  "@paymentWeekdayWed": {
+    "description": "X22 weekday header."
+  },
+  "paymentWeekdayThu": "Th",
+  "@paymentWeekdayThu": {
+    "description": "X22 weekday header."
+  },
+  "paymentWeekdayFri": "Fr",
+  "@paymentWeekdayFri": {
+    "description": "X22 weekday header."
+  },
+  "paymentWeekdaySat": "Sa",
+  "@paymentWeekdaySat": {
+    "description": "X22 weekday header."
+  },
+  "paymentWeekdaySun": "Su",
+  "@paymentWeekdaySun": {
+    "description": "X22 weekday header."
+  },
+  "paymentDayToday": "{date}, today",
+  "@paymentDayToday": {
+    "description": "X22 today cell spoken name.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentDaySpoken": "{date}",
+  "@paymentDaySpoken": {
+    "description": "X22 day cell spoken name.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentMonthJanuary": "January",
+  "@paymentMonthJanuary": {
+    "description": "X22 month name."
+  },
+  "paymentMonthFebruary": "February",
+  "@paymentMonthFebruary": {
+    "description": "X22 month name."
+  },
+  "paymentMonthMarch": "March",
+  "@paymentMonthMarch": {
+    "description": "X22 month name."
+  },
+  "paymentMonthApril": "April",
+  "@paymentMonthApril": {
+    "description": "X22 month name."
+  },
+  "paymentMonthMay": "May",
+  "@paymentMonthMay": {
+    "description": "X22 month name."
+  },
+  "paymentMonthJune": "June",
+  "@paymentMonthJune": {
+    "description": "X22 month name."
+  },
+  "paymentMonthJuly": "July",
+  "@paymentMonthJuly": {
+    "description": "X22 month name."
+  },
+  "paymentMonthAugust": "August",
+  "@paymentMonthAugust": {
+    "description": "X22 month name."
+  },
+  "paymentMonthSeptember": "September",
+  "@paymentMonthSeptember": {
+    "description": "X22 month name."
+  },
+  "paymentMonthOctober": "October",
+  "@paymentMonthOctober": {
+    "description": "X22 month name."
+  },
+  "paymentMonthNovember": "November",
+  "@paymentMonthNovember": {
+    "description": "X22 month name."
+  },
+  "paymentMonthDecember": "December",
+  "@paymentMonthDecember": {
+    "description": "X22 month name."
+  },
+  "paymentSplitTitle": "Split payment",
+  "@paymentSplitTitle": {
+    "description": "X23 screen title."
+  },
+  "paymentSplitKicker": "Split payment · total",
+  "@paymentSplitKicker": {
+    "description": "X23 hero kicker."
+  },
+  "paymentSplitBarTitle": "Split payment",
+  "@paymentSplitBarTitle": {
+    "description": "X23 split bar title."
+  },
+  "paymentSplitColumnPart": "Part",
+  "@paymentSplitColumnPart": {
+    "description": "X23 split table column."
+  },
+  "paymentSplitColumnAmount": "Amount",
+  "@paymentSplitColumnAmount": {
+    "description": "X23 split table column."
+  },
+  "paymentSplitColumnShare": "Share",
+  "@paymentSplitColumnShare": {
+    "description": "X23 split table column."
+  },
+  "paymentSplitPartsTitle": "Parts",
+  "@paymentSplitPartsTitle": {
+    "description": "X23 parts card title."
+  },
+  "paymentSplitRemove": "Remove {name}",
+  "@paymentSplitRemove": {
+    "description": "X23 remove part spoken name.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentSplitAdd": "Add a part",
+  "@paymentSplitAdd": {
+    "description": "X23 add part action."
+  },
+  "paymentSplitLeft": "Left to split",
+  "@paymentSplitLeft": {
+    "description": "X23 remainder label."
+  },
+  "paymentSplitAllInParts": "All of {amount} is in a part",
+  "@paymentSplitAllInParts": {
+    "description": "X23 exact remainder line.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentSplitSave": "Save split",
+  "@paymentSplitSave": {
+    "description": "X23 primary action."
+  },
+  "paymentSplitSaveNote": "Save is active when nothing is left to split.",
+  "@paymentSplitSaveNote": {
+    "description": "X23 factual caption."
+  },
+  "paymentSplitContext": "{name} · {date} · {count, plural, =1{1 part} other{{count} parts}}",
+  "@paymentSplitContext": {
+    "description": "X23 hero context line.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentSplitSubline": "{name}, {date}",
+  "@paymentSplitSubline": {
+    "description": "X23 header sub-line.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentSplitNoMerchant": "Payment",
+  "@paymentSplitNoMerchant": {
+    "description": "X23 context line with no merchant."
+  },
+  "paymentSplitEmpty": "None recorded",
+  "@paymentSplitEmpty": {
+    "description": "X23 empty split (SPEC 4.9)."
+  },
+  "paymentSplitAmountSpoken": "Amount for {name}",
+  "@paymentSplitAmountSpoken": {
+    "description": "X23 part amount sheet spoken name.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "transferKicker": "Transfer · {date}",
+  "@transferKicker": {
+    "description": "X26 kicker above the amount.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "transferClose": "Close",
+  "@transferClose": {
+    "description": "X26 closes and keeps the draft."
+  },
+  "transferSave": "Save transfer",
+  "@transferSave": {
+    "description": "X26 Save with no amount yet."
+  },
+  "transferSaveWithAmount": "Save {amount}",
+  "@transferSaveWithAmount": {
+    "description": "X26 Save label with the amount (SPEC 3.2).",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "transferFrom": "From",
+  "@transferFrom": {
+    "description": "X26 sending account row."
+  },
+  "transferTo": "To",
+  "@transferTo": {
+    "description": "X26 receiving account row."
+  },
+  "transferDate": "Date",
+  "@transferDate": {
+    "description": "X26 date row and sheet title."
+  },
+  "transferDateSpoken": "Date: {date}. Opens the date sheet",
+  "@transferDateSpoken": {
+    "description": "X26 date row spoken name.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "transferChooseAccount": "Choose account",
+  "@transferChooseAccount": {
+    "description": "X26 row value before a choice."
+  },
+  "transferAccountSpoken": "{field}: {name}. Opens the account list",
+  "@transferAccountSpoken": {
+    "description": "X26 account row spoken name.",
+    "placeholders": {
+      "field": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "transferCaption": "A transfer moves money between your own accounts. It is not counted as spending.",
+  "@transferCaption": {
+    "description": "X26 caption (SPEC 4.2, no advice)."
+  },
+  "transferAmountNotFilled": "Amount, not filled yet",
+  "@transferAmountNotFilled": {
+    "description": "X26 amount field before entry."
+  },
+  "transferSameAccount": "Choose two different accounts.",
+  "@transferSameAccount": {
+    "description": "X26 rejection of one account twice."
+  },
+  "transferCrossCurrency": "Transfers between two currencies are not in this version.",
+  "@transferCrossCurrency": {
+    "description": "X26 states X26b is v1.1 (SPEC 6.3)."
+  },
+  "transferNoAccount": "Add an account first.",
+  "@transferNoAccount": {
+    "description": "X26 empty account list."
+  },
+  "transferUnavailable": "The transfer is not connected in this build.",
+  "@transferUnavailable": {
+    "description": "X26 unwired gateway state."
+  },
+  "transferInvalid": "Check the amount and the two accounts.",
+  "@transferInvalid": {
+    "description": "X26 validation failure."
+  },
+  "transferSaveFailed": "The transfer was not saved. Your entries stay here.",
+  "@transferSaveFailed": {
+    "description": "X26 confirmed Save failed (SPEC 8.16)."
+  },
+  "transferSavedToast": "Transfer saved",
+  "@transferSavedToast": {
+    "description": "X26 toast after a confirmed write."
+  },
+  "transferUndo": "Undo",
+  "@transferUndo": {
+    "description": "X26 toast Undo action (SPEC 8.18)."
+  },
+  "transferDraftDiscard": "Discard draft",
+  "@transferDraftDiscard": {
+    "description": "X26 discards the stored draft (P01)."
+  },
+  "transferDraftUnsupported": "A saved draft from an older version cannot be opened. Discard it.",
+  "@transferDraftUnsupported": {
+    "description": "X26 unsupported draft state (P01)."
+  },
+  "voiceClose": "Close",
+  "@voiceClose": {
+    "description": "X24/X25 closes without a record."
+  },
+  "voicePermissionTitle": "Use your voice to add payments",
+  "@voicePermissionTitle": {
+    "description": "X87 dialog title (SCREENS)."
+  },
+  "voicePermissionLineListen": "The app listens only while the button is held or until you tap Stop.",
+  "@voicePermissionLineListen": {
+    "description": "X87 first line (SPEC 8.19)."
+  },
+  "voicePermissionLineOnDevice": "Speech is turned into text on this phone.",
+  "@voicePermissionLineOnDevice": {
+    "description": "X87 second line (SPEC 8.19)."
+  },
+  "voicePermissionLineNoAudio": "No audio is saved or sent.",
+  "@voicePermissionLineNoAudio": {
+    "description": "X87 third line (SPEC 8.19)."
+  },
+  "voicePermissionAllow": "Allow microphone",
+  "@voicePermissionAllow": {
+    "description": "X87 primary action."
+  },
+  "voicePermissionNotNow": "Not now",
+  "@voicePermissionNotNow": {
+    "description": "X87 keeps typed entry (F04-B)."
+  },
+  "voiceChecking": "Checking the microphone.",
+  "@voiceChecking": {
+    "description": "X24 before the engine answers."
+  },
+  "voiceListeningTitle": "Listening, on this phone",
+  "@voiceListeningTitle": {
+    "description": "X24 stage header."
+  },
+  "voiceStop": "Stop",
+  "@voiceStop": {
+    "description": "X24 ends recognition."
+  },
+  "voiceListeningEmpty": "Listening…",
+  "@voiceListeningEmpty": {
+    "description": "X24 before the first words."
+  },
+  "voiceListeningCaption": "Speak naturally. The app fills the form below. Nothing is saved until you tap Save.",
+  "@voiceListeningCaption": {
+    "description": "X24 caption (SPEC 8.19)."
+  },
+  "voiceFilledKicker": "Voice · form filled",
+  "@voiceFilledKicker": {
+    "description": "X25 kicker."
+  },
+  "voiceYouSaid": "You said",
+  "@voiceYouSaid": {
+    "description": "X25 transcript card title."
+  },
+  "voiceOnThisPhone": "on this phone",
+  "@voiceOnThisPhone": {
+    "description": "X25 transcript card meta (SPEC 8.19)."
+  },
+  "voiceForm": "Form",
+  "@voiceForm": {
+    "description": "X25 filled form card title."
+  },
+  "voiceFilledMeta": "{filled} filled · {check} to check",
+  "@voiceFilledMeta": {
+    "description": "X25 filled form meta.",
+    "placeholders": {
+      "filled": {
+        "type": "int"
+      },
+      "check": {
+        "type": "int"
+      }
+    }
+  },
+  "voiceRowAmount": "Amount",
+  "@voiceRowAmount": {
+    "description": "X25 review row."
+  },
+  "voiceRowWhere": "Where",
+  "@voiceRowWhere": {
+    "description": "X25 review row."
+  },
+  "voiceRowCategory": "Category",
+  "@voiceRowCategory": {
+    "description": "X25 review row."
+  },
+  "voiceRowDate": "Date",
+  "@voiceRowDate": {
+    "description": "X25 review row."
+  },
+  "voiceRowPaidWith": "Paid with",
+  "@voiceRowPaidWith": {
+    "description": "X25 review row."
+  },
+  "voiceNoneRecorded": "None recorded",
+  "@voiceNoneRecorded": {
+    "description": "X25 empty value (SPEC 4.9 known zero)."
+  },
+  "voiceCheckThis": "Check this one",
+  "@voiceCheckThis": {
+    "description": "X25 unsure field marker."
+  },
+  "voiceRowSpoken": "{name}: {value}",
+  "@voiceRowSpoken": {
+    "description": "X25 review row spoken name.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "voiceRowSpokenCheck": "{name}: {value}, please check",
+  "@voiceRowSpokenCheck": {
+    "description": "X25 unsure row spoken name.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "voiceReviewCaption": "These values come from what you said. Check the marked rows before Save.",
+  "@voiceReviewCaption": {
+    "description": "X25 review caption (no advice)."
+  },
+  "voiceChooseAccount": "Choose an account before Save.",
+  "@voiceChooseAccount": {
+    "description": "X25 a missing account blocks the direct Save."
+  },
+  "voiceChooseAccountRow": "Choose account",
+  "@voiceChooseAccountRow": {
+    "description": "X25 Paid with row before a choice."
+  },
+  "voiceSpeakAgain": "Speak again",
+  "@voiceSpeakAgain": {
+    "description": "X25 starts a new recognition."
+  },
+  "voiceSaveWithAmount": "Save {amount}",
+  "@voiceSaveWithAmount": {
+    "description": "X25 Save label with the amount.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "voiceContinueInForm": "Continue in the form",
+  "@voiceContinueInForm": {
+    "description": "X25 returns the transcript to X20."
+  },
+  "voiceTypeInstead": "Type it instead",
+  "@voiceTypeInstead": {
+    "description": "X24 without a usable engine (F04-B)."
+  },
+  "voiceNoSpeech": "No speech was recognised.",
+  "@voiceNoSpeech": {
+    "description": "X24 engine returned nothing."
+  },
+  "voiceDeniedTitle": "The microphone is not allowed",
+  "@voiceDeniedTitle": {
+    "description": "X24 permission denied state."
+  },
+  "voiceDeniedBody": "Typed entry works as usual.",
+  "@voiceDeniedBody": {
+    "description": "X24 denial keeps typed entry (F04-B)."
+  },
+  "voiceUnavailableTitle": "Voice is not available on this device",
+  "@voiceUnavailableTitle": {
+    "description": "X24 no verified on-device engine (SPEC 8.19)."
+  },
+  "voiceUnavailableBody": "Typed entry works as usual.",
+  "@voiceUnavailableBody": {
+    "description": "X24 unavailable keeps typed entry."
+  },
+  "voiceAccountCheck": "{name} (check)",
+  "@voiceAccountCheck": {
+    "description": "X25 account guessed from a card word.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxTitle": "Inbox",
+  "@inboxTitle": {
+    "description": "X60 header title."
+  },
+  "inboxBack": "Back",
+  "@inboxBack": {
+    "description": "X60 returns to Home."
+  },
+  "inboxSubline": "{count} to check · on this phone",
+  "@inboxSubline": {
+    "description": "X60 sub-line (SPEC 8.19, on-device).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inboxEmptySubline": "Nothing to check · on this phone",
+  "@inboxEmptySubline": {
+    "description": "X62 sub-line."
+  },
+  "inboxEmptyKicker": "Inbox · to check",
+  "@inboxEmptyKicker": {
+    "description": "X62 hero kicker."
+  },
+  "inboxHeroKicker": "Inbox · ready to confirm",
+  "@inboxHeroKicker": {
+    "description": "X60 hero kicker."
+  },
+  "inboxEmptyLine": "Nothing to check. Everything captured is confirmed.",
+  "@inboxEmptyLine": {
+    "description": "X62 hero line (known zero)."
+  },
+  "inboxEmptyTitle": "All clear",
+  "@inboxEmptyTitle": {
+    "description": "X62 empty state title."
+  },
+  "inboxEmptyBody": "New captures show here to check.",
+  "@inboxEmptyBody": {
+    "description": "X62 empty state body."
+  },
+  "inboxReadyLine": "{ticked} ticked of {pending}. Unsure items are not ticked.",
+  "@inboxReadyLine": {
+    "description": "X60 hero line (F07-A).",
+    "placeholders": {
+      "ticked": {
+        "type": "int"
+      },
+      "pending": {
+        "type": "int"
+      }
+    }
+  },
+  "inboxDecisionLine": "{ticked} ticked of {pending}. A decision is open.",
+  "@inboxDecisionLine": {
+    "description": "X60 hero line while a decision is open (SPEC 5.5).",
+    "placeholders": {
+      "ticked": {
+        "type": "int"
+      },
+      "pending": {
+        "type": "int"
+      }
+    }
+  },
+  "inboxNoTotal": "Not available",
+  "@inboxNoTotal": {
+    "description": "X60 hero before a ticked total."
+  },
+  "inboxDecisionTitle": "Needs a decision",
+  "@inboxDecisionTitle": {
+    "description": "X60 decision card title."
+  },
+  "inboxDecisionMeta": "{position} of {count}",
+  "@inboxDecisionMeta": {
+    "description": "X60 decision card meta.",
+    "placeholders": {
+      "position": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inboxDecisionQuestion": "Is this a transfer between your own accounts?",
+  "@inboxDecisionQuestion": {
+    "description": "X60 decision question (G02)."
+  },
+  "inboxDecisionFrom": "From · {date}",
+  "@inboxDecisionFrom": {
+    "description": "X60 decision source row.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxDecisionTo": "To · {date}",
+  "@inboxDecisionTo": {
+    "description": "X60 decision destination row.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxDecisionCaption": "A transfer is not counted as spending.",
+  "@inboxDecisionCaption": {
+    "description": "X60 decision caption (SPEC 4.2)."
+  },
+  "inboxDecisionYes": "Yes, a transfer",
+  "@inboxDecisionYes": {
+    "description": "X60 affirmative decision."
+  },
+  "inboxDecisionNo": "No, two payments",
+  "@inboxDecisionNo": {
+    "description": "X60 negative decision."
+  },
+  "inboxReadyTitle": "Ready to confirm",
+  "@inboxReadyTitle": {
+    "description": "X60 ready card title."
+  },
+  "inboxReadyMeta": "{count} ticked",
+  "@inboxReadyMeta": {
+    "description": "X60 ready card meta.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inboxNoneRecorded": "None recorded",
+  "@inboxNoneRecorded": {
+    "description": "X60 a factual empty value."
+  },
+  "inboxPaymentFallback": "Payment",
+  "@inboxPaymentFallback": {
+    "description": "X60 a staged row with no merchant."
+  },
+  "inboxCategoryMissing": "No category",
+  "@inboxCategoryMissing": {
+    "description": "X60 the staged row has no category."
+  },
+  "inboxCategoryUnsure": "{name} ?",
+  "@inboxCategoryUnsure": {
+    "description": "X60 category that needs a check (F07-A).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxRowLine": "{date} · {category}",
+  "@inboxRowLine": {
+    "description": "X60 row grey line.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxRowCheckSpoken": "{name}, tick to confirm",
+  "@inboxRowCheckSpoken": {
+    "description": "X60 checkbox spoken name.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxRowSpoken": "{name}, {amount}. Opens the item",
+  "@inboxRowSpoken": {
+    "description": "X60 row spoken name.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxConfirm": "Confirm {count} ticked, {amount}",
+  "@inboxConfirm": {
+    "description": "X60 confirm bar (F07-B).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxConfirmEmpty": "Confirm 0 ticked",
+  "@inboxConfirmEmpty": {
+    "description": "X60 confirm bar with no ticked row."
+  },
+  "inboxConfirmedToast": "Confirmed {count}",
+  "@inboxConfirmedToast": {
+    "description": "X60 toast after a batch.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inboxUndo": "Undo",
+  "@inboxUndo": {
+    "description": "X60 toast Undo (SPEC 8.18)."
+  },
+  "inboxItemTitle": "Check this payment",
+  "@inboxItemTitle": {
+    "description": "X61 sheet title (SCREENS)."
+  },
+  "inboxItemSource": "From {source}",
+  "@inboxItemSource": {
+    "description": "X61 source line.",
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxFieldName": "Name",
+  "@inboxFieldName": {
+    "description": "X61 field row."
+  },
+  "inboxFieldAmount": "Amount",
+  "@inboxFieldAmount": {
+    "description": "X61 field row."
+  },
+  "inboxFieldDate": "Date",
+  "@inboxFieldDate": {
+    "description": "X61 field row."
+  },
+  "inboxFieldCategory": "Category",
+  "@inboxFieldCategory": {
+    "description": "X61 field row."
+  },
+  "inboxFieldAccount": "Account",
+  "@inboxFieldAccount": {
+    "description": "X61 field row."
+  },
+  "inboxDelete": "Delete",
+  "@inboxDelete": {
+    "description": "X61 removes the staged item."
+  },
+  "inboxConfirmOne": "Confirm",
+  "@inboxConfirmOne": {
+    "description": "X61 one-item confirm."
+  },
+  "inboxSourceNotifications": "Notifications",
+  "@inboxSourceNotifications": {
+    "description": "Inbox source channel."
+  },
+  "inboxSourceMail": "Shared from mail app",
+  "@inboxSourceMail": {
+    "description": "Inbox source channel."
+  },
+  "inboxSourceStatement": "Statement",
+  "@inboxSourceStatement": {
+    "description": "Inbox source channel."
+  },
+  "inboxSourceReceipt": "Receipts and QR",
+  "@inboxSourceReceipt": {
+    "description": "Inbox source channel."
+  },
+  "inboxSourceOther": "Capture",
+  "@inboxSourceOther": {
+    "description": "Inbox source channel fallback."
+  },
+  "inboxLoading": "Reading this phone only.",
+  "@inboxLoading": {
+    "description": "X60 loading line (SPEC 8.19)."
+  },
+  "inboxFailed": "The Inbox did not load.",
+  "@inboxFailed": {
+    "description": "X60 read failure."
+  },
+  "inboxRetry": "Try again",
+  "@inboxRetry": {
+    "description": "X60 retry action."
+  },
+  "spendingTitle": "Spending",
+  "spendingLoading": "Reading this phone only.",
+  "@spendingLoading": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingLoadFailed": "The numbers did not load.",
+  "@spendingLoadFailed": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingRetry": "Try again",
+  "@spendingRetry": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingSpentKicker": "Spent",
+  "@spendingSpentKicker": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingChartTitle": "Spent",
+  "@spendingChartTitle": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingAverageShort": "AVG",
+  "spendingSameDaysLine": "Same days in {month}: {amount}. {comparison}",
+  "spendingLowerBy": "This month is {amount} lower.",
+  "spendingHigherBy": "This month is {amount} higher.",
+  "spendingSameAmount": "This month is the same.",
+  "spendingChartColumn": "Day",
+  "@spendingChartColumn": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingChartAmountColumn": "Amount",
+  "@spendingChartAmountColumn": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingChartMonthColumn": "Month",
+  "@spendingChartMonthColumn": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingLimitLabel": "Limit",
+  "@spendingLimitLabel": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingLeftLabel": "Left",
+  "@spendingLeftLabel": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingPaid": "Paid",
+  "@spendingPaid": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingNothingRecorded": "Nothing recorded",
+  "@spendingNothingRecorded": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingNoLimit": "No limit",
+  "@spendingNoLimit": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingNoLimits": "No category limits yet.",
+  "@spendingNoLimits": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingCategoriesWithoutLimit": "These categories have no limit yet.",
+  "@spendingCategoriesWithoutLimit": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingUncategorised": "Uncategorised",
+  "@spendingUncategorised": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingIncomplete": "This period is not closed yet.",
+  "@spendingIncomplete": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingHeroLimitLine": "{left} left of {limit}",
+  "@spendingHeroLimitLine": {
+    "description": "P26 Spending screen string.",
+    "placeholders": {
+      "left": {
+        "type": "String"
+      },
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "spendingByCategoryTitle": "By category",
+  "@spendingByCategoryTitle": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingWhereItGoes": "Where it goes",
+  "@spendingWhereItGoes": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingBudgetRow": "Budget",
+  "@spendingBudgetRow": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingMoneyInRow": "Money in",
+  "@spendingMoneyInRow": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingEditLimitsRow": "Edit limits",
+  "@spendingEditLimitsRow": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingAddLimit": "Add a category limit",
+  "@spendingAddLimit": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingPeriodWeek": "1W",
+  "@spendingPeriodWeek": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingPeriodMonth": "1M",
+  "@spendingPeriodMonth": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingPeriodSixMonths": "6M",
+  "@spendingPeriodSixMonths": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingPeriodYear": "1Y",
+  "@spendingPeriodYear": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingPeriodWeekSpoken": "Last 7 days",
+  "@spendingPeriodWeekSpoken": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingPeriodMonthSpoken": "This month",
+  "@spendingPeriodMonthSpoken": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingPeriodSixMonthsSpoken": "Last 6 complete months",
+  "@spendingPeriodSixMonthsSpoken": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingPeriodYearSpoken": "Last 12 complete months",
+  "@spendingPeriodYearSpoken": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingWhereItGoesTitle": "Where it goes",
+  "@spendingWhereItGoesTitle": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingWhereKicker": "Where it goes · {month}",
+  "@spendingWhereKicker": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingPercentOfSpending": "% of spending",
+  "@spendingPercentOfSpending": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingPercentOfMoneyIn": "% of money in",
+  "@spendingPercentOfMoneyIn": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingWhereLine": "Of your {moneyIn} money in so far: spent {spent}, kept {kept}.",
+  "@spendingWhereLine": {
+    "description": "P26 Spending screen string.",
+    "placeholders": {
+      "moneyIn": {
+        "type": "String"
+      },
+      "spent": {
+        "type": "String"
+      },
+      "kept": {
+        "type": "String"
+      }
+    }
+  },
+  "spendingWhereCaption": "Bar: share this month. Transfers and card repayments are not counted.",
+  "@spendingWhereCaption": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingShareValue": "{percent} · {amount}",
+  "@spendingShareValue": {
+    "description": "P26 Spending screen string.",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "spendingMoneyInTitle": "Money in",
+  "@spendingMoneyInTitle": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingMoneyInKicker": "Money in · total",
+  "@spendingMoneyInKicker": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingMoneyInChartTitle": "Money in",
+  "@spendingMoneyInChartTitle": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingKeptLine": "Kept so far: {kept}, {percent}.",
+  "@spendingKeptLine": {
+    "description": "P26 Spending screen string.",
+    "placeholders": {
+      "kept": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "spendingMoneyInNothing": "No money in is recorded for this period.",
+  "@spendingMoneyInNothing": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingBudgetTitle": "Budget",
+  "@spendingBudgetTitle": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingBudgetKicker": "Left of {month} limit",
+  "@spendingBudgetKicker": {
+    "description": "P26 Spending screen string.",
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "spendingBudgetLine": "{spent} of {limit} spent. Day {day} of {days}.",
+  "@spendingBudgetLine": {
+    "description": "P26 Spending screen string.",
+    "placeholders": {
+      "spent": {
+        "type": "String"
+      },
+      "limit": {
+        "type": "String"
+      },
+      "day": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "spendingBudgetNoLimit": "No limit is set for this month.",
+  "@spendingBudgetNoLimit": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingLimitsTitle": "Limits",
+  "@spendingLimitsTitle": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingLimitsMeta": "Most left first",
+  "@spendingLimitsMeta": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingLimitsCaption": "Each ring is one limit, filled to the share used. The white tick is today, {percent} of the month.",
+  "@spendingLimitsCaption": {
+    "description": "P26 Spending screen string.",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "spendingEditLimitsTitle": "Monthly limits",
+  "@spendingEditLimitsTitle": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingEditLimitsSubline": "Spending",
+  "@spendingEditLimitsSubline": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingSave": "Save",
+  "@spendingSave": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingTotalLimitKicker": "Total limit · each month",
+  "@spendingTotalLimitKicker": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingTotalLimitLine": "The sum of {count} category limits.",
+  "@spendingTotalLimitLine": {
+    "description": "P26 Spending screen string.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "spendingLimitPerCategory": "Limit per category",
+  "@spendingLimitPerCategory": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingLimitSpoken": "{name} limit {amount}. Edit.",
+  "@spendingLimitSpoken": {
+    "description": "P26 Spending screen string.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "spendingLimitUnset": "Set",
+  "@spendingLimitUnset": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingLimitSheetTitle": "Limit for {name}",
+  "@spendingLimitSheetTitle": {
+    "description": "P26 Spending screen string.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "spendingLimitUse": "Use this limit",
+  "@spendingLimitUse": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingLimitRemove": "Remove the limit",
+  "@spendingLimitRemove": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingEveryMonth": "Every month starts fresh.",
+  "@spendingEveryMonth": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingSaveFailed": "The limits were not saved. Your entries stay here.",
+  "@spendingSaveFailed": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingLimitsSavedToast": "Limits saved",
+  "@spendingLimitsSavedToast": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingMonthGone": "{percent} of the month",
+  "@spendingMonthGone": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingBack": "Back",
+  "@spendingBack": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingClose": "Close",
+  "@spendingClose": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingDecimal": "Decimal point",
+  "@spendingDecimal": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingDeleteKey": "Delete",
+  "@spendingDeleteKey": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingAmountNotFilled": "Amount, not filled yet",
+  "@spendingAmountNotFilled": {
+    "description": "P26 Spending screen string."
+  },
+  "spendingControlsSpoken": "Period: {label}",
+  "@spendingControlsSpoken": {
+    "description": "P26 Spending screen string."
+  },
+  "@spendingSameDaysLine": {
+    "description": "P26 Spending screen string.",
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "comparison": {
+        "type": "String"
+      }
+    }
+  },
+  "@spendingLowerBy": {
+    "description": "P26 Spending screen string.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@spendingHigherBy": {
+    "description": "P26 Spending screen string.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentsAllTitle": "All payments",
+  "@paymentsAllTitle": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsBack": "Back",
+  "@paymentsBack": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsFilter": "Filter payments",
+  "@paymentsFilter": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsFilterTitle": "Filter",
+  "@paymentsFilterTitle": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsFilterPeriod": "Period",
+  "@paymentsFilterPeriod": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsFilterShow": "Show",
+  "@paymentsFilterShow": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsPeriodThisMonth": "This month",
+  "@paymentsPeriodThisMonth": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsPeriodLastMonth": "Last month",
+  "@paymentsPeriodLastMonth": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsPeriodThisYear": "This year",
+  "@paymentsPeriodThisYear": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsShowMoneyOut": "Money out",
+  "@paymentsShowMoneyOut": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsShowMoneyIn": "Money in",
+  "@paymentsShowMoneyIn": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsShowTransfers": "Transfers",
+  "@paymentsShowTransfers": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsShowNoCategory": "No category",
+  "@paymentsShowNoCategory": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsFilterAccounts": "Accounts",
+  "@paymentsFilterAccounts": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsFilterCategories": "Categories",
+  "@paymentsFilterCategories": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsFilterAllAccounts": "All accounts",
+  "@paymentsFilterAllAccounts": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsFilterAllCategories": "All categories",
+  "@paymentsFilterAllCategories": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsFilterClear": "Clear",
+  "@paymentsFilterClear": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsFilterShowCount": "Show {count} payments",
+  "@paymentsFilterShowCount": {
+    "description": "P27 payment screen string.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentsToday": "Today",
+  "@paymentsToday": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsYesterday": "Yesterday",
+  "@paymentsYesterday": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsRowLine": "{category} · {account}",
+  "@paymentsRowLine": {
+    "description": "P27 payment screen string.",
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "account": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentsNoPayments": "No payments",
+  "@paymentsNoPayments": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsNoPaymentsBody": "No payments match this filter.",
+  "@paymentsNoPaymentsBody": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsPaymentFallback": "Payment",
+  "@paymentsPaymentFallback": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsDetailTitle": "Payment",
+  "@paymentsDetailTitle": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsDetailKicker": "Payment · {date}",
+  "@paymentsDetailKicker": {
+    "description": "P27 payment screen string.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentsDetailLine": "{merchant}. {account}.",
+  "@paymentsDetailLine": {
+    "description": "P27 payment screen string.",
+    "placeholders": {
+      "merchant": {
+        "type": "String"
+      },
+      "account": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentsFieldCategory": "Category",
+  "@paymentsFieldCategory": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsFieldAccount": "Account",
+  "@paymentsFieldAccount": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsFieldTags": "Tags",
+  "@paymentsFieldTags": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsFieldNote": "Note",
+  "@paymentsFieldNote": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsSplitTitle": "Split",
+  "@paymentsSplitTitle": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsSplitMeta": "{count} parts",
+  "@paymentsSplitMeta": {
+    "description": "P27 payment screen string.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentsDelete": "Delete payment",
+  "@paymentsDelete": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsDeleteTitle": "Delete this payment?",
+  "@paymentsDeleteTitle": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsDeleteBody": "{name}, {amount} on {date}. You can undo for 5 seconds after deleting.",
+  "@paymentsDeleteBody": {
+    "description": "P27 payment screen string.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentsDeleteKeep": "Keep it",
+  "@paymentsDeleteKeep": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsDeletedToast": "Payment deleted",
+  "@paymentsDeletedToast": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsUndo": "Undo",
+  "@paymentsUndo": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsDeleteFailed": "The payment was not deleted.",
+  "@paymentsDeleteFailed": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsSplitInto": "Split into {count}",
+  "@paymentsSplitInto": {
+    "description": "P27 payment screen string.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentsUncategorised": "Uncategorised",
+  "@paymentsUncategorised": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsNone": "None",
+  "@paymentsNone": {
+    "description": "P27 payment screen string."
+  },
+  "categoryLimitLine": "{left} left of {limit}",
+  "@categoryLimitLine": {
+    "description": "P27 payment screen string.",
+    "placeholders": {
+      "left": {
+        "type": "String"
+      },
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "categoryNoLimit": "No limit",
+  "@categoryNoLimit": {
+    "description": "P27 payment screen string."
+  },
+  "categoryUsed": "Used",
+  "@categoryUsed": {
+    "description": "P27 payment screen string."
+  },
+  "categoryMonthGone": "Month gone",
+  "@categoryMonthGone": {
+    "description": "P27 payment screen string."
+  },
+  "categoryAverage": "12-month average",
+  "@categoryAverage": {
+    "description": "P27 payment screen string."
+  },
+  "categoryEachMonth": "Each month",
+  "@categoryEachMonth": {
+    "description": "P27 payment screen string."
+  },
+  "categoryWhere": "Where",
+  "@categoryWhere": {
+    "description": "P27 payment screen string."
+  },
+  "categoryPayments": "Payments",
+  "@categoryPayments": {
+    "description": "P27 payment screen string."
+  },
+  "categoryAllPayments": "All {count}",
+  "@categoryAllPayments": {
+    "description": "P27 payment screen string.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "categoryNothingRecorded": "Nothing recorded",
+  "@categoryNothingRecorded": {
+    "description": "P27 payment screen string."
+  },
+  "categoryChartTitle": "Spent",
+  "@categoryChartTitle": {
+    "description": "P27 payment screen string."
+  },
+  "categoryChartLimit": "Limit",
+  "@categoryChartLimit": {
+    "description": "P27 payment screen string."
+  },
+  "categoryChartAverage": "Average",
+  "@categoryChartAverage": {
+    "description": "P27 payment screen string."
+  },
+  "categoryKicker": "{name} · {month}",
+  "@categoryKicker": {
+    "description": "P27 payment screen string.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "categoryNoPayments": "No payments",
+  "@categoryNoPayments": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsClose": "Close",
+  "@paymentsClose": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsRowSpoken": "{name}, {amount}. Opens the payment",
+  "@paymentsRowSpoken": {
+    "description": "P27 payment screen string.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentsDaySpoken": "{day}, {total}",
+  "@paymentsDaySpoken": {
+    "description": "P27 payment screen string.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentsChipsSpoken": "Filter: {summary}",
+  "@paymentsChipsSpoken": {
+    "description": "P27 payment screen string.",
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentsFilterButton": "Filter",
+  "@paymentsFilterButton": {
+    "description": "P27 payment screen string."
+  },
+  "paymentsCount": "{count} payments",
+  "@paymentsCount": {
+    "description": "P27 payment screen string.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentsNoCategory": "No category",
+  "@paymentsNoCategory": {
+    "description": "P27 payment screen string."
+  },
+  "spendingAllPaymentsRow": "All payments",
+  "@spendingAllPaymentsRow": {
+    "description": "P26 Spending row to X37."
+  },
+  "rulesTitle": "Categories and rules",
+  "@rulesTitle": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "rulesSubline": "Settings",
+  "@rulesSubline": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "rulesKicker": "Categories and rules · {count} rules",
+  "@rulesKicker": {
+    "description": "P28 repeating or rules screen string.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rulesStatement": "Rules come from your corrections.",
+  "@rulesStatement": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "rulesLine": "The app asks before it creates one.",
+  "@rulesLine": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "rulesShow": "Show",
+  "@rulesShow": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "rulesShowCategories": "Categories",
+  "@rulesShowCategories": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "rulesShowRules": "Rules",
+  "@rulesShowRules": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "rulesCard": "Rules",
+  "@rulesCard": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "rulesMeta": "most used",
+  "@rulesMeta": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "rulesWhen": "When name has “{pattern}”",
+  "@rulesWhen": {
+    "description": "P28 repeating or rules screen string.",
+    "placeholders": {
+      "pattern": {
+        "type": "String"
+      }
+    }
+  },
+  "rulesCategory": "Category: {name}",
+  "@rulesCategory": {
+    "description": "P28 repeating or rules screen string.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rulesUsed": "{count}x",
+  "@rulesUsed": {
+    "description": "P28 repeating or rules screen string.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rulesMore": "And {count} more. The number is how many times a rule was used.",
+  "@rulesMore": {
+    "description": "P28 repeating or rules screen string.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rulesAdd": "Add a rule",
+  "@rulesAdd": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "rulesEmpty": "No rules yet.",
+  "@rulesEmpty": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "rulesCategoriesEmpty": "No categories yet.",
+  "@rulesCategoriesEmpty": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c03Title": "Rule",
+  "@c03Title": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c03Save": "Save rule",
+  "@c03Save": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c03Match": "When the name has",
+  "@c03Match": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c03MatchHint": "For example Whole Foods",
+  "@c03MatchHint": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c03Category": "Category",
+  "@c03Category": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c03Invalid": "Enter a name and choose a category.",
+  "@c03Invalid": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c03SaveFailed": "The rule was not saved.",
+  "@c03SaveFailed": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "repeatingTitle": "Repeating",
+  "@repeatingTitle": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "repeatingKicker": "Repeating · each month",
+  "@repeatingKicker": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "repeatingLine": "{monthly} monthly · {yearly} yearly",
+  "@repeatingLine": {
+    "description": "P28 repeating or rules screen string.",
+    "placeholders": {
+      "monthly": {
+        "type": "String"
+      },
+      "yearly": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatingEmpty": "No repeating payments.",
+  "@repeatingEmpty": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "repeatingNext": "Next {date}",
+  "@repeatingNext": {
+    "description": "P28 repeating or rules screen string.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatingPaid": "Paid",
+  "@repeatingPaid": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "repeatingExpected": "Expected",
+  "@repeatingExpected": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "repeatingDetailSubline": "Repeating payment",
+  "@repeatingDetailSubline": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "repeatingHeroKicker": "{name} · {frequency}",
+  "@repeatingHeroKicker": {
+    "description": "P28 repeating or rules screen string.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "frequency": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatingYearly": "{amount} a year",
+  "@repeatingYearly": {
+    "description": "P28 repeating or rules screen string.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatingHistory": "Last 6 payments",
+  "@repeatingHistory": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "repeatingPaidWith": "Paid with",
+  "@repeatingPaidWith": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "repeatingNextPayment": "Next payment",
+  "@repeatingNextPayment": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "repeatingCategory": "Category",
+  "@repeatingCategory": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "repeatingStop": "Stop repeating",
+  "@repeatingStop": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "repeatingStopTitle": "Stop this repeating payment?",
+  "@repeatingStopTitle": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "repeatingStopBody": "Generation ends. Confirmed payments stay.",
+  "@repeatingStopBody": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "repeatingStopKeep": "Keep it",
+  "@repeatingStopKeep": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "repeatingStopFailed": "The schedule was not stopped.",
+  "@repeatingStopFailed": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c02Title": "Schedule",
+  "@c02Title": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c02Save": "Save schedule",
+  "@c02Save": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c02Name": "Name",
+  "@c02Name": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c02NameHint": "For example Netflix",
+  "@c02NameHint": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c02Amount": "Amount",
+  "@c02Amount": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c02Frequency": "Frequency",
+  "@c02Frequency": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c02Weekly": "Weekly",
+  "@c02Weekly": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c02Monthly": "Monthly",
+  "@c02Monthly": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c02Yearly": "Yearly",
+  "@c02Yearly": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c02Start": "First payment",
+  "@c02Start": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c02Account": "Paid with",
+  "@c02Account": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c02ChooseAccount": "Choose account",
+  "@c02ChooseAccount": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c02Invalid": "Enter a name, an amount and an account.",
+  "@c02Invalid": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c02SaveFailed": "The schedule was not saved.",
+  "@c02SaveFailed": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "c02AmountNotFilled": "Amount, not filled yet",
+  "@c02AmountNotFilled": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "repeatingNothingRecorded": "Nothing recorded",
+  "@repeatingNothingRecorded": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "repeatingBack": "Back",
+  "@repeatingBack": {
+    "description": "P28 repeating or rules screen string."
+  },
+  "spendingRepeatingRow": "Repeating",
+  "@spendingRepeatingRow": {
+    "description": "P28 route entry."
+  },
+  "hideAmountsHide": "Hide amounts",
+  "@hideAmountsHide": {
+    "description": "P29 visible Hide amounts control."
+  },
+  "hideAmountsShow": "Show amounts",
+  "@hideAmountsShow": {
+    "description": "P29 visible Hide amounts control."
+  },
+  "historyTitle": "Activity history",
+  "@historyTitle": {
+    "description": "P29 activity history string."
+  },
+  "historySubline": "Settings",
+  "@historySubline": {
+    "description": "P29 activity history string."
+  },
+  "historyPaymentAdded": "Payment added",
+  "@historyPaymentAdded": {
+    "description": "P29 activity history string."
+  },
+  "historyPaymentChanged": "Payment changed",
+  "@historyPaymentChanged": {
+    "description": "P29 activity history string."
+  },
+  "historyPaymentDeleted": "Payment deleted",
+  "@historyPaymentDeleted": {
+    "description": "P29 activity history string."
+  },
+  "historyTransferAdded": "Transfer added",
+  "@historyTransferAdded": {
+    "description": "P29 activity history string."
+  },
+  "historyInboxConfirmed": "Inbox confirmed",
+  "@historyInboxConfirmed": {
+    "description": "P29 activity history string."
+  },
+  "historyLimitsSaved": "Limits saved",
+  "@historyLimitsSaved": {
+    "description": "P29 activity history string."
+  },
+  "historyScheduleChanged": "Repeating changed",
+  "@historyScheduleChanged": {
+    "description": "P29 activity history string."
+  },
+  "historyRuleCreated": "Rule created",
+  "@historyRuleCreated": {
+    "description": "P29 activity history string."
+  },
+  "historyChange": "Change",
+  "@historyChange": {
+    "description": "P29 activity history string."
+  },
+  "historyReversible": "Reversible",
+  "@historyReversible": {
+    "description": "P29 activity history string."
+  },
+  "historyReversed": "Reversed",
+  "@historyReversed": {
+    "description": "P29 activity history string."
+  },
+  "historyUndo": "Undo",
+  "@historyUndo": {
+    "description": "P29 activity history string."
+  },
+  "historyEmpty": "No confirmed changes yet.",
+  "@historyEmpty": {
+    "description": "P29 activity history string."
+  },
+  "historyLoadFailed": "The history did not load.",
+  "@historyLoadFailed": {
+    "description": "P29 activity history string."
+  },
+  "x80AppCard": "App",
+  "@x80AppCard": {
+    "description": "P29 activity history string."
+  },
+  "x80ActivityHistory": "Activity history",
+  "@x80ActivityHistory": {
+    "description": "P29 activity history string."
+  },
+  "x80ActivityHistoryValue": "On this phone",
+  "@x80ActivityHistoryValue": {
+    "description": "P29 activity history string."
+  },
+  "spendingSameDaysHidden": "The same-days comparison is hidden with the amounts.",
+  "@spendingSameDaysHidden": {
+    "description": "P29 hidden-state line."
+  },
+  "categoryLimitHidden": "The limit is hidden with the amounts.",
+  "@categoryLimitHidden": {
+    "description": "P29 hidden-state line."
+  },
+  "demoTitle": "Demo",
+  "@demoTitle": {
+    "description": "P29 debug demo entry (never in a release build)."
+  },
+  "demoNote": "Synthetic data, kept in memory",
+  "@demoNote": {
+    "description": "P29 debug demo entry (never in a release build)."
+  },
+  "demoSpending": "Spending",
+  "@demoSpending": {
+    "description": "P29 debug demo entry (never in a release build)."
+  },
+  "demoAddPayment": "Add a payment",
+  "@demoAddPayment": {
+    "description": "P29 debug demo entry (never in a release build)."
+  },
+  "demoAllPayments": "All payments",
+  "@demoAllPayments": {
+    "description": "P29 debug demo entry (never in a release build)."
+  },
+  "demoInbox": "Inbox",
+  "@demoInbox": {
+    "description": "P29 debug demo entry (never in a release build)."
+  },
+  "demoRepeating": "Repeating",
+  "@demoRepeating": {
+    "description": "P29 debug demo entry (never in a release build)."
+  },
+  "demoRules": "Categories and rules",
+  "@demoRules": {
+    "description": "P29 debug demo entry (never in a release build)."
+  },
+  "demoHistory": "Activity history",
+  "@demoHistory": {
+    "description": "P29 debug demo entry (never in a release build)."
+  },
+  "demoHome": "Home",
+  "@demoHome": {
+    "description": "P29 debug demo entry (never in a release build)."
+  },
+  "demoStarting": "Starting the demo…",
+  "@demoStarting": {
+    "description": "P29 debug demo entry (never in a release build)."
+  },
+  "demoFailed": "The demo did not start.",
+  "@demoFailed": {
+    "description": "P29 debug demo entry (never in a release build)."
+  },
+  "demoGoTo": "Go to",
+  "@demoGoTo": {
+    "description": "P29 demo-only Home card (debug build)."
+  },
+  "importTitle": "Import",
+  "@importTitle": {
+    "description": "Phase 3 PDF import (SCREENS X63-X68, X88)."
+  },
+  "importSubtitle": "Read on this phone",
+  "@importSubtitle": {
+    "description": "Phase 3 import header sub-line."
+  },
+  "importKicker": "IMPORT · READ ON THIS PHONE",
+  "@importKicker": {
+    "description": "Phase 3 import hub kicker."
+  },
+  "importLead": "Choose a PDF statement. The app reads the file on this phone and sends drafts to the Inbox. You confirm each one.",
+  "@importLead": {
+    "description": "Phase 3 import hub lead."
+  },
+  "importChoosePdf": "Choose a PDF statement",
+  "@importChoosePdf": {
+    "description": "Phase 3 import primary action."
+  },
+  "importChoosePdfHelper": "The file is read here. Nothing is uploaded.",
+  "@importChoosePdfHelper": {
+    "description": "Phase 3 import helper."
+  },
+  "importSavedLayouts": "Saved layouts",
+  "@importSavedLayouts": {
+    "description": "Phase 3 import saved layouts card title."
+  },
+  "importSavedLayoutsNone": "No saved layouts",
+  "@importSavedLayoutsNone": {
+    "description": "Phase 3 import empty saved layouts."
+  },
+  "importHistory": "History",
+  "@importHistory": {
+    "description": "Phase 3 import history card title."
+  },
+  "importHistoryNone": "No imports yet",
+  "@importHistoryNone": {
+    "description": "Phase 3 import empty history."
+  },
+  "importTip": "Tip: share a file from your bank app or Files directly to this app.",
+  "@importTip": {
+    "description": "Phase 3 import hub caption."
+  },
+  "importLayoutUsed": "PDF · used {count} times",
+  "@importLayoutUsed": {
+    "description": "Phase 3 saved layout use count."
+  },
+  "importLayoutUsedOnce": "PDF · used once",
+  "@importLayoutUsedOnce": {
+    "description": "Phase 3 saved layout use count of one."
+  },
+  "importHistoryLine": "{date} · {staged} new · {existing} already in app",
+  "@importHistoryLine": {
+    "description": "Phase 3 import history row with repeats."
+  },
+  "importHistoryLineShort": "{date} · {staged} new",
+  "@importHistoryLineShort": {
+    "description": "Phase 3 import history row without repeats."
+  },
+  "importOpenHistorySpoken": "Open the import of {date}: {name}, {staged} new, {existing} already in app.",
+  "@importOpenHistorySpoken": {
+    "description": "Phase 3 import history row spoken label."
+  },
+  "importPasswordTitle": "This PDF is locked",
+  "@importPasswordTitle": {
+    "description": "Phase 3 X64 dialog title."
+  },
+  "importPasswordBody": "This statement is protected with a password. Enter it once.",
+  "@importPasswordBody": {
+    "description": "Phase 3 X64 dialog body."
+  },
+  "importPasswordField": "PDF password",
+  "@importPasswordField": {
+    "description": "Phase 3 X64 field label."
+  },
+  "importPasswordShow": "Show password",
+  "@importPasswordShow": {
+    "description": "Phase 3 X64 eye button."
+  },
+  "importPasswordHide": "Hide password",
+  "@importPasswordHide": {
+    "description": "Phase 3 X64 eye button."
+  },
+  "importPasswordWrong": "That password did not open the file. Try again.",
+  "@importPasswordWrong": {
+    "description": "Phase 3 X64 wrong password message."
+  },
+  "importPasswordRemember": "Remember for this layout",
+  "@importPasswordRemember": {
+    "description": "Phase 3 X64 remember toggle."
+  },
+  "importPasswordRememberHelper": "Stored in this phone's secure storage",
+  "@importPasswordRememberHelper": {
+    "description": "Phase 3 X64 remember helper."
+  },
+  "importPasswordOpen": "Open PDF",
+  "@importPasswordOpen": {
+    "description": "Phase 3 X64 primary action."
+  },
+  "importCancel": "Cancel",
+  "@importCancel": {
+    "description": "Phase 3 dialog cancel action."
+  },
+  "importPreviewKicker": "IMPORT PREVIEW · {name}",
+  "@importPreviewKicker": {
+    "description": "Phase 3 X65 hero kicker."
+  },
+  "importPreviewLine": "{count} new payments to send to the Inbox.",
+  "@importPreviewLine": {
+    "description": "Phase 3 X65 hero line."
+  },
+  "importFactsRows": "Rows",
+  "@importFactsRows": {
+    "description": "Phase 3 X65 facts row."
+  },
+  "importFactsRowsMeta": "in the file",
+  "@importFactsRowsMeta": {
+    "description": "Phase 3 X65 facts meta."
+  },
+  "importFactsAlready": "Already in app",
+  "@importFactsAlready": {
+    "description": "Phase 3 X65 facts row."
+  },
+  "importFactsAlreadyMeta": "not sent again",
+  "@importFactsAlreadyMeta": {
+    "description": "Phase 3 X65 facts meta."
+  },
+  "importFactsNew": "New",
+  "@importFactsNew": {
+    "description": "Phase 3 X65 facts row."
+  },
+  "importFactsNewMeta": "to the Inbox",
+  "@importFactsNewMeta": {
+    "description": "Phase 3 X65 facts meta."
+  },
+  "importMatchedLayout": "Matched your saved layout \"{name}\"",
+  "@importMatchedLayout": {
+    "description": "Phase 3 X65 layout check line."
+  },
+  "importNoLayout": "This layout is new to the app.",
+  "@importNoLayout": {
+    "description": "Phase 3 X65 layout note."
+  },
+  "importPreviewCard": "Preview",
+  "@importPreviewCard": {
+    "description": "Phase 3 X65 preview card title."
+  },
+  "importPreviewMeta": "Date · details · amount",
+  "@importPreviewMeta": {
+    "description": "Phase 3 X65 preview card meta."
+  },
+  "importPreviewMore": "And {count} more rows.",
+  "@importPreviewMore": {
+    "description": "Phase 3 X65 preview caption."
+  },
+  "importSend": "Send {count} to the Inbox",
+  "@importSend": {
+    "description": "Phase 3 X65 primary action."
+  },
+  "importWrongLayout": "Wrong layout? Teach again",
+  "@importWrongLayout": {
+    "description": "Phase 3 X65 link."
+  },
+  "importFileDeleted": "The file copy is deleted after import.",
+  "@importFileDeleted": {
+    "description": "Phase 3 X65 caption."
+  },
+  "importSourceAccount": "Source account",
+  "@importSourceAccount": {
+    "description": "Phase 3 X65 account row."
+  },
+  "importChooseAccount": "Choose the account",
+  "@importChooseAccount": {
+    "description": "Phase 3 X65 account action."
+  },
+  "importTeachTitle": "Teach once",
+  "@importTeachTitle": {
+    "description": "Phase 3 X66 title."
+  },
+  "importTeachSubtitle": "New layout, {name}",
+  "@importTeachSubtitle": {
+    "description": "Phase 3 X66 sub-line."
+  },
+  "importTeachKicker": "TEACH ONCE · {name}",
+  "@importTeachKicker": {
+    "description": "Phase 3 X66 kicker."
+  },
+  "importTeachLead": "Tap the parts of one row. The app learns this layout and reads the next statement without asking.",
+  "@importTeachLead": {
+    "description": "Phase 3 X66 lead."
+  },
+  "importTeachDate": "Date",
+  "@importTeachDate": {
+    "description": "Phase 3 X66 field."
+  },
+  "importTeachDetails": "Details",
+  "@importTeachDetails": {
+    "description": "Phase 3 X66 field."
+  },
+  "importTeachAmount": "Amount",
+  "@importTeachAmount": {
+    "description": "Phase 3 X66 field."
+  },
+  "importTeachSteps": "Steps",
+  "@importTeachSteps": {
+    "description": "Phase 3 X66 steps card title."
+  },
+  "importTeachStepDone": "Date · {value}",
+  "@importTeachStepDone": {
+    "description": "Phase 3 X66 completed step."
+  },
+  "importTeachStepNow": "{number} · {field} · Tap it now",
+  "@importTeachStepNow": {
+    "description": "Phase 3 X66 current step."
+  },
+  "importTeachStepNext": "{number} · {field} · Next",
+  "@importTeachStepNext": {
+    "description": "Phase 3 X66 next step."
+  },
+  "importTeachContinue": "Continue",
+  "@importTeachContinue": {
+    "description": "Phase 3 X66 primary action."
+  },
+  "importTeachSave": "Save layout",
+  "@importTeachSave": {
+    "description": "Phase 3 X66 save action."
+  },
+  "importTeachSignWords": "Sign words",
+  "@importTeachSignWords": {
+    "description": "Phase 3 X66 sign card title."
+  },
+  "importTeachSignOut": "Money out is shown as",
+  "@importTeachSignOut": {
+    "description": "Phase 3 X66 sign row."
+  },
+  "importTeachSignIn": "Money in is shown as",
+  "@importTeachSignIn": {
+    "description": "Phase 3 X66 sign row."
+  },
+  "importTeachSample": "Statement",
+  "@importTeachSample": {
+    "description": "Phase 3 X66 sample card title."
+  },
+  "importTeachPage": "page {number}",
+  "@importTeachPage": {
+    "description": "Phase 3 X66 sample card meta."
+  },
+  "importTeachNeedThree": "Tap the date, then the details, then the amount.",
+  "@importTeachNeedThree": {
+    "description": "Phase 3 X66 helper."
+  },
+  "importDoneKicker": "IMPORT · DONE · {name}",
+  "@importDoneKicker": {
+    "description": "Phase 3 X68 hero kicker."
+  },
+  "importDoneLine": "{count} sent to the Inbox. {ready} are ready to confirm. {decisions} need a decision. {noCategory} have no category.",
+  "@importDoneLine": {
+    "description": "Phase 3 X68 hero line."
+  },
+  "importDoneOpenInbox": "Open the Inbox",
+  "@importDoneOpenInbox": {
+    "description": "Phase 3 X68 primary action."
+  },
+  "importDoneUndo": "Undo this import",
+  "@importDoneUndo": {
+    "description": "Phase 3 X68 ghost action."
+  },
+  "importDoneCaption": "Undo removes every item from this file. You can undo until you confirm them.",
+  "@importDoneCaption": {
+    "description": "Phase 3 X68 caption."
+  },
+  "importUndone": "Import removed.",
+  "@importUndone": {
+    "description": "Phase 3 X68 toast."
+  },
+  "importErrorTitle": "This file has no rows the app can read",
+  "@importErrorTitle": {
+    "description": "Phase 3 X88 title."
+  },
+  "importErrorBody": "{name} may be a photo of a page, or a layout this version cannot read.",
+  "@importErrorBody": {
+    "description": "Phase 3 X88 body."
+  },
+  "importErrorChoose": "Choose another file",
+  "@importErrorChoose": {
+    "description": "Phase 3 X88 action."
+  },
+  "importErrorTeach": "Teach the layout",
+  "@importErrorTeach": {
+    "description": "Phase 3 X88 action."
+  },
+  "importErrorNothingAdded": "Nothing from this file was added.",
+  "@importErrorNothingAdded": {
+    "description": "Phase 3 X88 caption."
+  },
+  "importErrorNotPdf": "This file is not a PDF.",
+  "@importErrorNotPdf": {
+    "description": "Phase 3 X88 error."
+  },
+  "importErrorDamaged": "This file is damaged and cannot be read.",
+  "@importErrorDamaged": {
+    "description": "Phase 3 X88 error."
+  },
+  "importErrorTooLarge": "This file is too large to read.",
+  "@importErrorTooLarge": {
+    "description": "Phase 3 X88 error."
+  },
+  "importErrorLocked": "This PDF needs its password.",
+  "@importErrorLocked": {
+    "description": "Phase 3 X88 error."
+  },
+  "importErrorEncryption": "This version cannot open this PDF's protection.",
+  "@importErrorEncryption": {
+    "description": "Phase 3 X88 error."
+  },
+  "importErrorNoText": "This PDF has no text the app can read.",
+  "@importErrorNoText": {
+    "description": "Phase 3 X88 error."
+  },
+  "importErrorNoRows": "This file has no payments the app can read.",
+  "@importErrorNoRows": {
+    "description": "Phase 3 X88 error."
+  },
+  "importErrorDuplicate": "This file is already in the app. Choose it again to import it a second time.",
+  "@importErrorDuplicate": {
+    "description": "Phase 3 X88 error."
+  },
+  "importErrorUnavailable": "Import is not available until the vault opens.",
+  "@importErrorUnavailable": {
+    "description": "Phase 3 import unavailable."
+  },
+  "importErrorSend": "The rows were not sent. Nothing changed.",
+  "@importErrorSend": {
+    "description": "Phase 3 X65 send failure."
+  },
+  "importErrorUndo": "The import was not removed.",
+  "@importErrorUndo": {
+    "description": "Phase 3 X68 undo failure."
+  },
+  "importErrorTemplate": "The layout was not saved.",
+  "@importErrorTemplate": {
+    "description": "Phase 3 X66 failure."
+  },
+  "importSemanticFile": "Choose a PDF statement to import",
+  "@importSemanticFile": {
+    "description": "Phase 3 semantic label."
+  },
+  "importSemanticHistoryRow": "Import of {date}: {name}",
+  "@importSemanticHistoryRow": {
+    "description": "Phase 3 semantic label."
+  },
+  "importSemanticAmount": "{description}, {amount}",
+  "@importSemanticAmount": {
+    "description": "Phase 3 preview row spoken label."
+  },
+  "importSemanticStep": "{field}, tap this cell",
+  "@importSemanticStep": {
+    "description": "Phase 3 X66 cell spoken label."
+  },
+  "importReading": "Reading the file on this phone…",
+  "@importReading": {
+    "description": "Phase 3 import progress."
+  },
+  "importNoAccount": "Choose an account for the imported rows.",
+  "@importNoAccount": {
+    "description": "Phase 3 X65 account requirement."
+  },
+  "importDoneTitle": "Import",
+  "@importDoneTitle": {
+    "description": "Phase 3 X68 header title."
+  },
+  "importReady": "Ready to confirm",
+  "@importReady": {
+    "description": "Phase 3 X68 count row."
+  },
+  "importDecisions": "Need a decision",
+  "@importDecisions": {
+    "description": "Phase 3 X68 count row."
+  },
+  "importNoCategory": "No category",
+  "@importNoCategory": {
+    "description": "Phase 3 X68 count row."
+  },
+  "importRows": "rows",
+  "@importRows": {
+    "description": "Phase 3 count unit."
+  },
+  "importErrorNotPdfTitle": "This file is not a PDF",
+  "@importErrorNotPdfTitle": {
+    "description": "Phase 3 X88 title for a non-PDF file."
+  }
+}

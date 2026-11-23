@@ -27,8 +27,9 @@ abstract final class AppText {
     );
   }
 
-  static const String _inter = 'Inter';
-  static const String _display = 'Inter Display';
+  // DESIGN 2.5: the family names come from the font tokens (DESIGN 2.1).
+  static const String _inter = FontTokens.family;
+  static const String _display = FontTokens.familyHero;
 
   static final TextStyle numberHeroLight = _style(
     TypeTokens.numberHeroLight,

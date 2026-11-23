@@ -4,20 +4,16 @@ import 'dart:math' as math;
 import 'token_gen_lib.dart';
 
 /// A measured pair below its minimum passes only when a closed decision exempts
-/// it. The map holds `pair -> decision id`; the pair is `label|theme|background`.
-/// It is a failure while the decision is still an open question (CR-19).
-const Map<String, String> _exemptions = <String, String>{
-  'state.loss|light|page': 'LIGHT-LOSS-CONTRAST',
-  'state.loss|light|pageSpotlight': 'LIGHT-LOSS-CONTRAST',
-  'data.signed.loss|light|page': 'LIGHT-LOSS-CONTRAST',
-  'data.signed.loss|light|pageSpotlight': 'LIGHT-LOSS-CONTRAST',
-  'text.heroFill.stop1|light|page': 'T05-HERO-FILL-CONTRAST',
-};
+/// it. The map holds `pair -> decision id`. It is a failure while the decision
+/// is still an open question (CR-19). The map is empty today: the two former
+/// open decisions closed by changing the token value (LIGHT-LOSS-CONTRAST,
+/// T05-HERO-FILL-CONTRAST; docs/DECISIONS.md "Decided", 2026-11-22), so their
+/// pairs now measure at their minimum without an exemption.
+const Map<String, String> _exemptions = <String, String>{};
 
 /// Decision ids that are closed and permit their exemption to pass. Add an id
 /// only when docs/DECISIONS.md records it under "Decided" with the reason.
-/// The ids above are open questions, so their pairs fail until the design owner
-/// supplies a compliant token or changes the contract (R07).
+/// The list is empty today; the mechanism stays for any future exemption.
 const Set<String> _closedDecisions = <String>{};
 
 void main() {

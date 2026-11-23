@@ -19,8 +19,8 @@ class DetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageBackground(
       child: ListView(
-        padding: const EdgeInsets.only(
-          top: Space.l,
+        padding: EdgeInsets.only(
+          top: Space.l + MediaQuery.paddingOf(context).top,
           left: Space.page,
           right: Space.page,
           bottom: Space.xxl,

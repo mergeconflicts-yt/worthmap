@@ -37,7 +37,9 @@ class WidgetSurfaceHost extends StatelessWidget {
   final SectionTitleResolver titleFor;
 
   /// N-09: the word for a key this release does not know or does not show.
-  /// Required, so it comes from l10n in T10 (T06-L10N-CONSTANTS).
+  /// Required: the caller passes the l10n string
+  /// `AppLocalizations.of(context).widgetUnavailable`
+  /// (T06-L10N-CONSTANTS closed 2026-11-22; AGENTS 6.9).
   final String unavailableLabel;
 
   /// N-02: the shared read store. Each shown placement acquires its metric

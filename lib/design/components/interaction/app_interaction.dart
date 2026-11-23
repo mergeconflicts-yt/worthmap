@@ -20,6 +20,7 @@ class AppInteraction extends StatefulWidget {
   const AppInteraction({
     required this.onActivated,
     required this.child,
+    this.onLongPressed,
     this.enabled = true,
     this.borderRadius,
     this.cursor = SystemMouseCursors.click,
@@ -29,6 +30,9 @@ class AppInteraction extends StatefulWidget {
 
   /// Called by a tap, Enter or Space when [enabled].
   final VoidCallback? onActivated;
+
+  /// Called by a long press (the tab bar Add opens voice input).
+  final VoidCallback? onLongPressed;
   final Widget child;
   final bool enabled;
 
@@ -112,6 +116,7 @@ class _AppInteractionState extends State<AppInteraction> {
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: _enabled ? widget.onActivated : null,
+          onLongPress: _enabled ? widget.onLongPressed : null,
           child: Stack(
             clipBehavior: Clip.none,
             children: <Widget>[

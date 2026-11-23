@@ -6,7 +6,7 @@ import 'glass_card.dart';
 
 /// N-09: the card for a key this release does not know or does not show.
 /// The label comes from l10n in T10; until then the caller passes it
-/// (DECISION-PENDING: T06-L10N-CONSTANTS).
+/// (T06-L10N-CONSTANTS closed 2026-11-22, DECISIONS "Decided").
 class UnavailableCard extends StatelessWidget {
   const UnavailableCard({required this.label, super.key});
 

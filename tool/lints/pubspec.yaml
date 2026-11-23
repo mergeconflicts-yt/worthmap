@@ -1,0 +1,13 @@
+name: contour_lints
+description: Contour design and privacy lint rules (DESIGN 9, AGENTS 4).
+publish_to: none
+version: 0.1.0
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  # The analyzer AST. Pinned to the version custom_lint 0.6.4 uses.
+  analyzer: 6.4.1
+  # The plugin API for `dart run custom_lint`. Apache-2.0. No network.
+  custom_lint_builder: 0.6.4

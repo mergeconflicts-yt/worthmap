@@ -1,16 +1,25 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
+  plugins:
+    - custom_lint
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
     - lib/design/tokens/tokens.g.dart
     - lib/l10n/app_localizations*.dart
+    - lib/l10n/generated/**
     - build/**
     - ios/**
     - android/**
+    # A nested package with its own pubspec. Analyze it with
+    # `dart analyze tool/lints`; custom_lint compiles it on every run.
+    - tool/lints/**
   errors:
     invalid_annotation_target: ignore
+    # custom_lint 0.6.4 still uses the legacy analyzer plugin API. Remove this
+    # when T12 can move to the new analyzer plugin system (DECISIONS T12-LINTS).
+    analysis_options_deprecated_plugins: ignore
 
 linter:
   rules:

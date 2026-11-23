@@ -264,7 +264,7 @@
 1. Kicker "TRANSFER · TWO CURRENCIES"; Transfer selected.
 2. GlassCard: From "Savings · USD" "$15,000"; To "Harbor Bank India · INR".
 3. GlassCard "Amounts" (meta "USD to INR"), 2 × 2 fields: You send $2,000.00; They receive ₹165,402; Rate you got "83.20 per USD" (helper "Mid-market today: 83.45"); Fee $12.00 (helper "0.6% of what you send").
-4. GlassCard (stage) kicker "WHAT THIS TRANSFER COSTS · USD": $18 (the hero); line "Fee $12.00, plus $5.96 from the rate difference. Saved as a fee, not as spending." SplitBar Fee $12.00 (66.8%), Rate difference $5.96 (33.2%). Table total $17.96.
+4. GlassCard (stage) kicker "WHAT THIS TRANSFER COSTS · USD": $18 (the hero); line "Fee $12.00, plus $5.96 from the rate difference. Saved as a fee, not as part of the transfer." SplitBar Fee $12.00 (66.8%), Rate difference $5.96 (33.2%). Table total $17.96.
 5. GlassCard: Date "13 Oct"; Service "Your transfer app"; Note "Parents, October". AppButton primary "Save transfer".
 
 **X27 Scan QR receipt** — FormScreen, Close, "Scan a QR receipt" · Spending (v_b_scan)
@@ -298,9 +298,9 @@
 
 1. Header "Inbox", sub-line "12 to check · on this phone".
 2. 0Hero (number): kicker "INBOX · READY TO CONFIRM"; $412.36; line "8 ticked of 12. 3 need a decision. Unsure items are not ticked." SplitBar of sources (Notifications 6, Shared from mail app 5, Statement 1); source chips All 12 · Notifications 6 · Mail app 5 · Statement 1 (control row; DECISION-PENDING CONTROL-ROW-SCOPE).
-3. GlassCard (stage) "Needs a decision" (meta "1 of 3"): "Is this a transfer between your own accounts?"; boxes "Checking · 12 Oct −$1,240" → "Visa card · 12 Oct +$1,240"; caption "A transfer is not counted as spending."; ghost buttons "Yes, a transfer", "No, 2 payments".
+3. GlassCard (stage) "Needs a decision" (meta "1 of 3"): "Is this a transfer between your own accounts?"; boxes "Checking · 12 Oct −$1,240" → "Visa card · 12 Oct +$1,240"; caption "A transfer is not counted as spending."; buttons: filled "Yes, a transfer", ghost "No, 2 payments" (the open decision owns the filled action).
 4. GlassCard "Ready to confirm" (meta "8 ticked"): rows with Checkbox, name, "Today · notification", amount, category pill ("Groceries ?" when unsure, not ticked). Caption "And 3 more. Tap a category to change it. Swipe left to delete; each row also has Delete in its sheet."
-5. ConfirmBar "Confirm 8 ticked, $412.36", after the list, in the scroll flow.
+5. ConfirmBar "Confirm 8 ticked, $412.36", after the list, in the scroll flow; ghost while a decision is open, filled after the last one resolves.
 
 **X62 Inbox, empty** — DetailScreen, opened from Home, DetailHeader(plain) with Back, keeps the tab bar · Home (v_inbox_empty)
 
@@ -429,7 +429,7 @@
 1. 0Hero (number): kicker "NETFLIX · EVERY MONTH ON THE 18TH"; $17.99; line "From 18 Oct, Expected: up $2.50 from $15.49. $215.88 a year."
 2. GlassCard (stage) "Last 6 payments" (meta "Apr–Sep"): six columns Apr–Sep $15.49, latest highlighted; October (expected) not drawn; amount above, month below. Table. Spoken "Netflix, last 6 payments, April to September: $15.49 each. Next payment 18 October, Expected, $17.99."
 3. GlassCard: Paid with "Visa card" (X41); Category "Subscriptions" (X36); Next payment "18 Oct" "Expected · $17.99" (X50); Cancellation address "netflix.com/cancel" (monospace, "Kept as text on this phone", not a link).
-4. GlassCard: ToggleRow "Add it to the Inbox to confirm", "Off: added automatically" (off). AppButton ghost "Stop repeating" with trash.
+4. GlassCard: ToggleRow "Add it to the Inbox to confirm", "Off: confirm it here" (off). AppButton ghost "Stop repeating" with trash.
 
 **X36 Category detail** — DetailScreen "Groceries", sub-line "October" · Spending
 
@@ -457,7 +457,7 @@
 1. 0Hero (number): kicker "PAYMENT · 5 OCT 2026 · 6:42 PM"; −$121.30; line "Whole Foods Market. Visa card. From your receipt photo."
 2. GlassCard: Category "Split into 3"; Account "Visa card" (X41); Tags "Household"; Note "Weekly shop".
 3. GlassCard (stage) "Split" (meta "Edit" link): SplitBar Groceries $84.12 (69%), Household $25.00 (21%), Gifts $12.18 (10%). Table: category, amount, share.
-4. GlassCard, ToggleRows (off): Reimbursable "Not counted as your spending until paid back"; Refund expected "Track money that is coming back to you".
+4. GlassCard, ToggleRows (off, exclusive): Reimbursable "Not counted as your spending; it is owed back"; Refund expected "Track money that is coming back to you".
 5. GlassCard: Receipt image "Stored on this phone"; Similar payments "14 at Whole Foods" 14 (X37).
 6. AppButton ghost "Delete payment" with trash (X39b).
 
@@ -748,10 +748,10 @@
 1. 0Hero without number: kicker "SETTINGS"; "Everything is on this phone."; line "Encrypted. No account. No server."
 2. Five GlassCards, rows with grey icon tiles (name, value, chevron), in order:
    - "Capture": Capture sources "3 on" (X81); Categories and rules "16 categories" "24 rules" (X84); Import layouts "3 saved" (X63).
-   - "Money": Main currency "USD"; Accounts "9" (X40); Month starts on "1st"; Number format "1,234.56".
+   - "Money": Main currency "USD"; Accounts "9" (X40); Month starts on "1st"; Refunds "Refund month" (SPEC 4.11); Number format "1,234.56".
    - "Screens and widgets" (meta "tab screens"): "Main number on Home" "Net worth" (X13); Home, Spending, Money in, Wealth, Investments, Calendar, Goals, Protect, Tax, each with its widget count, each opens edit mode (WIDGETS-001); last row "Restore the default widgets" (text.primary).
    - "Safety": App lock "Face ID"; Recovery on this phone "Last snapshot" "Sun 11 Oct" (X83); Privacy and network "Prices only" (X86).
-   - "App": Features "Simple mode" (X85); Appearance "System"; About and open source "Version 1.0".
+   - "App": Features "Simple mode" (X85); Appearance "System"; Activity history "Today, 4:12 pm" (C06, SPEC 8.18); About and open source "Version 1.0".
 3. No export or sync control.
 
 **X81 Capture sources** — DetailScreen "Capture sources", sub-line "Settings" · Home (v_e_capture)
