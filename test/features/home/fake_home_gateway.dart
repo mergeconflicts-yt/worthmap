@@ -15,9 +15,24 @@ final class FakeHomeGateway implements HomeGateway {
 
 final HomeSummary demoSummary = HomeSummary(
   currencyCode: 'USD',
+  month: LocalDate(2026, 10, 1),
   netWorthMinor: 18790000,
+  netWorthChangeMinor: 1690000,
+  netWorthSeries: <HomeSeriesPoint>[
+    for (var i = 0; i < 12; i++)
+      HomeSeriesPoint(
+        month: LocalDate(
+          2025 + ((10 + i) ~/ 12),
+          ((10 + i) % 12) + 1,
+          1,
+        ),
+        amountMinor: 17100000 + i * 153636,
+      ),
+  ],
   cashMinor: 2145000,
   cardOwedMinor: 124000,
+  investmentsMinor: 12980000,
+  subscriptionsMonthlyMinor: 2898,
   moneyInMinor: 820000,
   spentMinor: 394000,
   limitMinor: 520000,
@@ -27,46 +42,34 @@ final HomeSummary demoSummary = HomeSummary(
   monthDays: 31,
   inboxCount: 12,
   repeatingCount: 7,
-  recent: <HomeRecentPayment>[
-    HomeRecentPayment(
-      id: 'p1',
-      date: LocalDate(2026, 10, 13),
-      amountMinor: -3175,
-      currencyCode: 'USD',
-      merchantName: 'PX Market',
-      categoryName: 'Groceries',
-    ),
-    HomeRecentPayment(
-      id: 'p2',
-      date: LocalDate(2026, 10, 12),
-      amountMinor: -5200,
-      currencyCode: 'USD',
-      merchantName: 'Cafe Nero',
-      categoryName: 'Dining',
-    ),
-    HomeRecentPayment(
-      id: 'p3',
-      date: LocalDate(2026, 10, 10),
-      amountMinor: -12000,
-      currencyCode: 'USD',
-      merchantName: 'City power',
-      categoryName: 'Utilities',
-    ),
-    HomeRecentPayment(
-      id: 'p4',
-      date: LocalDate(2026, 10, 9),
+  accountCount: 4,
+  upcoming: <HomeUpcomingItem>[
+    HomeUpcomingItem(
+      date: LocalDate(2026, 10, 18),
+      name: 'Netflix',
       amountMinor: -1799,
       currencyCode: 'USD',
-      merchantName: 'Netflix',
-      categoryName: 'Subscriptions',
+      kind: 'subscription',
     ),
-    HomeRecentPayment(
-      id: 'p5',
-      date: LocalDate(2026, 10, 8),
-      amountMinor: -8412,
+    HomeUpcomingItem(
+      date: LocalDate(2026, 10, 20),
+      name: 'Phone',
+      amountMinor: -4500,
       currencyCode: 'USD',
-      merchantName: 'Whole Foods',
-      categoryName: 'Groceries',
+      kind: 'subscription',
+    ),
+    HomeUpcomingItem(
+      date: LocalDate(2026, 10, 28),
+      name: 'Health',
+      amountMinor: -21000,
+      currencyCode: 'USD',
+      kind: 'subscription',
     ),
   ],
+  incomeSplit: const HomeIncomeSplit(
+    moneyInMinor: 820000,
+    investedMinor: 0,
+    inCashMinor: 426000,
+    currencyCode: 'USD',
+  ),
 );

@@ -110,6 +110,12 @@ final class AccountRepository {
       return const MissingBalance();
     }
     final anchorDate = pointer.data['anchor_date'] as String;
+    if (asOf.compareTo(anchorDate) < 0) {
+      // The anchor says nothing about the account before its own date.
+      // A historical read before the anchor is Missing, never the anchor
+      // balance (SPEC 4.3).
+      return const MissingBalance();
+    }
     final currency = Currency.of(pointer.data['currency'] as String);
     final sum = await _db.customSelect(
       'SELECT COALESCE(SUM(amount_minor), 0) AS delta FROM transactions '
@@ -123,6 +129,17 @@ final class AccountRepository {
       amount: Money.fromMinor(minor, currency),
       anchorDate: anchorDate,
     );
+  }
+
+  /// The number of live holdings. Home uses it to tell "no holdings" (Invested
+  /// is zero) from "holdings exist, cost basis not read here" (Missing).
+  Future<int> holdingCount() async {
+    final row = await _db
+        .customSelect(
+          'SELECT COUNT(*) AS n FROM holdings WHERE deleted_at IS NULL',
+        )
+        .getSingle();
+    return row.data['n'] as int;
   }
 
   /// C01: creates an account (one authored row).

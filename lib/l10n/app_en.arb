@@ -3512,5 +3512,85 @@
   "x10Owes": "Owes ",
   "@x10Owes": {
     "description": "X10 card balance prefix."
+  },
+  "chartLineSpoken": "{title}: from {first} to {last}.",
+  "@chartLineSpoken": {
+    "description": "Preview line chart spoken label."
+  },
+  "homeTileSpoken": "{label}, {value}",
+  "@homeTileSpoken": {
+    "description": "Home tile spoken label."
+  },
+  "homeTimelineTitle": "Next 30 days",
+  "@homeTimelineTitle": {
+    "description": "Home timeline card title."
+  },
+  "homeTimelineDue": "{amount} due before {date}",
+  "@homeTimelineDue": {
+    "description": "Home timeline meta."
+  },
+  "homeTimelineEmpty": "No payments are due in the next 30 days.",
+  "@homeTimelineEmpty": {
+    "description": "Home timeline empty state."
+  },
+  "homeTimelineLegend": "{name}",
+  "@homeTimelineLegend": {
+    "description": "Home timeline legend item."
+  },
+  "homeMonthTitle": "This month",
+  "@homeMonthTitle": {
+    "description": "Home this-month card title."
+  },
+  "homeIncomeSplit": "Income split",
+  "@homeIncomeSplit": {
+    "description": "Home split bar title."
+  },
+  "homeSplitInvested": "Invested",
+  "@homeSplitInvested": {
+    "description": "Home split part."
+  },
+  "homeSplitInCash": "In cash",
+  "@homeSplitInCash": {
+    "description": "Home split part."
+  },
+  "homeFooter": "Prices off · Read on this phone",
+  "@homeFooter": {
+    "description": "Home footer line."
+  },
+  "homeQuickLookMeta": "today",
+  "@homeQuickLookMeta": {
+    "description": "Home quick look meta."
+  },
+  "x10Investments": "Investments",
+  "@x10Investments": {
+    "description": "X10 quick look row."
+  },
+  "x10Subscriptions": "Subscriptions",
+  "@x10Subscriptions": {
+    "description": "X10 quick look row."
+  },
+  "homeSplitShare": "Share",
+  "@homeSplitShare": {
+    "description": "Home split bar column."
+  },
+  "homeTwelveMonths": "12 months",
+  "@homeTwelveMonths": {
+    "description": "Home hero side figure period."
+  },
+  "homeNetWorthChart": "Net worth, last 12 months",
+  "@homeNetWorthChart": {
+    "description": "Home hero line chart spoken title."
+  },
+  "homeCashLine": "available now",
+  "@homeCashLine": {
+    "description": "Home cash tile line."
+  },
+  "homeSubscriptionsLine": "a month",
+  "@homeSubscriptionsLine": {
+    "description": "Home subscriptions tile line."
+  },
+  "homeDueBefore": "before {date}",
+  "@homeDueBefore": {
+    "description": "Home timeline meta line."
   }
 }

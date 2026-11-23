@@ -33,7 +33,6 @@ void main() {
               onInbox: () {},
               onSettings: () {},
               onSpending: () {},
-              onAllPayments: () {},
             ),
           ),
         );

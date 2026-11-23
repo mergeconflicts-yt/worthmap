@@ -1,14 +1,17 @@
 /// The only import a feature uses (DESIGN 1): `package:contour/design/design.dart`.
 library;
 
+export 'charts/area_line_chart.dart';
 export 'charts/billing_strip.dart';
 export 'charts/brand_mark.dart';
 export 'charts/chart_frame.dart';
 export 'charts/chart_tone.dart';
 export 'charts/chart_values.dart';
+export 'charts/glyph_timeline.dart';
 export 'charts/period_bar_chart.dart';
 export 'charts/ring_meter.dart';
 export 'charts/split_bar.dart';
+export 'charts/split_strip.dart';
 export 'components/buttons/app_button.dart';
 export 'components/buttons/icon_button.dart';
 export 'components/buttons/info_button.dart';
@@ -32,6 +35,7 @@ export 'components/interaction/app_interaction.dart';
 export 'components/interaction/capsule_meter.dart';
 export 'components/navigation/app_tab_bar.dart';
 export 'components/overlays/app_sheet.dart';
+export 'components/rows/home_tile_grid.dart';
 export 'components/rows/icon_tile.dart';
 export 'components/rows/select_row.dart';
 export 'components/rows/toggle_row.dart';

@@ -26,7 +26,9 @@ Version: 2026-10-17. Scope: Phase 1 only. Authority order: AGENTS.md, SPEC.md + 
   X88. Deferred with no route: CSV, Excel, OFX, QIF, CAMT.053, MT940, QR,
   receipt photo, holdings screenshot, share intake and `G03`.
 - Home with data: the debug demo mounts X10 (`docs/DECISIONS.md`
-  `P4-HOME-DATA`). Release keeps X03 until the vault composition.
+  `P4-HOME-DATA`): hero, 12-month line, Quick look tiles, next 30 days,
+  this month and the split strip. Release keeps X03 until the vault
+  composition.
 - The debug demo can use a real SQLite file with
   `--dart-define=DEMO_DB_PATH=<path>` (`P4-LOCAL-DEMO-VAULT`). The file is
   synthetic and unencrypted until `T07-CIPHER-BUILD` and `PF-01` close.

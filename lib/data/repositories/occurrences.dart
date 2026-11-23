@@ -838,6 +838,38 @@ final class OccurrenceRepository {
     ).toString();
   }
 
+  /// Upcoming occurrences in a date window, with the schedule name.
+  Future<List<UpcomingOccurrenceRow>> upcomingBetween({
+    required LocalDate from,
+    required LocalDate to,
+  }) async {
+    final rows = await _db.customSelect(
+      'SELECT o.id, o.schedule_id, o.date, o.amount_minor, o.currency, '
+      's.name, s.kind '
+      'FROM scheduled_occurrences o '
+      'JOIN schedules s ON s.id = o.schedule_id '
+      'WHERE o.deleted_at IS NULL AND s.deleted_at IS NULL '
+      'AND o.date >= ? AND o.date <= ? '
+      'ORDER BY o.date, o.id',
+      variables: <Variable<Object>>[
+        Variable<String>(from.toString()),
+        Variable<String>(to.toString()),
+      ],
+    ).get();
+    return <UpcomingOccurrenceRow>[
+      for (final row in rows)
+        UpcomingOccurrenceRow(
+          id: row.data['id'] as String,
+          scheduleId: row.data['schedule_id'] as String,
+          name: row.data['name'] as String,
+          kind: row.data['kind'] as String,
+          date: row.data['date'] as String,
+          amountMinor: row.data['amount_minor'] as int?,
+          currency: row.data['currency'] as String,
+        ),
+    ];
+  }
+
   /// One schedule's occurrences, oldest first.
   Future<List<OccurrenceRow>> listForSchedule(String scheduleId) async {
     final rows = await _db.customSelect(
@@ -1154,4 +1186,25 @@ final class OccurrenceRepository {
       ['metric.calendar', date, 'schedule', scheduleId],
     );
   }
+}
+
+/// One upcoming occurrence with its schedule name (Home timeline).
+final class UpcomingOccurrenceRow {
+  const UpcomingOccurrenceRow({
+    required this.id,
+    required this.scheduleId,
+    required this.name,
+    required this.kind,
+    required this.date,
+    required this.amountMinor,
+    required this.currency,
+  });
+
+  final String id;
+  final String scheduleId;
+  final String name;
+  final String kind;
+  final String date;
+  final int? amountMinor;
+  final String currency;
 }

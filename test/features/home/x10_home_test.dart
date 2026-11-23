@@ -29,7 +29,6 @@ void main() {
           onInbox: () {},
           onSettings: () {},
           onSpending: () {},
-          onAllPayments: () {},
         ),
       ),
     );
@@ -41,9 +40,9 @@ void main() {
     expect(find.text('Cash'), findsOneWidget);
     expect(find.text('Card bill'), findsOneWidget);
     expect(find.text('This month'), findsOneWidget);
-    expect(find.text('Recent'), findsOneWidget);
-    expect(find.textContaining('PX Market'), findsOneWidget);
-    expect(find.textContaining('13 Oct'), findsWidgets);
+    expect(find.text('Investments'), findsOneWidget);
+    expect(find.text('Next 30 days'), findsOneWidget);
+    expect(find.textContaining('Netflix'), findsWidgets);
   });
 
   testWidgets('a missing balance is not zero', (tester) async {
@@ -56,17 +55,19 @@ void main() {
           gateway: FakeHomeGateway(
             summary: HomeSummary(
               currencyCode: summary.currencyCode,
+              month: summary.month,
               monthDay: summary.monthDay,
               monthDays: summary.monthDays,
               inboxCount: 0,
               repeatingCount: 0,
-              recent: const <HomeRecentPayment>[],
+              accountCount: 0,
+              netWorthSeries: const <HomeSeriesPoint>[],
+              upcoming: const <HomeUpcomingItem>[],
             ),
           ),
           onInbox: () {},
           onSettings: () {},
           onSpending: () {},
-          onAllPayments: () {},
         ),
       ),
     );
@@ -76,7 +77,10 @@ void main() {
       find.text('—'),
       findsWidgets,
     );
-    expect(find.text('No payments yet.'), findsOneWidget);
+    expect(
+      find.text('No payments are due in the next 30 days.'),
+      findsOneWidget,
+    );
     expect(find.text(r'$0.00'), findsNothing);
   });
 }

@@ -302,8 +302,6 @@ final class ContourRouter {
                     onInbox: () => context.push(AppRoute.inbox.path),
                     onSettings: () => context.push(AppRoute.settings.path),
                     onSpending: () => context.push(AppRoute.spending.path),
-                    onAllPayments: () =>
-                        context.push(AppRoute.allPayments.path),
                   ),
           ),
         ),

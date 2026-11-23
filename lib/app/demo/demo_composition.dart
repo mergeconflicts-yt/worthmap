@@ -30,6 +30,7 @@ import '../../data/repositories/schedules.dart';
 import '../../data/repositories/transfers.dart';
 import '../../data/repositories/write_plan.dart';
 import '../../domain/periods/budget_month.dart';
+import '../../domain/periods/period_math.dart';
 import '../../domain/periods/period_range.dart';
 import '../../features/import/import_models.dart';
 import '../account_draft_store.dart';
@@ -178,7 +179,8 @@ final class DemoComposition {
         final opening = accounts.planSetOpeningBalance(
           accountId: id,
           anchorId: anchorId,
-          date: LocalDate(today.year, today.month, 1).toString(),
+          date:
+              addMonths(LocalDate(today.year, today.month, 1), -13).toString(),
           balanceMinor: liability ? -openingMinor : openingMinor,
           currency: currency,
         );
@@ -218,6 +220,14 @@ final class DemoComposition {
         124000,
         liability: true,
       );
+      final brokerage = await createAccount(
+        'Brokerage',
+        'brokerage',
+        'USD',
+        12980000,
+      );
+      // Keep the brokerage id used by the closing balance read.
+      assert(brokerage.isNotEmpty);
 
       // Categories.
       const expenseNames = <String>[
@@ -316,6 +326,35 @@ final class DemoComposition {
           'payment.create',
           'payment',
           '{"payment":"$id"}',
+        );
+      }
+
+      // Twelve earlier months, so the net worth line has real points.
+      for (var back = 12; back >= 1; back--) {
+        final base = addMonths(month.start, -back);
+        await payment(
+          accountId: checking,
+          date: LocalDate(base.year, base.month, 1).toString(),
+          amountMinor: 400000,
+          kind: 'income',
+          merchant: 'Acme salary',
+          categoryId: salaryId,
+        );
+        await payment(
+          accountId: checking,
+          date: LocalDate(base.year, base.month, 2).toString(),
+          amountMinor: -120000,
+          kind: 'expense',
+          merchant: 'Rent',
+          categoryId: expenseIds['Rent'],
+        );
+        await payment(
+          accountId: checking,
+          date: LocalDate(base.year, base.month, 6).toString(),
+          amountMinor: -45000,
+          kind: 'expense',
+          merchant: 'Whole Foods',
+          categoryId: expenseIds['Groceries'],
         );
       }
 
@@ -426,15 +465,16 @@ final class DemoComposition {
         String name,
         int amountMinor,
         String rrule,
-        String startDate,
-      ) async {
+        String startDate, {
+        String kind = 'subscription',
+      }) async {
         final id = nextId();
         await run(
           schedules.planCreate(
             scheduleId: id,
             fields: ScheduleFields(
               name: name,
-              kind: 'subscription',
+              kind: kind,
               currency: 'USD',
               accountId: card,
               amountMinor: amountMinor,
@@ -459,6 +499,7 @@ final class DemoComposition {
         180000,
         'FREQ=MONTHLY;BYMONTHDAY=1',
         day(1).toString(),
+        kind: 'bill',
       );
       await schedule(
         'Car insurance',
@@ -470,6 +511,7 @@ final class DemoComposition {
           (today.month + 3 - 1) % 12 + 1,
           4,
         ).toString(),
+        kind: 'premium',
       );
 
       // Expected occurrences for this month.
@@ -479,7 +521,7 @@ final class DemoComposition {
         newId: nextId,
       );
       await generator.generate(
-        window: DateRange(month.start, month.end),
+        window: DateRange(month.start, addDays(today, 30)),
       );
 
       // Rules.
@@ -565,8 +607,8 @@ final class DemoComposition {
       accounts: accounts,
       inbox: inboxRepository,
       schedules: schedules,
+      occurrences: occurrences,
       spending: spendingGateway,
-      payments: paymentsReadGateway,
       today: () => today,
     );
     final historyGateway = SqlHistoryGateway(

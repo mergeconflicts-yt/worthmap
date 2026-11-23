@@ -179,16 +179,28 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   schedule count; Recent is the five newest money-out payments. A missing
   balance makes its total Missing, never zero.
 
-- Layout. X10 shows the hero, Quick look, This month, Recent, and two actions
-  (Spending, All payments). The 12-month chart, the target line, Quick look
-  library tiles, Next 30 days, split bars, repeating rows and the footer wait
-  for their data (markets, goals, calendar, repeating reads).
+- Layout. X10 shows the hero with the 12-month change figure, the 12-month
+  net worth line, Quick look as a 2-column tile grid (Cash, Card bill,
+  Investments, Subscriptions), the next 30 days as a timeline, this month with
+  the limit meter, the income split strip (Invested, In cash) and the footer.
+  New design components: `AreaLineChart`, `HomeTileGrid`, `GlyphTimeline`,
+  `SplitStrip`.
 
-- Hidden state. Every amount is `MoneyText`; the hero context line is hidden
-  with the number. Counts stay.
+- Still absent, because their data or record type does not exist yet: the
+  net-worth target line (no goal record), Needs and Wants in the split (the
+  category essential tag is not in the schema, `P26-NEEDS-WANTS`), the goals
+  progress card (goals are v1.1), the prices and snapshot footer facts, and the
+  four-section tab bar (Wealth and Plan screens do not exist).
+
+- Hidden state. Every amount is `MoneyText` or a chart amount text; the hero
+  context line and the chart labels are hidden with the number. Counts stay.
+
+- Historical reads. `AccountRepository.balanceAt` now returns Missing for a
+  date before the selected anchor, instead of the anchor balance. The 12-month
+  series depends on that rule; a month before an anchor is a gap.
 
 - Evidence: `test/features/home/x10_home_test.dart` (2),
-  `test/app/demo_home_test.dart` (data from the in-memory demo),
+  `test/app/demo_home_test.dart` (data from the in-memory demo), and
   `test/golden/design/home_golden_test.dart` (4, dark and light at 1.0 and 2.0).
   At 2.0 the six-digit hero wraps at the group boundary as `HeroAmount` already
   documents; no digit is lost.

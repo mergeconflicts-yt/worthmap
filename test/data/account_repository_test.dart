@@ -159,6 +159,22 @@ void main() {
     expect((asOf14 as KnownBalance).amount.minor, 635000);
   });
 
+  test('a date before the anchor is Missing, not the anchor balance', () async {
+    await run(
+      accounts.planSetOpeningBalance(
+        accountId: _checking,
+        anchorId: _id(1),
+        date: '2026-10-13',
+        balanceMinor: 645000,
+        currency: 'USD',
+      ),
+    );
+    expect(
+      await accounts.balanceAt(accountId: _checking, asOf: '2026-10-12'),
+      isA<MissingBalance>(),
+    );
+  });
+
   test('an entered zero is a real anchor', () async {
     await run(
       accounts.planSetOpeningBalance(

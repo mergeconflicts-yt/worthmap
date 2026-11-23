@@ -15,11 +15,9 @@ void main() {
     expect(find.text('NET WORTH'), findsOneWidget);
     expect(find.text('Quick look'), findsOneWidget);
     expect(find.text('This month'), findsOneWidget);
-    expect(find.text('Recent'), findsOneWidget);
     // A real number, not the Missing dash of the first-run Home.
     expect(find.textContaining('Add an account balance'), findsNothing);
     expect(find.text('Money in'), findsOneWidget);
     expect(find.text('Spent'), findsOneWidget);
-    expect(find.text('No payments yet.'), findsNothing);
   });
 }
