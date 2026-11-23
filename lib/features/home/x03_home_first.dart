@@ -116,6 +116,7 @@ class X03HomeFirstRun extends StatelessWidget {
                 name: l.x03Step2,
                 line: l.x03Step2Line,
                 semanticLabel: l.x03Step2,
+                onTap: () => GoRouter.of(context).push('/x63'),
               ),
               SelectRow(
                 name: l.x03Step3,

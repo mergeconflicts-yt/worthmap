@@ -59,6 +59,8 @@ class X80Settings extends StatelessWidget {
               SelectRow(
                 name: l.x80ImportLayouts,
                 value: l.x80ImportLayoutsValue,
+                semanticLabel: l.x80ImportLayouts,
+                onTap: () => GoRouter.of(context).push('/x63'),
               ),
             ],
           ),

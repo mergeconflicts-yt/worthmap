@@ -40,7 +40,8 @@ PDF only, per the owner decision recorded in DECISIONS `P3-PDF-SUBSET`.
     Tests: `test/features/import/import_password_test.dart` (8, including a
     fully RC4-encrypted statement).
   - P3-25, P3-26 and P3-28 units: X63 hub, X64 password, X65 preview, X66 Teach
-    once, X68 done and X88 error, their widget tests and 16 goldens.
+    once, X68 done and X88 error, their widget tests and 16 goldens. Entries:
+    X03 Get started step 2 and X80 Capture > Import layouts.
 - Deferred with no route, tile or switch:
   - P3-02, P3-21, P3-22 (file picker and share intake), P3-03, P3-31 (broker
     and position imports), P3-04, P3-23, P3-24, P3-30 (OCR, QR and receipt

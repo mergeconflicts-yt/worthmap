@@ -16,7 +16,7 @@ claimed.
 | `dart run custom_lint` | pass, no issues |
 | `dart run tool/check_tokens.dart` | OK |
 | `dart run tool/check_contrast.dart` | OK, 545 pairs |
-| `flutter test test` | pass, 1121 tests |
+| `flutter test test` | pass, 1123 tests |
 | `flutter test --tags golden` | pass, 209 goldens |
 | `flutter test integration_test` | not run: no simulator on this host |
 
@@ -44,6 +44,8 @@ claimed.
 ## Screens
 
 - X63, X64, X65, X66, X68 and X88 are built from `lib/design` components.
+- Entries: Home > Get started step 2, and Settings > Capture > Import layouts.
+  Both open `/x63`; tests in `test/features/import/import_entry_test.dart`.
 - 16 goldens: `screens_x63_import_hub`, `screens_x65_import_preview`,
   `screens_x68_import_done`, `screens_x88_import_error`, in dark and light at
   1.0 and 2.0. All inspected.
