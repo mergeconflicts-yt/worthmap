@@ -19,11 +19,11 @@ void main() {
     await tester.pumpWidget(ContourApp(router: router));
     await tester.pumpAndSettle();
 
-    expect(find.text('Go to'), findsOneWidget);
-    expect(find.text('Spending'), findsOneWidget);
-    expect(find.text('Add a payment'), findsOneWidget);
+    expect(find.text('NET WORTH'), findsOneWidget);
+    expect(find.text('Quick look'), findsOneWidget);
+    expect(find.text('This month'), findsOneWidget);
 
-    await tester.tap(find.text('Spending'));
+    await tester.tap(find.widgetWithText(AppButton, 'Spending'));
     await tester.pumpAndSettle();
 
     expect(find.byType(X30Spending), findsOneWidget);

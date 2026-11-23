@@ -33,7 +33,9 @@ import '../features/add/x20_add_payment.dart';
 import '../features/add/x26_transfer.dart';
 import '../features/history/c06_history.dart';
 import '../features/history/history_models.dart';
+import '../features/home/home_models.dart';
 import '../features/home/x03_home_first.dart';
+import '../features/home/x10_home.dart';
 import '../features/import/import_models.dart';
 import '../features/import/x63_import.dart';
 import '../features/inbox/inbox_models.dart';
@@ -142,6 +144,7 @@ final class ContourRouter {
     PaymentsReadGateway? paymentsRead,
     RepeatingGateway? repeating,
     HistoryGateway? history,
+    HomeGateway? home,
     ImportGateway? imports,
     ImportFileIntake? importFiles,
     ImportPasswordVault? importPasswords,
@@ -164,6 +167,7 @@ final class ContourRouter {
         _paymentsRead = paymentsRead ?? const UnavailablePaymentsReadGateway(),
         _repeating = repeating ?? const UnavailableRepeatingGateway(),
         _history = history ?? const UnavailableHistoryGateway(),
+        _home = home,
         _imports = imports ?? const UnavailableImportGateway(),
         _importFiles = importFiles ?? const UnavailableFileIntake(),
         _importPasswords = importPasswords;
@@ -208,6 +212,9 @@ final class ContourRouter {
 
   /// The activity history port for C06.
   final HistoryGateway _history;
+
+  /// The Home summary port. Null keeps X03, the first-run Home.
+  final HomeGateway? _home;
 
   /// The PDF import port for X63.
   final ImportGateway _imports;
@@ -281,14 +288,23 @@ final class ContourRouter {
           name: AppRoute.home.screenId,
           builder: (context, state) => _screenScaffold(
             AppRoute.home,
-            X03HomeFirstRun(
-              onSpending: _demoEntries
-                  ? () => context.push(AppRoute.spending.path)
-                  : null,
-              onAddPayment: _demoEntries
-                  ? () => context.push(AppRoute.paymentAdd.path)
-                  : null,
-            ),
+            _home == null
+                ? X03HomeFirstRun(
+                    onSpending: _demoEntries
+                        ? () => context.push(AppRoute.spending.path)
+                        : null,
+                    onAddPayment: _demoEntries
+                        ? () => context.push(AppRoute.paymentAdd.path)
+                        : null,
+                  )
+                : X10Home(
+                    gateway: _home,
+                    onInbox: () => context.push(AppRoute.inbox.path),
+                    onSettings: () => context.push(AppRoute.settings.path),
+                    onSpending: () => context.push(AppRoute.spending.path),
+                    onAllPayments: () =>
+                        context.push(AppRoute.allPayments.path),
+                  ),
           ),
         ),
         GoRoute(

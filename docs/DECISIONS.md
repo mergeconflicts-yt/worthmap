@@ -142,6 +142,35 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   request per family, when a typed read is first needed.
 ## Decided
 
+### P4-HOME-DATA
+
+- Decision (2026-11-23, owner asked for Home with data). The debug demo now
+  mounts X10 instead of X03 when a `HomeGateway` exists. The release start keeps
+  X03, because its vault composition still waits for `PF-01` and
+  `T07-CIPHER-BUILD`.
+
+- Read model. Net worth is the sum of `include_in_net_worth` balances. Cash is
+  the sum of `is_liquid` balances. Card bill is the sum of liability balances
+  shown as owed. Money in and Spent come from the existing P26 and P15 reads
+  for the current month. Inbox is `pendingCount`; repeating is the active
+  schedule count; Recent is the five newest money-out payments. A missing
+  balance makes its total Missing, never zero.
+
+- Layout. X10 shows the hero, Quick look, This month, Recent, and two actions
+  (Spending, All payments). The 12-month chart, the target line, Quick look
+  library tiles, Next 30 days, split bars, repeating rows and the footer wait
+  for their data (markets, goals, calendar, repeating reads).
+
+- Hidden state. Every amount is `MoneyText`; the hero context line is hidden
+  with the number. Counts stay.
+
+- Evidence: `test/features/home/x10_home_test.dart` (2),
+  `test/app/demo_home_test.dart` (data from the in-memory demo),
+  `test/golden/design/home_golden_test.dart` (4, dark and light at 1.0 and 2.0).
+  At 2.0 the six-digit hero wraps at the group boundary as `HeroAmount` already
+  documents; no digit is lost.
+
+
 ### P3-PDF-SUBSET
 
 - Decision (2026-11-23, owner confirmed in this working session). Phase 3 is

@@ -3428,5 +3428,89 @@
   "importErrorNotPdfTitle": "This file is not a PDF",
   "@importErrorNotPdfTitle": {
     "description": "Phase 3 X88 title for a non-PDF file."
+  },
+  "x10Kicker": "NET WORTH",
+  "@x10Kicker": {
+    "description": "X10 hero kicker."
+  },
+  "x10MonthLine": "{moneyIn} in · {moneyOut} out this month",
+  "@x10MonthLine": {
+    "description": "X10 hero context line."
+  },
+  "x10MonthLineHidden": "This month",
+  "@x10MonthLineHidden": {
+    "description": "X10 hero context line in hidden mode."
+  },
+  "x10NoBalance": "Add an account balance to see net worth.",
+  "@x10NoBalance": {
+    "description": "X10 hero Missing line."
+  },
+  "x10QuickLook": "Quick look",
+  "@x10QuickLook": {
+    "description": "X10 card title."
+  },
+  "x10Cash": "Cash",
+  "@x10Cash": {
+    "description": "X10 quick look row."
+  },
+  "x10CardBill": "Card bill",
+  "@x10CardBill": {
+    "description": "X10 quick look row."
+  },
+  "x10Inbox": "Inbox",
+  "@x10Inbox": {
+    "description": "X10 quick look row."
+  },
+  "x10Repeating": "Repeating payments",
+  "@x10Repeating": {
+    "description": "X10 quick look row."
+  },
+  "x10ThisMonth": "This month",
+  "@x10ThisMonth": {
+    "description": "X10 card title."
+  },
+  "x10MoneyIn": "Money in",
+  "@x10MoneyIn": {
+    "description": "X10 this-month row."
+  },
+  "x10Spent": "Spent",
+  "@x10Spent": {
+    "description": "X10 this-month row."
+  },
+  "x10OfLimit": "{percent} of the limit",
+  "@x10OfLimit": {
+    "description": "X10 spent line."
+  },
+  "x10NoLimit": "No limit set",
+  "@x10NoLimit": {
+    "description": "X10 spent line when no limit exists."
+  },
+  "x10Recent": "Recent",
+  "@x10Recent": {
+    "description": "X10 card title."
+  },
+  "x10NoRecent": "No payments yet.",
+  "@x10NoRecent": {
+    "description": "X10 recent empty line."
+  },
+  "x10AllPayments": "All payments",
+  "@x10AllPayments": {
+    "description": "X10 action."
+  },
+  "x10OpenSpending": "Spending",
+  "@x10OpenSpending": {
+    "description": "X10 action."
+  },
+  "x10SpokenInbox": "Inbox, {count} items",
+  "@x10SpokenInbox": {
+    "description": "X10 Inbox action spoken label."
+  },
+  "x10DayOf": "day {day} of {days}",
+  "@x10DayOf": {
+    "description": "X10 month meta."
+  },
+  "x10Owes": "Owes ",
+  "@x10Owes": {
+    "description": "X10 card balance prefix."
   }
 }

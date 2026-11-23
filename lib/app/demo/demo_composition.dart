@@ -35,6 +35,7 @@ import '../../features/import/import_models.dart';
 import '../account_draft_store.dart';
 import '../accounts_gateway.dart';
 import '../history_gateway.dart';
+import '../home_gateway.dart';
 import '../import_gateway.dart';
 import '../inbox_gateway.dart';
 import '../payment_draft_store.dart';
@@ -538,6 +539,14 @@ final class DemoComposition {
       newId: nextId,
     );
     final importGateway = SqlImportGateway(imports: importStaging);
+    final homeGateway = SqlHomeGateway(
+      accounts: accounts,
+      inbox: inboxRepository,
+      schedules: schedules,
+      spending: spendingGateway,
+      payments: paymentsReadGateway,
+      today: () => today,
+    );
     final historyGateway = SqlHistoryGateway(
       history: historyRepository,
       payments: payments,
@@ -559,6 +568,7 @@ final class DemoComposition {
       paymentsRead: paymentsReadGateway,
       repeating: repeatingGateway,
       history: historyGateway,
+      home: homeGateway,
       imports: importGateway,
       importFiles: const SyntheticFileIntake(),
       importPasswords: MemoryImportPasswordVault(),

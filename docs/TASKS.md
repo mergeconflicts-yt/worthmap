@@ -25,6 +25,8 @@ Version: 2026-10-17. Scope: Phase 1 only. Authority order: AGENTS.md, SPEC.md + 
   `P3-PDF-SUBSET`): reader, statement rows, Teach once, staging, X63–X68 and
   X88. Deferred with no route: CSV, Excel, OFX, QIF, CAMT.053, MT940, QR,
   receipt photo, holdings screenshot, share intake and `G03`.
+- Home with data: the debug demo mounts X10 (`docs/DECISIONS.md`
+  `P4-HOME-DATA`). Release keeps X03 until the vault composition.
 - Test state: `flutter test test` 345 pass (measured 2026-11-22);
   `flutter test --tags golden` 33 pass and stable (4 + 4 component/gallery +
   20 Phase 1 screens + 4 new components + 1 l10n check; the count grew from
