@@ -27,6 +27,9 @@ Version: 2026-10-17. Scope: Phase 1 only. Authority order: AGENTS.md, SPEC.md + 
   receipt photo, holdings screenshot, share intake and `G03`.
 - Home with data: the debug demo mounts X10 (`docs/DECISIONS.md`
   `P4-HOME-DATA`). Release keeps X03 until the vault composition.
+- The debug demo can use a real SQLite file with
+  `--dart-define=DEMO_DB_PATH=<path>` (`P4-LOCAL-DEMO-VAULT`). The file is
+  synthetic and unencrypted until `T07-CIPHER-BUILD` and `PF-01` close.
 - Test state: `flutter test test` 345 pass (measured 2026-11-22);
   `flutter test --tags golden` 33 pass and stable (4 + 4 component/gallery +
   20 Phase 1 screens + 4 new components + 1 l10n check; the count grew from

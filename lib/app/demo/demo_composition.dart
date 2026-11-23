@@ -53,21 +53,37 @@ import 'sample_statement.dart';
 final class DemoComposition {
   const DemoComposition._();
 
-  static Future<ContourRouter> build() async {
+  static Future<ContourRouter> build({
+    String? dbPath,
+    void Function(Vault vault)? onVault,
+  }) async {
     assert(kDebugMode, 'The demo composition is a debug-only path');
     final today = _localToday();
     final ids = _IdSource();
     String nextId() => ids.next();
 
-    final vault = await Vault.openInMemory(
-      cipher: const UnverifiedOpenCipher(),
-      keySource: () => '00' * 32,
-      dbEpochFactory: nextId,
-    );
+    final Vault vault;
+    if (dbPath == null || dbPath.isEmpty) {
+      vault = await Vault.openInMemory(
+        cipher: const UnverifiedOpenCipher(),
+        keySource: () => '00' * 32,
+        dbEpochFactory: nextId,
+      );
+    } else {
+      // A real SQLite file, debug only. The cipher is the synthetic adapter
+      // until DB-A and PF-01 close (DECISIONS P4-LOCAL-DEMO-VAULT).
+      vault = await Vault.open(
+        path: dbPath,
+        cipher: const UnverifiedOpenCipher(),
+        keySource: () => '00' * 32,
+        dbEpochFactory: nextId,
+      );
+    }
     final db = vault.database;
-    await db.customStatement(
-      "INSERT INTO currencies (code, minor_digits) VALUES ('USD', 2)",
-    );
+    onVault?.call(vault);
+    final rows =
+        await db.customSelect('SELECT COUNT(*) AS n FROM accounts').getSingle();
+    final needsSeed = (rows.data['n'] as int) == 0;
 
     DateTime clockUtc() => DateTime.now().toUtc();
     final commands = CommandRepository(
@@ -136,350 +152,356 @@ final class DemoComposition {
     }
 
     // Accounts.
-    Future<String> createAccount(
-      String name,
-      String type,
-      String currency,
-      int openingMinor, {
-      bool liability = false,
-      bool liquid = false,
-    }) async {
-      final id = nextId();
-      final anchorId = nextId();
-      final create = accounts.planCreateAccount(
-        id: id,
-        name: name,
-        type: type,
-        currency: currency,
-        isLiability: liability,
-        isLiquid: liquid,
+    if (needsSeed) {
+      await db.customStatement(
+        "INSERT INTO currencies (code, minor_digits) VALUES ('USD', 2)",
       );
-      final opening = accounts.planSetOpeningBalance(
-        accountId: id,
-        anchorId: anchorId,
-        date: LocalDate(today.year, today.month, 1).toString(),
-        balanceMinor: liability ? -openingMinor : openingMinor,
-        currency: currency,
-      );
-      await run(
-        WritePlan(
-          changes: <ChangeLogEntry>[...create.changes, ...opening.changes],
-          apply: () async {
-            await create.apply();
-            await opening.apply();
-          },
-        ),
-        'account.create',
-        'account',
-        '{"account":"$id"}',
-      );
-      return id;
-    }
 
-    final checking = await createAccount(
-      'Checking',
-      'bank',
-      'USD',
-      645000,
-      liquid: true,
-    );
-    final savings = await createAccount(
-      'Savings',
-      'bank',
-      'USD',
-      1500000,
-      liquid: true,
-    );
-    final card = await createAccount(
-      'Visa card',
-      'card',
-      'USD',
-      124000,
-      liability: true,
-    );
+      Future<String> createAccount(
+        String name,
+        String type,
+        String currency,
+        int openingMinor, {
+        bool liability = false,
+        bool liquid = false,
+      }) async {
+        final id = nextId();
+        final anchorId = nextId();
+        final create = accounts.planCreateAccount(
+          id: id,
+          name: name,
+          type: type,
+          currency: currency,
+          isLiability: liability,
+          isLiquid: liquid,
+        );
+        final opening = accounts.planSetOpeningBalance(
+          accountId: id,
+          anchorId: anchorId,
+          date: LocalDate(today.year, today.month, 1).toString(),
+          balanceMinor: liability ? -openingMinor : openingMinor,
+          currency: currency,
+        );
+        await run(
+          WritePlan(
+            changes: <ChangeLogEntry>[...create.changes, ...opening.changes],
+            apply: () async {
+              await create.apply();
+              await opening.apply();
+            },
+          ),
+          'account.create',
+          'account',
+          '{"account":"$id"}',
+        );
+        return id;
+      }
 
-    // Categories.
-    const expenseNames = <String>[
-      'Rent',
-      'Groceries',
-      'Dining',
-      'Coffee',
-      'Transport',
-      'Shopping',
-      'Utilities',
-      'Subscriptions',
-    ];
-    final expenseIds = <String, String>{};
-    for (var index = 0; index < expenseNames.length; index++) {
-      final id = nextId();
-      expenseIds[expenseNames[index]] = id;
+      final checking = await createAccount(
+        'Checking',
+        'bank',
+        'USD',
+        645000,
+        liquid: true,
+      );
+      final savings = await createAccount(
+        'Savings',
+        'bank',
+        'USD',
+        1500000,
+        liquid: true,
+      );
+      final card = await createAccount(
+        'Visa card',
+        'card',
+        'USD',
+        124000,
+        liability: true,
+      );
+
+      // Categories.
+      const expenseNames = <String>[
+        'Rent',
+        'Groceries',
+        'Dining',
+        'Coffee',
+        'Transport',
+        'Shopping',
+        'Utilities',
+        'Subscriptions',
+      ];
+      final expenseIds = <String, String>{};
+      for (var index = 0; index < expenseNames.length; index++) {
+        final id = nextId();
+        expenseIds[expenseNames[index]] = id;
+        await run(
+          categories.planCreateCategory(
+            id: id,
+            name: expenseNames[index],
+            kind: 'expense',
+            sortOrder: index,
+          ),
+          'category.create',
+          'category',
+          '{"category":"$id"}',
+        );
+      }
+      final salaryId = nextId();
       await run(
         categories.planCreateCategory(
-          id: id,
-          name: expenseNames[index],
-          kind: 'expense',
-          sortOrder: index,
+          id: salaryId,
+          name: 'Salary',
+          kind: 'income',
+          sortOrder: 0,
         ),
         'category.create',
         'category',
-        '{"category":"$id"}',
+        '{"category":"$salaryId"}',
       );
-    }
-    final salaryId = nextId();
-    await run(
-      categories.planCreateCategory(
-        id: salaryId,
-        name: 'Salary',
-        kind: 'income',
-        sortOrder: 0,
-      ),
-      'category.create',
-      'category',
-      '{"category":"$salaryId"}',
-    );
 
-    // Budget limits for this month.
-    final month = BudgetMonth.containing(today);
-    final monthKey = '${month.start.year.toString().padLeft(4, '0')}-'
-        '${month.start.month.toString().padLeft(2, '0')}';
-    await run(
-      await budgets.planSaveLimits(
-        month: monthKey,
-        currency: 'USD',
-        startDate: month.start.toString(),
-        endDate: month.end.toString(),
-        limits: <String, int>{
-          expenseIds['Rent']!: 180000,
-          expenseIds['Groceries']!: 120000,
-          expenseIds['Dining']!: 60000,
-          expenseIds['Shopping']!: 50000,
-          expenseIds['Transport']!: 40000,
-          expenseIds['Utilities']!: 30000,
-          expenseIds['Subscriptions']!: 10000,
-        },
-      ),
-      'budget.saveLimits',
-      'budget',
-      '{"month":"$monthKey"}',
-    );
-
-    // Payments of this month.
-    LocalDate day(int value) => LocalDate(
-          today.year,
-          today.month,
-          value > today.day ? today.day : value,
-        );
-    Future<void> payment({
-      required String accountId,
-      required String date,
-      required int amountMinor,
-      required String kind,
-      String? merchant,
-      String? categoryId,
-    }) async {
-      final id = nextId();
+      // Budget limits for this month.
+      final month = BudgetMonth.containing(today);
+      final monthKey = '${month.start.year.toString().padLeft(4, '0')}-'
+          '${month.start.month.toString().padLeft(2, '0')}';
       await run(
-        payments.planCreate(
-          NewPayment(
-            id: id,
-            eventId: nextId(),
-            accountId: accountId,
-            date: date,
-            amountMinor: amountMinor,
-            currency: 'USD',
-            kind: kind,
-            merchantName: merchant,
-            categoryId: categoryId,
-          ),
-        ),
-        'payment.create',
-        'payment',
-        '{"payment":"$id"}',
-      );
-    }
-
-    await payment(
-      accountId: checking,
-      date: day(1).toString(),
-      amountMinor: 820000,
-      kind: 'income',
-      merchant: 'Acme salary',
-      categoryId: salaryId,
-    );
-    await payment(
-      accountId: checking,
-      date: day(1).toString(),
-      amountMinor: -180000,
-      kind: 'expense',
-      merchant: 'Rent',
-      categoryId: expenseIds['Rent'],
-    );
-    await payment(
-      accountId: card,
-      date: day(5).toString(),
-      amountMinor: -8412,
-      kind: 'expense',
-      merchant: 'Whole Foods',
-      categoryId: expenseIds['Groceries'],
-    );
-    await payment(
-      accountId: card,
-      date: day(9).toString(),
-      amountMinor: -5200,
-      kind: 'expense',
-      merchant: 'Cafe Nero',
-      categoryId: expenseIds['Dining'],
-    );
-    await payment(
-      accountId: checking,
-      date: day(8).toString(),
-      amountMinor: -12000,
-      kind: 'expense',
-      merchant: 'City power',
-      categoryId: expenseIds['Utilities'],
-    );
-    await payment(
-      accountId: card,
-      date: day(15).toString(),
-      amountMinor: -24000,
-      kind: 'expense',
-      merchant: 'Uniqlo',
-      categoryId: expenseIds['Shopping'],
-    );
-    await payment(
-      accountId: checking,
-      date: day(18).toString(),
-      amountMinor: -3000,
-      kind: 'expense',
-      merchant: 'Metro',
-      categoryId: expenseIds['Transport'],
-    );
-    await payment(
-      accountId: card,
-      date: day(18).toString(),
-      amountMinor: -1799,
-      kind: 'expense',
-      merchant: 'Netflix',
-      categoryId: expenseIds['Subscriptions'],
-    );
-    await payment(
-      accountId: checking,
-      date: day(20).toString(),
-      amountMinor: -3175,
-      kind: 'expense',
-      merchant: 'PX Market',
-      categoryId: expenseIds['Groceries'],
-    );
-    await payment(
-      accountId: card,
-      date: day(21).toString(),
-      amountMinor: -640,
-      kind: 'expense',
-      merchant: 'Starbucks',
-      categoryId: expenseIds['Coffee'],
-    );
-
-    // One transfer between two owned accounts.
-    final transferEvent = nextId();
-    await run(
-      transfers.planCreate(
-        NewTransfer(
-          eventId: transferEvent,
-          linkId: nextId(),
-          sendingId: nextId(),
-          receivingId: nextId(),
-          fromAccountId: checking,
-          toAccountId: savings,
-          date: day(10).toString(),
-          amountMinor: 50000,
+        await budgets.planSaveLimits(
+          month: monthKey,
           currency: 'USD',
+          startDate: month.start.toString(),
+          endDate: month.end.toString(),
+          limits: <String, int>{
+            expenseIds['Rent']!: 180000,
+            expenseIds['Groceries']!: 120000,
+            expenseIds['Dining']!: 60000,
+            expenseIds['Shopping']!: 50000,
+            expenseIds['Transport']!: 40000,
+            expenseIds['Utilities']!: 30000,
+            expenseIds['Subscriptions']!: 10000,
+          },
         ),
-      ),
-      'transfer.create',
-      'transfer',
-      '{"event":"$transferEvent"}',
-    );
+        'budget.saveLimits',
+        'budget',
+        '{"month":"$monthKey"}',
+      );
 
-    // Repeating payments.
-    Future<void> schedule(
-      String name,
-      int amountMinor,
-      String rrule,
-      String startDate,
-    ) async {
-      final id = nextId();
+      // Payments of this month.
+      LocalDate day(int value) => LocalDate(
+            today.year,
+            today.month,
+            value > today.day ? today.day : value,
+          );
+      Future<void> payment({
+        required String accountId,
+        required String date,
+        required int amountMinor,
+        required String kind,
+        String? merchant,
+        String? categoryId,
+      }) async {
+        final id = nextId();
+        await run(
+          payments.planCreate(
+            NewPayment(
+              id: id,
+              eventId: nextId(),
+              accountId: accountId,
+              date: date,
+              amountMinor: amountMinor,
+              currency: 'USD',
+              kind: kind,
+              merchantName: merchant,
+              categoryId: categoryId,
+            ),
+          ),
+          'payment.create',
+          'payment',
+          '{"payment":"$id"}',
+        );
+      }
+
+      await payment(
+        accountId: checking,
+        date: day(1).toString(),
+        amountMinor: 820000,
+        kind: 'income',
+        merchant: 'Acme salary',
+        categoryId: salaryId,
+      );
+      await payment(
+        accountId: checking,
+        date: day(1).toString(),
+        amountMinor: -180000,
+        kind: 'expense',
+        merchant: 'Rent',
+        categoryId: expenseIds['Rent'],
+      );
+      await payment(
+        accountId: card,
+        date: day(5).toString(),
+        amountMinor: -8412,
+        kind: 'expense',
+        merchant: 'Whole Foods',
+        categoryId: expenseIds['Groceries'],
+      );
+      await payment(
+        accountId: card,
+        date: day(9).toString(),
+        amountMinor: -5200,
+        kind: 'expense',
+        merchant: 'Cafe Nero',
+        categoryId: expenseIds['Dining'],
+      );
+      await payment(
+        accountId: checking,
+        date: day(8).toString(),
+        amountMinor: -12000,
+        kind: 'expense',
+        merchant: 'City power',
+        categoryId: expenseIds['Utilities'],
+      );
+      await payment(
+        accountId: card,
+        date: day(15).toString(),
+        amountMinor: -24000,
+        kind: 'expense',
+        merchant: 'Uniqlo',
+        categoryId: expenseIds['Shopping'],
+      );
+      await payment(
+        accountId: checking,
+        date: day(18).toString(),
+        amountMinor: -3000,
+        kind: 'expense',
+        merchant: 'Metro',
+        categoryId: expenseIds['Transport'],
+      );
+      await payment(
+        accountId: card,
+        date: day(18).toString(),
+        amountMinor: -1799,
+        kind: 'expense',
+        merchant: 'Netflix',
+        categoryId: expenseIds['Subscriptions'],
+      );
+      await payment(
+        accountId: checking,
+        date: day(20).toString(),
+        amountMinor: -3175,
+        kind: 'expense',
+        merchant: 'PX Market',
+        categoryId: expenseIds['Groceries'],
+      );
+      await payment(
+        accountId: card,
+        date: day(21).toString(),
+        amountMinor: -640,
+        kind: 'expense',
+        merchant: 'Starbucks',
+        categoryId: expenseIds['Coffee'],
+      );
+
+      // One transfer between two owned accounts.
+      final transferEvent = nextId();
       await run(
-        schedules.planCreate(
-          scheduleId: id,
-          fields: ScheduleFields(
-            name: name,
-            kind: 'subscription',
+        transfers.planCreate(
+          NewTransfer(
+            eventId: transferEvent,
+            linkId: nextId(),
+            sendingId: nextId(),
+            receivingId: nextId(),
+            fromAccountId: checking,
+            toAccountId: savings,
+            date: day(10).toString(),
+            amountMinor: 50000,
             currency: 'USD',
-            accountId: card,
-            amountMinor: amountMinor,
-            startDate: startDate,
-            rrule: rrule,
           ),
         ),
-        'schedule.create',
-        'schedule',
-        '{"schedule":"$id"}',
+        'transfer.create',
+        'transfer',
+        '{"event":"$transferEvent"}',
       );
-    }
 
-    await schedule(
-      'Netflix',
-      1799,
-      'FREQ=MONTHLY;BYMONTHDAY=18',
-      day(18).toString(),
-    );
-    await schedule(
-      'Rent',
-      180000,
-      'FREQ=MONTHLY;BYMONTHDAY=1',
-      day(1).toString(),
-    );
-    await schedule(
-      'Car insurance',
-      78000,
-      'FREQ=YEARLY;BYMONTH=${(today.month + 3 - 1) % 12 + 1};'
-          'BYMONTHDAY=4',
-      LocalDate(
-        today.month > 9 ? today.year + 1 : today.year,
-        (today.month + 3 - 1) % 12 + 1,
-        4,
-      ).toString(),
-    );
+      // Repeating payments.
+      Future<void> schedule(
+        String name,
+        int amountMinor,
+        String rrule,
+        String startDate,
+      ) async {
+        final id = nextId();
+        await run(
+          schedules.planCreate(
+            scheduleId: id,
+            fields: ScheduleFields(
+              name: name,
+              kind: 'subscription',
+              currency: 'USD',
+              accountId: card,
+              amountMinor: amountMinor,
+              startDate: startDate,
+              rrule: rrule,
+            ),
+          ),
+          'schedule.create',
+          'schedule',
+          '{"schedule":"$id"}',
+        );
+      }
 
-    // Expected occurrences for this month.
-    final generator = OccurrenceGenerator(
-      db: db,
-      clockUtc: clockUtc,
-      newId: nextId,
-    );
-    await generator.generate(
-      window: DateRange(month.start, month.end),
-    );
-
-    // Rules.
-    Future<void> rule(String pattern, String categoryId) async {
-      final id = nextId();
-      await run(
-        categories.planCreateRule(
-          id: id,
-          matchType: 'merchantContains',
-          pattern: pattern,
-          categoryId: categoryId,
-          createdFrom: 'user',
-        ),
-        'categoryRule.create',
-        'categoryRule',
-        '{"rule":"$id"}',
+      await schedule(
+        'Netflix',
+        1799,
+        'FREQ=MONTHLY;BYMONTHDAY=18',
+        day(18).toString(),
       );
-    }
+      await schedule(
+        'Rent',
+        180000,
+        'FREQ=MONTHLY;BYMONTHDAY=1',
+        day(1).toString(),
+      );
+      await schedule(
+        'Car insurance',
+        78000,
+        'FREQ=YEARLY;BYMONTH=${(today.month + 3 - 1) % 12 + 1};'
+            'BYMONTHDAY=4',
+        LocalDate(
+          today.month > 9 ? today.year + 1 : today.year,
+          (today.month + 3 - 1) % 12 + 1,
+          4,
+        ).toString(),
+      );
 
-    await rule('Whole Foods', expenseIds['Groceries']!);
-    await rule('Uber', expenseIds['Transport']!);
+      // Expected occurrences for this month.
+      final generator = OccurrenceGenerator(
+        db: db,
+        clockUtc: clockUtc,
+        newId: nextId,
+      );
+      await generator.generate(
+        window: DateRange(month.start, month.end),
+      );
+
+      // Rules.
+      Future<void> rule(String pattern, String categoryId) async {
+        final id = nextId();
+        await run(
+          categories.planCreateRule(
+            id: id,
+            matchType: 'merchantContains',
+            pattern: pattern,
+            categoryId: categoryId,
+            createdFrom: 'user',
+          ),
+          'categoryRule.create',
+          'categoryRule',
+          '{"rule":"$id"}',
+        );
+      }
+
+      await rule('Whole Foods', expenseIds['Groceries']!);
+      await rule('Uber', expenseIds['Transport']!);
+    } // needsSeed
 
     // Gateways.
     final accountsGateway = SqlAccountsGateway(

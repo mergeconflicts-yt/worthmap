@@ -142,6 +142,29 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   request per family, when a typed read is first needed.
 ## Decided
 
+### P4-LOCAL-DEMO-VAULT
+
+- Decision (2026-11-23, owner asked for the app's real database). The debug
+  demo can open a real SQLite file when the runner sets
+  `DEMO_DB_PATH`, for example
+  `flutter run --dart-define=DEMO_DB_PATH=$HOME/contour-demo.db`. The second
+  start reopens the file and does not seed again. Empty keeps the in-memory
+  demo.
+
+- The file holds synthetic data only. It opens through
+  `UnverifiedOpenCipher`, because no verified SQLCipher build is in the
+  repository (`T07-CIPHER-BUILD`, gate DB-A). It is therefore not encrypted
+  and must not hold personal data. It stays behind `kDebugMode` and is never a
+  release path.
+
+- Release stays on the unavailable gateways. Real-user persistence waits for
+  the pinned cipher build, the DB-A evidence and the PF-01 copy-confinement
+  decision (AGENTS 2.1).
+
+- Evidence: `test/app/demo_persistence_test.dart` builds the file vault twice,
+  closes each, and asserts the same account count.
+
+
 ### P4-HOME-DATA
 
 - Decision (2026-11-23, owner asked for Home with data). The debug demo now

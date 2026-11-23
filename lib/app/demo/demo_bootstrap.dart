@@ -19,7 +19,12 @@ class DemoBootstrap extends StatefulWidget {
 }
 
 class _DemoBootstrapState extends State<DemoBootstrap> {
-  late final Future<ContourRouter> _router = DemoComposition.build();
+  /// A real SQLite file for the debug demo when the runner sets
+  /// `DEMO_DB_PATH`. Empty keeps the in-memory demo.
+  static const String _dbPath = String.fromEnvironment('DEMO_DB_PATH');
+
+  late final Future<ContourRouter> _router =
+      DemoComposition.build(dbPath: _dbPath);
 
   @override
   Widget build(BuildContext context) {
