@@ -60,8 +60,9 @@ backup":
   `manual_quotes`, `fx_observations`, `holdings`, `investment_transactions`,
   `lots`, `lot_allocations`, `position_observations`, `month_closes`,
   `close_revisions`, `local_jobs` and `attachment_manifests`
-  (`lib/data/db/schema/reference_schema.dart`). Phase 4 adds typed reads and
-  writers; it does not add a second model.
+  (`lib/data/db/schema/reference_schema.dart`). Schema version 10 adds
+  `valuation_rules`, `card_details` and `loan_details`. Phase 4 adds typed
+  reads and writers; it does not add a second model.
 - Unchanged and not closed by Phase 4: `PF-01`, DB-A, DB-B,
   `T07-CIPHER-BUILD`, T08/T11 native bindings, `P21-UNWIRED-GATEWAY`.
 
@@ -125,11 +126,13 @@ task starts:
   Phase 2 and 3 did.
 - `P4-VALUE-METHOD-BASIS` — decided 28 Nov 2026. The fixture regeneration it
   needs is P4-01b.
+- `P4-RULE-STORAGE` — decided 28 Nov 2026. Schema version 10 holds the
+  value rule, card details and loan details.
 
 ## Order and parallel tracks
 
-- Track A — accounts and wealth: P4-01 to P4-08. P4-09 follows P4-11; P4-10
-  follows P4-18.
+- Track A — accounts and wealth: P4-01, P4-01b, P4-02, P4-02b, then P4-03 to
+  P4-08. P4-09 follows P4-11; P4-10 follows P4-18.
 - Track B — investments: P4-11 to P4-17. Starts with the P4-11 domain model.
   P4-09 needs P4-11.
 - Track C — forecast and Home: P4-20 (needs P4-04), then P4-18 (needs
@@ -193,7 +196,7 @@ Shared files (`router.dart`, `tokens.json`, `pubspec.yaml`, database schema,
 - Evidence: the document diff, the test list and the regenerated goldens.
   Reviewer: product and finance + design and accessibility.
 
-### P4-02 — Account and asset reads (data)
+### P4-02 — Account and asset reads (data) (done for reads and create)
 
 - Objective: typed reads for the account list, its type, value method and
   details, plus the writes for a new account with its dated value.
@@ -212,6 +215,38 @@ Shared files (`router.dart`, `tokens.json`, `pubspec.yaml`, database schema,
 - Evidence: repository tests with Appendix A data and a migration note (no
   schema change expected). Reviewer: product and finance + privacy and
   security.
+- Status: reads and account create are done (2026-11-28):
+  `AccountRepository.findById` returns the account row, its institution and
+  its value at the read date; `planCreateAccount` stores the institution,
+  ownership share, minimum balance and overdraft limit. Tests:
+  `test/data/account_detail_test.dart` (5). The value method has no storage;
+  see `P4-RULE-STORAGE` and P4-02b.
+
+### P4-02b — Value-rule and account-detail storage (data) (done)
+
+- Objective: add the tables that hold the value method, card details and loan
+  details, so a saved account reopens with its rule.
+- Refs: SPEC 9.2; DATABASE_DESIGN 4.1; DECISIONS `P4-RULE-STORAGE`.
+- Depends on: the `P4-RULE-STORAGE` decision; P4-01. Blocks P4-03, P4-04.
+- Owner: Data builder. Files allowed: `lib/data/db/migrations/v010_*.dart`,
+  `lib/data/db/migration.dart`, `lib/data/repositories/accounts.dart`,
+  `test/data/migration_010_test.dart`, `test/data/*`.
+- Contract: one authored row per account per method family, with UUID v7,
+  timestamps, soft delete and revision; parameters as bounded JSON; the last
+  real value and date; a method enum that matches SPEC 9.2. A new real value
+  restarts the estimate (P4-01). Card and loan details hold the SPEC 9.2
+  fields. The migration is additive and runs inside the existing transaction.
+- Acceptance: a fresh vault and an upgraded version 9 vault both hold the
+  tables; a rule round-trips; a second rule for one account replaces the
+  first through a command; a deleted account keeps its rule row soft-deleted;
+  the migration test uses a version 9 fixture; all AGENTS 4 commands pass.
+- Evidence: migration test, repository tests. Reviewer: product and finance +
+  privacy and security.
+- Status: done (2026-11-28). Schema version 10 adds `valuation_rules`,
+  `card_details` and `loan_details`; the rule round-trip is in
+  `AccountRepository.ruleFor` and `planSaveRule`. Tests:
+  `test/data/migration_010_test.dart` (3); the rule tests in
+  `test/data/account_detail_test.dart`.
 
 ### P4-03 — Add, choose type and the typed forms (X42)
 

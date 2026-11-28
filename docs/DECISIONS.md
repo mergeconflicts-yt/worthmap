@@ -165,6 +165,27 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   request per family, when a typed read is first needed.
 
 
+
+### P4-RULE-STORAGE
+
+- Decision (2026-11-28, owner). Schema version 10 adds three authored
+  one-to-one tables: `valuation_rules`, `card_details` and `loan_details`.
+  - `valuation_rules` holds `account_id`, `method` (the seven SPEC 9.2
+    methods) and `parameters_json` (valid JSON, 4 KiB bound).
+  - `card_details` holds the limit, statement and due days, minimum rule,
+    paying account, annual fee and date.
+  - `loan_details` holds the original amount, decimal rate, rate type, reset
+    date, EMI and day, end date, prepayment rule, paying account and linked
+    asset.
+- The last real value is the selected balance anchor, not a second column in
+  the rule. That follows DATABASE_DESIGN 4.2: metadata holds no second
+  balance. A new real value restarts the projection (P4-01).
+- The migration is additive and runs in one transaction. A version 9 vault
+  upgrades and keeps its rows; a failure stays at 9 and closed. Each table
+  registers its identity, requires a revision bump and refuses a hard delete.
+- Evidence: `test/data/migration_010_test.dart` (3), the rule round-trip in
+  `test/data/account_detail_test.dart`, and 197 data tests.
+
 ## Decided
 
 ### P4-VALUE-METHOD-BASIS
