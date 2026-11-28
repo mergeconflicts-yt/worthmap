@@ -47,6 +47,7 @@ void main() {
             gateway: FakeSpendingGateway(),
             onWhereItGoes: () {},
             onAllPayments: () {},
+            onRepeating: () {},
             onMoneyIn: () {},
             onBudget: () {},
             onEditLimits: () {},

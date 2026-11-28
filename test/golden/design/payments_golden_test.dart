@@ -63,6 +63,7 @@ void main() {
           tester,
           X37AllPayments(
             gateway: FakePaymentsReadGateway(),
+            today: FakePaymentsReadGateway.defaultToday,
             onClose: () {},
             onOpenPayment: (String id) async => null,
           ),

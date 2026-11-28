@@ -54,6 +54,7 @@ void main() {
             gateway: FakeSpendingGateway(),
             onWhereItGoes: () {},
             onAllPayments: () {},
+            onRepeating: () {},
             onMoneyIn: () {},
             onBudget: () {},
             onEditLimits: () {},
@@ -93,6 +94,7 @@ void main() {
           tester,
           X37AllPayments(
             gateway: FakePaymentsReadGateway(),
+            today: FakePaymentsReadGateway.defaultToday,
             onClose: () {},
             onOpenPayment: (String id) async => null,
           ),

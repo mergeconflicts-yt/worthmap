@@ -1,8 +1,10 @@
 @Tags(<String>['golden'])
 library;
 
+import 'package:contour/core/percent.dart';
 import 'package:contour/design/design.dart';
 import 'package:contour/l10n/generated/app_localizations.dart';
+import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -72,6 +74,13 @@ class _NewComponentsGallery extends StatelessWidget {
                 CapsuleMeter(
                   value: 5,
                   limit: 5,
+                  spokenLabel: l.x03GetStartedSpoken,
+                ),
+                const VSpace(Space.m),
+                CapsuleMeter(
+                  value: 76,
+                  limit: 100,
+                  today: Percent.fromPoints(Decimal.fromInt(42)),
                   spokenLabel: l.x03GetStartedSpoken,
                 ),
               ],

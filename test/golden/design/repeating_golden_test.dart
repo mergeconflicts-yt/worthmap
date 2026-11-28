@@ -1,6 +1,7 @@
 @Tags(<String>['golden'])
 library;
 
+import 'package:contour/core/dates.dart';
 import 'package:contour/design/design.dart';
 import 'package:contour/features/spending/c02_schedule_editor.dart';
 import 'package:contour/features/spending/c03_rule_editor.dart';
@@ -97,6 +98,7 @@ void main() {
             gateway: FakeRepeatingGateway(),
             onClose: () {},
             onSaved: () {},
+            today: LocalDate(2026, 11, 22),
           ),
           height: scale == 1.0 ? 2300 : 3400,
         );

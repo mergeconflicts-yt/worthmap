@@ -1,6 +1,7 @@
 @Tags(<String>['golden'])
 library;
 
+import 'package:contour/app/hidden_amounts.dart';
 import 'package:contour/core/dates.dart';
 import 'package:contour/design/design.dart';
 import 'package:contour/features/home/x10_home.dart';
@@ -27,12 +28,15 @@ void main() {
             theme: theme.$2,
             section: Section.home,
             textScale: scale,
-            child: X10Home(
-              gateway: const FakeHomeGateway(),
-              today: LocalDate(2026, 10, 13),
-              onInbox: () {},
-              onSettings: () {},
-              onSpending: () {},
+            child: HiddenAmountsHost(
+              controller: HiddenAmountsController(),
+              child: X10Home(
+                gateway: const FakeHomeGateway(),
+                today: LocalDate(2026, 10, 13),
+                onInbox: () {},
+                onSettings: () {},
+                onSpending: () {},
+              ),
             ),
           ),
         );
