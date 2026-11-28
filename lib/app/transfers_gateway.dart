@@ -232,11 +232,7 @@ final class SqlTransfersGateway implements TransferGateway {
     };
   }
 
-  static AccountKind _kind(String type) => switch (type) {
-        'card' => AccountKind.card,
-        'cash' => AccountKind.cash,
-        _ => AccountKind.bank,
-      };
+  static AccountKind _kind(String type) => AccountKind.fromDatabase(type);
 }
 
 /// A UUID v7 from the wall clock and secure randomness, for the app boundary.

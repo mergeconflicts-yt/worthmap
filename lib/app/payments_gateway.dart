@@ -291,11 +291,7 @@ final class SqlPaymentsGateway implements PaymentsGateway {
     };
   }
 
-  static AccountKind _kind(String type) => switch (type) {
-        'card' => AccountKind.card,
-        'cash' => AccountKind.cash,
-        _ => AccountKind.bank,
-      };
+  static AccountKind _kind(String type) => AccountKind.fromDatabase(type);
 }
 
 /// The production cut-off: the local calendar date.

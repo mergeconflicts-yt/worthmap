@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:contour/app/accounts_gateway.dart';
 import 'package:contour/core/dates.dart';
 import 'package:contour/data/db/db.dart';
 import 'package:contour/data/repositories/accounts.dart';
+import 'package:contour/domain/values/value_projection.dart';
 import 'package:contour/features/accounts/account_models.dart';
 import 'package:contour/features/accounts/account_setup_controller.dart';
+import 'package:decimal/decimal.dart';
+import 'package:drift/drift.dart' show Variable;
 import 'package:flutter_test/flutter_test.dart';
 
 String _id(int n) =>
@@ -167,5 +172,64 @@ void main() {
     );
     final listed = (await gateway.listAccounts()).single;
     expect(listed.balanceMinor, 645000);
+  });
+
+  test('a deposit save writes the account, the anchor and the interest rule',
+      () async {
+    final saved = await gateway.createDeposit(
+      DepositSetup(
+        name: 'Harbor term deposit',
+        currencyCode: 'USD',
+        amountMinor: 1000000,
+        annualRate: Decimal.parse('0.041'),
+        compounding: Compounding.monthly,
+        start: LocalDate(2026, 2, 12),
+        maturity: LocalDate(2026, 11, 12),
+      ),
+    );
+    expect(saved.kind, AccountKind.deposit);
+    final listed = await gateway.listAccounts();
+    expect(listed.single.kind, AccountKind.deposit);
+    expect(listed.single.balanceMinor, 1000000);
+
+    final rule = await repository.ruleFor(saved.id);
+    expect(rule, isNotNull);
+    expect(rule!.method, 'interest');
+    final parameters = jsonDecode(rule.parametersJson) as Map<String, Object?>;
+    expect(parameters['annualRate'], '0.041');
+    expect(parameters['compounding'], 'monthly');
+    expect(parameters['start'], '2026-02-12');
+    expect(parameters['maturity'], '2026-11-12');
+    expect(parameters['renewsAutomatically'], isFalse);
+
+    final balance = await repository.balanceAt(
+      accountId: saved.id,
+      asOf: '2026-10-13',
+    ) as KnownBalance;
+    expect(balance.anchorDate, '2026-02-12');
+
+    final row = await vault.database.customSelect(
+      'SELECT is_liquid FROM accounts WHERE id = ?',
+      variables: <Variable<Object>>[Variable<String>(saved.id)],
+    ).getSingle();
+    expect(row.data['is_liquid'], 0);
+  });
+
+  test('a deposit with a maturity before the start is rejected', () async {
+    await expectLater(
+      gateway.createDeposit(
+        DepositSetup(
+          name: 'Broken deposit',
+          currencyCode: 'USD',
+          amountMinor: 100,
+          annualRate: Decimal.parse('0.04'),
+          compounding: Compounding.simple,
+          start: LocalDate(2026, 2, 12),
+          maturity: LocalDate(2026, 2, 1),
+        ),
+      ),
+      throwsArgumentError,
+    );
+    expect(await gateway.listAccounts(), isEmpty);
   });
 }

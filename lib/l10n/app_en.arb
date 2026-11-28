@@ -769,6 +769,7 @@
     "description": "Account row type line."
   },
   "accountLineCard": "Credit card",
+  "accountLineOther": "Account",
   "@accountLineCard": {
     "description": "Account row type line."
   },

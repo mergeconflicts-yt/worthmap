@@ -9,7 +9,10 @@
 // and tested; `P21-UNWIRED-GATEWAY` records the gate.
 library;
 
+import 'dart:convert';
 import 'dart:math';
+
+import 'package:decimal/decimal.dart';
 
 import '../core/dates.dart';
 import '../core/ids.dart';
@@ -22,7 +25,7 @@ import '../features/accounts/account_models.dart';
 ///
 /// One [createAccount] call writes the account, the inclusive anchor, the
 /// selected pointer and the ChangeLog entries in one command.
-final class SqlAccountsGateway implements AccountsGateway {
+final class SqlAccountsGateway implements AccountsGateway, DepositGateway {
   SqlAccountsGateway({
     required this.accounts,
     required this.commands,
@@ -112,6 +115,91 @@ final class SqlAccountsGateway implements AccountsGateway {
     );
   }
 
+  /// SPEC 6.6, X42b: the deposit, its anchor and its interest rule.
+  ///
+  /// The rule parameters are bounded JSON. The maturity must be after the
+  /// start and the rate must not be negative; both are programmer errors.
+  @override
+  Future<AccountSummary> createDeposit(DepositSetup setup) async {
+    if (setup.maturity.compareTo(setup.start) <= 0) {
+      throw ArgumentError.value(
+        setup.maturity,
+        'maturity',
+        'Must be after the start',
+      );
+    }
+    if (setup.annualRate < Decimal.zero) {
+      throw ArgumentError.value(setup.annualRate, 'annualRate', 'Negative');
+    }
+    final accountId = newId();
+    final anchorId = newId();
+    final ruleId = newId();
+    final operationId = newId();
+    final create = accounts.planCreateAccount(
+      id: accountId,
+      name: setup.name,
+      type: AccountKind.deposit.databaseType,
+      currency: setup.currencyCode,
+      isLiquid: setup.countsAsCash,
+      includeInNetWorth: setup.includeInNetWorth,
+    );
+    final opening = accounts.planSetOpeningBalance(
+      accountId: accountId,
+      anchorId: anchorId,
+      date: setup.start.toString(),
+      balanceMinor: setup.amountMinor,
+      currency: setup.currencyCode,
+    );
+    final rule = accounts.planSaveRule(
+      id: ruleId,
+      accountId: accountId,
+      method: 'interest',
+      parametersJson: jsonEncode(<String, Object?>{
+        'v': 1,
+        'annualRate': setup.annualRate.toString(),
+        'compounding': setup.compounding.name,
+        'start': setup.start.toString(),
+        'maturity': setup.maturity.toString(),
+        'renewsAutomatically': setup.renewsAutomatically,
+      }),
+    );
+    final combined = WritePlan(
+      changes: <ChangeLogEntry>[
+        ...create.changes,
+        ...opening.changes,
+        ...rule.changes,
+      ],
+      apply: () async {
+        await create.apply();
+        await opening.apply();
+        await rule.apply();
+      },
+    );
+    await commands.prepare(
+      operationId: operationId,
+      commandType: 'account.createDeposit',
+      draftId: newId(),
+      formType: 'deposit',
+      payloadJson: '{"v":1}',
+      payloadVersion: 1,
+      codecVersion: 1,
+      schemaVersion: 1,
+    );
+    await commands.execute(
+      operationId: operationId,
+      changes: combined.changes,
+      effects: combined.apply,
+      resultJson: '{}',
+    );
+    return AccountSummary(
+      id: accountId,
+      name: setup.name,
+      kind: AccountKind.deposit,
+      currencyCode: setup.currencyCode,
+      balanceMinor: setup.amountMinor,
+    );
+  }
+
   Future<int?> _balance(String accountId, String asOf) async {
     final balance = await accounts.balanceAt(accountId: accountId, asOf: asOf);
     return switch (balance) {
@@ -120,11 +208,7 @@ final class SqlAccountsGateway implements AccountsGateway {
     };
   }
 
-  static AccountKind _kind(String type) => switch (type) {
-        'card' => AccountKind.card,
-        'cash' => AccountKind.cash,
-        _ => AccountKind.bank,
-      };
+  static AccountKind _kind(String type) => AccountKind.fromDatabase(type);
 }
 
 /// A UUID v7 from the wall clock and secure randomness, for the app boundary.

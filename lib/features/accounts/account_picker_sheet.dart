@@ -95,6 +95,7 @@ class AccountPickerSheet extends StatelessWidget {
         AccountKind.bank => l.accountLineBank,
         AccountKind.cash => l.accountLineCash,
         AccountKind.card => l.accountLineCard,
+        _ => l.accountLineOther,
       };
 }
 

@@ -248,7 +248,7 @@ Shared files (`router.dart`, `tokens.json`, `pubspec.yaml`, database schema,
   `test/data/migration_010_test.dart` (3); the rule tests in
   `test/data/account_detail_test.dart`.
 
-### P4-03 — Add, choose type and the typed forms (X42)
+### P4-03 — Add, choose type and the typed forms (X42) (in progress)
 
 - Objective: wire the type chooser and the shared form family for each
   asset type listed in SPEC 6.6.
@@ -267,6 +267,17 @@ Shared files (`router.dart`, `tokens.json`, `pubspec.yaml`, database schema,
   SPEC 6.6 groups; goldens at 1.0 and 2.0, light and dark.
 - Evidence: widget tests per type, goldens, F10-A. Reviewer: product and
   finance + design and accessibility.
+- Status (2026-11-28): the type model and the deposit save path are done.
+  - `AccountKind` now holds the full SPEC 6.6 type set with the authored
+    database value, the seven groups and the liability flag. The three
+    gateways map a stored type through `AccountKind.fromDatabase`.
+  - `DepositSetup` and `DepositGateway.createDeposit` write the account, the
+    inclusive anchor and the `interest` rule with bounded JSON parameters in
+    one commit. Tests: `test/features/accounts/account_setup_vault_test.dart`
+    (two new cases).
+  - Remaining: the X42 chooser, the shared form family for pension, vehicle,
+    property, gold, loan, card and the manual types, the type facts and the
+    goldens.
 
 ### P4-04 — Account detail family (X41, X41c–X41f, X41b)
 
