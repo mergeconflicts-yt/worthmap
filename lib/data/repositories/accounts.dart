@@ -27,6 +27,7 @@ final class AccountRow {
     required this.isLiquid,
     required this.includeInNetWorth,
     required this.revision,
+    this.institution,
   });
 
   final String id;
@@ -37,7 +38,51 @@ final class AccountRow {
   final bool isLiquid;
   final bool includeInNetWorth;
   final int revision;
+
+  /// SPEC 9.2: the bank or broker name. Null when the user entered none.
+  final String? institution;
 }
+
+/// SPEC 6.6, X41: one account and its value at the read date.
+final class AccountDetail {
+  const AccountDetail({required this.account, required this.balance});
+
+  final AccountRow account;
+
+  /// Known from the selected anchor, or Missing (G01-E).
+  final AccountBalance balance;
+}
+
+/// SPEC 9.2, schema version 10: one value method per account.
+///
+/// The rule holds the method and its bounded parameters. The real value stays
+/// the selected balance anchor, so this row holds no balance.
+final class ValuationRuleRow {
+  const ValuationRuleRow({
+    required this.id,
+    required this.accountId,
+    required this.method,
+    required this.parametersJson,
+    required this.revision,
+  });
+
+  final String id;
+  final String accountId;
+  final String method;
+  final String parametersJson;
+  final int revision;
+}
+
+/// SPEC 9.2: the value methods. The database check holds the same list.
+const Set<String> kValueMethods = <String>{
+  'marketPrice',
+  'interest',
+  'contribution',
+  'weightPrice',
+  'manual',
+  'depreciation',
+  'capitalAccount',
+};
 
 /// G01-E: a balance is known from a selected anchor, or Missing.
 sealed class AccountBalance {
@@ -74,8 +119,8 @@ final class AccountRepository {
   Future<List<AccountRow>> list() async {
     final rows = await _db
         .customSelect(
-          'SELECT id, name, type, currency, is_liability, is_liquid, '
-          'include_in_net_worth, revision FROM accounts '
+          'SELECT id, name, type, currency, institution, is_liability, '
+          'is_liquid, include_in_net_worth, revision FROM accounts '
           'WHERE deleted_at IS NULL ORDER BY name',
         )
         .get();
@@ -90,8 +135,40 @@ final class AccountRepository {
           isLiquid: (row.data['is_liquid'] as int) == 1,
           includeInNetWorth: (row.data['include_in_net_worth'] as int) == 1,
           revision: row.data['revision'] as int,
+          institution: row.data['institution'] as String?,
         ),
     ];
+  }
+
+  /// X41: one live account and its value at [asOf]. Null when it is absent.
+  Future<AccountDetail?> findById({
+    required String id,
+    required String asOf,
+  }) async {
+    final row = await _db.customSelect(
+      'SELECT id, name, type, currency, institution, is_liability, '
+      'is_liquid, include_in_net_worth, revision FROM accounts '
+      'WHERE id = ? AND deleted_at IS NULL',
+      variables: [Variable(id)],
+    ).getSingleOrNull();
+    if (row == null) {
+      return null;
+    }
+    final account = AccountRow(
+      id: row.data['id'] as String,
+      name: row.data['name'] as String,
+      type: row.data['type'] as String,
+      currency: row.data['currency'] as String,
+      isLiability: (row.data['is_liability'] as int) == 1,
+      isLiquid: (row.data['is_liquid'] as int) == 1,
+      includeInNetWorth: (row.data['include_in_net_worth'] as int) == 1,
+      revision: row.data['revision'] as int,
+      institution: row.data['institution'] as String?,
+    );
+    return AccountDetail(
+      account: account,
+      balance: await balanceAt(accountId: id, asOf: asOf),
+    );
   }
 
   /// G01-A to G01-E: the balance as at [asOf], or Missing.
@@ -152,12 +229,104 @@ final class AccountRepository {
     return row.data['d'] as String?;
   }
 
+  /// The live value rule of [accountId], or null when none is stored.
+  Future<ValuationRuleRow?> ruleFor(String accountId) async {
+    final row = await _db.customSelect(
+      'SELECT id, account_id, method, parameters_json, revision '
+      'FROM valuation_rules WHERE account_id = ? AND deleted_at IS NULL',
+      variables: [Variable(accountId)],
+    ).getSingleOrNull();
+    if (row == null) {
+      return null;
+    }
+    return ValuationRuleRow(
+      id: row.data['id'] as String,
+      accountId: row.data['account_id'] as String,
+      method: row.data['method'] as String,
+      parametersJson: row.data['parameters_json'] as String,
+      revision: row.data['revision'] as int,
+    );
+  }
+
+  /// Saves one value rule. Pass [current] to edit; null inserts a new row.
+  ///
+  /// The parameters are bounded JSON. The method comes from [kValueMethods];
+  /// an unknown method is a programmer error, not a user state.
+  WritePlan planSaveRule({
+    required String id,
+    required String accountId,
+    required String method,
+    required String parametersJson,
+    ValuationRuleRow? current,
+  }) {
+    if (!kValueMethods.contains(method)) {
+      throw ArgumentError.value(method, 'method', 'Unknown value method');
+    }
+    final decoded = jsonDecode(parametersJson);
+    if (decoded is! Map<String, Object?>) {
+      throw ArgumentError.value(
+        parametersJson,
+        'parametersJson',
+        'Must be a JSON object',
+      );
+    }
+    final now = _nowMs();
+    if (current == null) {
+      return WritePlan(
+        changes: <ChangeLogEntry>[
+          ChangeLogEntry(
+            entityId: id,
+            toRevision: 1,
+            changeKind: 'create',
+            afterJson: jsonEncode(<String, Object?>{
+              'accountId': accountId,
+              'method': method,
+            }),
+            schemaVersion: 1,
+          ),
+        ],
+        apply: () async {
+          await _db.customStatement(
+            'INSERT INTO valuation_rules (id, created_at, updated_at, '
+            'deleted_at, revision, account_id, method, parameters_json) '
+            'VALUES (?, ?, ?, NULL, 1, ?, ?, ?)',
+            [id, now, now, accountId, method, parametersJson],
+          );
+        },
+      );
+    }
+    return WritePlan(
+      changes: <ChangeLogEntry>[
+        ChangeLogEntry(
+          entityId: current.id,
+          fromRevision: current.revision,
+          toRevision: current.revision + 1,
+          changeKind: 'edit',
+          beforeJson: jsonEncode(<String, Object?>{'method': current.method}),
+          afterJson: jsonEncode(<String, Object?>{'method': method}),
+          schemaVersion: 1,
+        ),
+      ],
+      apply: () async {
+        await _db.customStatement(
+          'UPDATE valuation_rules SET method = ?, parameters_json = ?, '
+          'updated_at = ?, revision = revision + 1 WHERE id = ?',
+          [method, parametersJson, now, current.id],
+        );
+      },
+    );
+  }
+
   /// C01: creates an account (one authored row).
   WritePlan planCreateAccount({
     required String id,
     required String name,
     required String type,
     required String currency,
+    String? institution,
+    String ownershipPercent = '100',
+    int? minimumBalanceMinor,
+    int? overdraftLimitMinor,
     bool isLiability = false,
     bool isLiquid = false,
     bool includeInNetWorth = true,
@@ -169,16 +338,22 @@ final class AccountRepository {
           entityId: id,
           toRevision: 1,
           changeKind: 'create',
-          afterJson: jsonEncode(<String, Object?>{'name': name, 'type': type}),
+          afterJson: jsonEncode(<String, Object?>{
+            'name': name,
+            'type': type,
+            'institution': institution,
+          }),
           schemaVersion: 1,
         ),
       ],
       apply: () async {
         await _db.customStatement(
           'INSERT INTO accounts (id, created_at, updated_at, deleted_at, '
-          'revision, name, type, currency, institution, is_liability, '
-          'is_liquid, include_in_net_worth, archived) '
-          'VALUES (?, ?, ?, NULL, 1, ?, ?, ?, NULL, ?, ?, ?, 0)',
+          'revision, name, type, currency, institution, '
+          'ownership_percent_decimal, minimum_balance_minor, '
+          'overdraft_limit_minor, is_liability, is_liquid, '
+          'include_in_net_worth, archived) '
+          'VALUES (?, ?, ?, NULL, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)',
           [
             id,
             now,
@@ -186,6 +361,10 @@ final class AccountRepository {
             name,
             type,
             currency,
+            institution,
+            ownershipPercent,
+            minimumBalanceMinor,
+            overdraftLimitMinor,
             isLiability ? 1 : 0,
             isLiquid ? 1 : 0,
             includeInNetWorth ? 1 : 0,

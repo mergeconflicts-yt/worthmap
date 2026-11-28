@@ -49,7 +49,7 @@ void main() {
     try {
       createFreshVault(raw, dbEpoch: _epoch);
       final state = raw.select('SELECT schema_version FROM db_state').first;
-      expect(state['schema_version'], 9);
+      expect(state['schema_version'], 10);
       expect(_columns(raw, 'categories'), contains('is_essential'));
     } finally {
       raw.close();
@@ -73,7 +73,7 @@ void main() {
 
       final version = verifyExistingVault(raw);
 
-      expect(version, 9);
+      expect(version, 10);
       expect(_columns(raw, 'categories'), contains('is_essential'));
       final kept = raw.select(
         'SELECT name, is_essential FROM categories WHERE id = ?',

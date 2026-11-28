@@ -84,6 +84,9 @@ void main() {
         'budget_limits',
         'budget_templates',
         'price_changes',
+        'valuation_rules',
+        'card_details',
+        'loan_details',
       };
       for (final expected in <String>[
         ...kReferenceTableNames,
@@ -103,7 +106,7 @@ void main() {
             "SELECT count(*) AS n FROM sqlite_master WHERE type = 'trigger'",
           )
           .getSingle();
-      expect(triggers.data['n'], 363);
+      expect(triggers.data['n'], 372);
 
       final state = await db
           .customSelect(
@@ -114,7 +117,7 @@ void main() {
           .getSingle();
       expect(state.data['db_epoch'], epoch);
       expect(state.data['commit_sequence'], 0);
-      expect(state.data['schema_version'], 9);
+      expect(state.data['schema_version'], 10);
       expect(state.data['network_enabled'], 0);
       expect(state.data['read_revision'], 0);
       expect(vault.dbEpoch, epoch);
@@ -259,7 +262,7 @@ void main() {
         dbEpochFactory: () => epoch,
       );
       await vault.database.customStatement(
-        'UPDATE db_state SET schema_version = 10 WHERE singleton = 1',
+        'UPDATE db_state SET schema_version = 11 WHERE singleton = 1',
       );
       await vault.close();
 
@@ -273,7 +276,7 @@ void main() {
         throwsA(
           isA<VaultOpenError>()
               .having((e) => e.code, 'code', VaultOpenErrorCode.schemaState)
-              .having((e) => e.detail, 'detail', 'newerSchema 10'),
+              .having((e) => e.detail, 'detail', 'newerSchema 11'),
         ),
       );
       // The data is untouched; nothing was recreated as empty.
@@ -281,7 +284,7 @@ void main() {
       final version =
           raw.select('SELECT schema_version FROM db_state').first.values.first;
       raw.close();
-      expect(version, 10);
+      expect(version, 11);
     } finally {
       await directory.delete(recursive: true);
     }
