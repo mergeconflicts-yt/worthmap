@@ -142,6 +142,16 @@ final class AccountRepository {
     return row.data['n'] as int;
   }
 
+  /// The earliest live balance anchor date, for the MAX period.
+  Future<String?> firstAnchorDate() async {
+    final row = await _db
+        .customSelect(
+          'SELECT MIN(date) AS d FROM balance_anchors WHERE deleted_at IS NULL',
+        )
+        .getSingle();
+    return row.data['d'] as String?;
+  }
+
   /// C01: creates an account (one authored row).
   WritePlan planCreateAccount({
     required String id,

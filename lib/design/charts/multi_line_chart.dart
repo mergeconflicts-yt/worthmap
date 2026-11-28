@@ -1,12 +1,15 @@
 // DESIGN 7.2: `AreaLineChart` multi — up to three series on one zero-based
 // scale (SCREENS X40: net worth, investments, cash).
 //
-// A Missing point is a gap, never a zero. The legend names each series in
-// words; the table holds the exact values. The caller formats every amount.
+// A Missing point is a gap, never a zero. The y axis starts at $0 with four
+// steps on the right; the x axis shows the first, middle and last labels. The
+// legend names each series in words; the table holds the exact values. The
+// caller formats every amount.
 library;
 
 import 'package:flutter/widgets.dart';
 
+import '../../core/money.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../theme/app_theme.dart';
 import '../tokens/space.dart';
@@ -15,6 +18,7 @@ import '../typography/app_text.dart';
 import 'area_line_chart.dart';
 import 'chart_frame.dart';
 import 'chart_tone.dart';
+import 'chart_values.dart';
 
 /// One line of the chart.
 class MultiLineSeries {
@@ -39,7 +43,9 @@ class MultiLineChart extends StatelessWidget {
     required this.series,
     required this.table,
     this.emptyLabel,
+    this.currencyCode = 'USD',
     this.height = 168,
+    this.showAxis = true,
     super.key,
   });
 
@@ -50,7 +56,11 @@ class MultiLineChart extends StatelessWidget {
   /// The exact rows; the first column is the date.
   final ChartTable table;
   final String? emptyLabel;
+  final String currencyCode;
   final double height;
+
+  /// Draws the y labels on the right and three x labels.
+  final bool showAxis;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +82,12 @@ class MultiLineChart extends StatelessWidget {
         ),
       );
     }
+    final maxMinor = _maxMinor();
+    final currency = Currency.of(currencyCode);
+    final yLabels = <String>[
+      for (var i = 0; i <= 4; i++)
+        chartShortAmount(Money.fromMinor(maxMinor * i ~/ 4, currency)),
+    ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -91,6 +107,9 @@ class MultiLineChart extends StatelessWidget {
                     ),
                 ],
                 grid: colours.chrome.grid,
+                axis: colours.chrome.axis,
+                yLabels: showAxis ? yLabels : const <String>[],
+                xLabels: showAxis ? _xLabels() : const <String>[],
               ),
             ),
           ),
@@ -109,6 +128,30 @@ class MultiLineChart extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  int _maxMinor() {
+    var max = 0;
+    for (final line in series) {
+      for (final point in line.points) {
+        final amount = point.amount;
+        if (amount != null && amount.minor > max) {
+          max = amount.minor;
+        }
+      }
+    }
+    return max;
+  }
+
+  /// The first, middle and last labels, uppercased.
+  List<String> _xLabels() {
+    final points = series.isEmpty ? const <LinePoint>[] : series.first.points;
+    if (points.isEmpty) {
+      return const <String>[];
+    }
+    final indices = <int>{0, points.length ~/ 2, points.length - 1}.toList()
+      ..sort();
+    return <String>[for (final index in indices) points[index].label];
   }
 }
 
@@ -142,10 +185,19 @@ class _LegendItem extends StatelessWidget {
 }
 
 class _MultiLinePainter extends CustomPainter {
-  const _MultiLinePainter({required this.series, required this.grid});
+  const _MultiLinePainter({
+    required this.series,
+    required this.grid,
+    required this.axis,
+    required this.yLabels,
+    required this.xLabels,
+  });
 
   final List<({Color colour, List<LinePoint> points})> series;
   final Color grid;
+  final Color axis;
+  final List<String> yLabels;
+  final List<String> xLabels;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -168,10 +220,12 @@ class _MultiLinePainter extends CustomPainter {
     }
     if (!hasValue) return;
     const padTop = 8.0;
-    const padBottom = 8.0;
+    final padBottom = xLabels.isEmpty ? 8.0 : 24.0;
     final plotHeight = size.height - padTop - padBottom;
     final span = max <= 0 ? 1.0 : max;
-    final stepX = count <= 1 ? 0.0 : (size.width - 8) / (count - 1);
+    // The right labels sit outside the plot so a label never covers a line.
+    final plotRight = size.width - (yLabels.isEmpty ? 0 : 44);
+    final stepX = count <= 1 ? 0.0 : (plotRight - 8) / (count - 1);
 
     Offset pointAt(int index, double value) {
       final y = padTop + plotHeight - (value / span) * plotHeight;
@@ -181,11 +235,48 @@ class _MultiLinePainter extends CustomPainter {
     // The zero baseline (one scale from $0).
     canvas.drawLine(
       Offset(0, size.height - padBottom),
-      Offset(size.width, size.height - padBottom),
+      Offset(plotRight, size.height - padBottom),
       Paint()
         ..color = grid
         ..strokeWidth = 1,
     );
+
+    if (yLabels.isNotEmpty) {
+      final style = AppText.labelCaps.copyWith(color: axis);
+      for (var i = 0; i < yLabels.length; i++) {
+        final value = i / (yLabels.length - 1);
+        final text = TextPainter(
+          text: TextSpan(text: yLabels[i], style: style),
+          textDirection: TextDirection.ltr,
+        )..layout();
+        final y = padTop + plotHeight - value * plotHeight - text.height / 2;
+        text.paint(canvas, Offset(size.width - text.width - 2, y));
+      }
+    }
+
+    if (xLabels.isNotEmpty) {
+      final style = AppText.labelCaps.copyWith(color: axis);
+      final positions = <double>[
+        0,
+        plotRight / 2,
+        plotRight,
+      ];
+      for (var i = 0; i < xLabels.length && i < positions.length; i++) {
+        final text = TextPainter(
+          text: TextSpan(
+            text: xLabels[i].toUpperCase(),
+            style: style,
+          ),
+          textDirection: TextDirection.ltr,
+        )..layout();
+        final dx = switch (i) {
+          0 => 0.0,
+          1 => positions[i] - text.width / 2,
+          _ => plotRight - text.width,
+        };
+        text.paint(canvas, Offset(dx, size.height - 14));
+      }
+    }
 
     for (final line in series) {
       final path = Path();

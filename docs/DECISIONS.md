@@ -197,32 +197,40 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
 
 ### P4-WEALTH
 
-- Decision (2026-11-28). X40 is built from the existing P14 account reads.
-  Net worth sums `include_in_net_worth` balances; cash sums `is_liquid`
-  balances; investments sum non-liquid, non-liability accounts in net worth.
-  A point with a Missing balance is Missing, so the 5Y change is Missing until
-  the history covers 60 months (`wealth_change`, SPEC 4.3).
+- Decision (2026-11-28, owner's Wealth mockup). X40 now follows the reference:
+  the `NET WORTH` kicker with the Home controls (hide, Inbox with count,
+  Settings), the number with the change and its share at the right, the target
+  line, the three-series chart, the period chips, the own/owe card and the
+  "Not in net worth" card.
 
-- Periods. 1M is rolling 30 days (SCREENS X40). 1Y and 5Y use month ends and
-  end at today, never at a future date. The change is end − start; the share
-  is change ÷ start through `Decimal`, formatted to one decimal. The demo
-  starts its anchors 13 months back, so 5Y reads Missing.
+- Periods. 1D, 1W and 1M are rolling days; 1Y and 5Y use month ends; MAX
+  starts at the first live balance anchor. Every period ends at today, never
+  at a future date. The change is end − start; the share is change ÷ start
+  through `Decimal`, formatted to one decimal. A short history keeps 5Y
+  Missing (`wealth_change`, SPEC 4.3).
 
-- Chart. New `MultiLineChart`: up to three series on one zero-based scale,
-  legend in words, exact table, Missing points as gaps. Net worth uses
-  `ChartMark.gain`, investments `invested`, cash `inCash`. `state.gain`
-  already exists, so no new token is needed (SCREENS X40 lists this as open).
+- Chart. `MultiLineChart` gains a right y axis in four steps from $0 and three
+  x labels (first, middle, last). The plot stops before the y labels, so a
+  label never covers a line. Net worth uses `ChartMark.gain`, investments
+  `invested`, cash `inCash`; no new token.
 
-- Card. "You own / You owe" shows the two totals and the recorded types
-  (cash and bank, investments, cards). SCREENS X40 uses tabs and a type grid;
-  this build uses one flat card, because a tab control is a second control row
-  (CONTROL-ROW-SCOPE) and property, car, deposits and loans have no records
-  yet.
+- Own/owe card. `AmountTabs` carries the two totals with a mark under the
+  selected tab. `SplitLine` is the thin line across every recorded own and owe
+  type. `TypeTileGrid` shows the fixed type slots (3 per row, 2 above 1.3 text
+  scale, 1 at 2.0); a type with no record is a dashed tile with "None
+  recorded". Recorded types in the demo are investments, cash and bank, and
+  cards.
 
-- Deferred and not claimed as built: X40b "About this number" (needs the
-  NUM-001 parts: markets, currency, values), the "Not in net worth" card, the
-  X41/X42 account details, and the goal record (G09). The demo target
-  ($1,000,000 by Dec 2040) stays synthetic, as on Home.
+- Not in net worth. The demo passes the SCREENS samples (unvested shares
+  $31,595, owed to you $2,640, dividends $245) as synthetic values, like the
+  target. The release path passes none, so the card stays out until the
+  records exist.
+
+- Not built and not claimed: the row chevrons (the detail screens do not
+  exist), the "160 shares at today's price" fact (no share record), the "Edit
+  widgets" control (no editor route on this tab), and X40b "About this
+  number" (needs the NUM-001 parts: markets, currency, values). The demo
+  target stays synthetic, as on Home.
 
 - Evidence: `test/domain/numbers/wealth_change_test.dart` (6),
   `test/features/wealth/x40_wealth_test.dart` (3),

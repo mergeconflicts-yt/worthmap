@@ -28,10 +28,12 @@ void main() {
     expect(find.text('1M'), findsOneWidget);
     expect(find.text('1Y'), findsOneWidget);
     expect(find.text('5Y'), findsOneWidget);
-    expect(find.text('You own / You owe'), findsOneWidget);
+    expect(find.text('YOU OWN'), findsOneWidget);
+    expect(find.text('YOU OWE'), findsOneWidget);
     expect(find.text('Cash and bank'), findsOneWidget);
     expect(find.text('Investments'), findsWidgets);
-    expect(find.text('Cards'), findsOneWidget);
+    expect(find.text('Retirement'), findsOneWidget);
+    expect(find.textContaining('None recorded'), findsWidgets);
     expect(find.textContaining('1,000,000'), findsOneWidget);
   });
 

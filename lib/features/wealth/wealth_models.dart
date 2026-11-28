@@ -9,7 +9,7 @@ import '../../core/dates.dart';
 import '../../core/percent.dart';
 
 /// SCREENS X40: the period chips, 1Y by default.
-enum WealthPeriod { oneMonth, oneYear, fiveYears }
+enum WealthPeriod { oneDay, oneWeek, oneMonth, oneYear, fiveYears, max }
 
 /// One reading of the three series at a date.
 ///
@@ -30,8 +30,19 @@ final class WealthPoint {
   final int? cashMinor;
 }
 
-/// A recorded part of what you own or owe (SCREENS X40).
-enum WealthTypeKind { cash, investments, card }
+/// A part of what you own or owe (SCREENS X40).
+enum WealthTypeKind {
+  cash,
+  investments,
+  retirement,
+  car,
+  deposits,
+  property,
+  gold,
+  bonds,
+  other,
+  card,
+}
 
 final class WealthType {
   const WealthType({
@@ -64,6 +75,7 @@ final class WealthTarget {
 final class WealthView {
   const WealthView({
     required this.currencyCode,
+    required this.today,
     required this.period,
     required this.netWorthMinor,
     required this.changeMinor,
@@ -74,10 +86,15 @@ final class WealthView {
     required this.ownTypes,
     required this.oweTypes,
     required this.accountCount,
+    required this.inboxCount,
     this.target,
+    this.unvestedMinor,
+    this.owedToYouMinor,
+    this.dividendsMinor,
   });
 
   final String currencyCode;
+  final LocalDate today;
   final WealthPeriod period;
 
   /// The net worth at the last point; null is Missing.
@@ -95,7 +112,13 @@ final class WealthView {
   final List<WealthType> ownTypes;
   final List<WealthType> oweTypes;
   final int accountCount;
+  final int inboxCount;
   final WealthTarget? target;
+
+  /// "Not in net worth" (SCREENS X40). Null keeps the row out.
+  final int? unvestedMinor;
+  final int? owedToYouMinor;
+  final int? dividendsMinor;
 }
 
 /// The Wealth data port. It writes nothing.

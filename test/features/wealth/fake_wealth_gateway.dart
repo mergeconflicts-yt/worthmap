@@ -39,6 +39,7 @@ final class FakeWealthGateway implements WealthGateway {
     final share = Percent.fromPoints(Decimal.parse('9.9'));
     return WealthView(
       currencyCode: 'USD',
+      today: last,
       period: period,
       netWorthMinor: end,
       changeMinor: period == WealthPeriod.fiveYears ? null : end! - start!,
@@ -68,6 +69,10 @@ final class FakeWealthGateway implements WealthGateway {
         ),
       ],
       accountCount: 9,
+      inboxCount: 2,
+      unvestedMinor: 3159500,
+      owedToYouMinor: 264000,
+      dividendsMinor: 24500,
       target: WealthTarget(
         amountMinor: 100000000,
         date: LocalDate(2040, 12, 1),

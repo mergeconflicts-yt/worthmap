@@ -4049,4 +4049,96 @@
   "@calendarSpoken": {
     "description": "SymbolCalendar spoken day label."
   }
+  ,"wealthPeriodOneDay": "1D",
+  "@wealthPeriodOneDay": {
+    "description": "X40 period chip."
+  },
+  "wealthPeriodOneWeek": "1W",
+  "@wealthPeriodOneWeek": {
+    "description": "X40 period chip."
+  },
+  "wealthPeriodMax": "MAX",
+  "@wealthPeriodMax": {
+    "description": "X40 period chip."
+  },
+  "wealthPeriodSpokenOneDay": "1 day",
+  "@wealthPeriodSpokenOneDay": {
+    "description": "X40 chip spoken form."
+  },
+  "wealthPeriodSpokenOneWeek": "1 week",
+  "@wealthPeriodSpokenOneWeek": {
+    "description": "X40 chip spoken form."
+  },
+  "wealthPeriodSpokenMax": "all history",
+  "@wealthPeriodSpokenMax": {
+    "description": "X40 chip spoken form."
+  },
+  "wealthToday": "Today",
+  "@wealthToday": {
+    "description": "X40 chart last axis label."
+  },
+  "wealthTypeNone": "None recorded",
+  "@wealthTypeNone": {
+    "description": "X40 empty type tile."
+  },
+  "wealthTypeRetirement": "Retirement",
+  "@wealthTypeRetirement": {
+    "description": "X40 type tile."
+  },
+  "wealthTypeCar": "Car",
+  "@wealthTypeCar": {
+    "description": "X40 type tile."
+  },
+  "wealthTypeDeposits": "Deposits",
+  "@wealthTypeDeposits": {
+    "description": "X40 type tile."
+  },
+  "wealthTypeProperty": "Property",
+  "@wealthTypeProperty": {
+    "description": "X40 type tile."
+  },
+  "wealthTypeGold": "Gold and silver",
+  "@wealthTypeGold": {
+    "description": "X40 type tile."
+  },
+  "wealthTypeBonds": "Bonds",
+  "@wealthTypeBonds": {
+    "description": "X40 type tile."
+  },
+  "wealthTypeOther": "Other",
+  "@wealthTypeOther": {
+    "description": "X40 own type tile."
+  },
+  "wealthTypeOtherOwed": "Other money owed",
+  "@wealthTypeOtherOwed": {
+    "description": "X40 owe type tile."
+  },
+  "wealthNotInNetWorth": "Not in net worth",
+  "@wealthNotInNetWorth": {
+    "description": "X40 card title."
+  },
+  "wealthExpected": "Expected",
+  "@wealthExpected": {
+    "description": "X40 card meta."
+  },
+  "wealthUnvestedShares": "Unvested shares",
+  "@wealthUnvestedShares": {
+    "description": "X40 row."
+  },
+  "wealthOwedToYou": "Owed to you",
+  "@wealthOwedToYou": {
+    "description": "X40 row."
+  },
+  "wealthDividends": "Dividends, next 6 months",
+  "@wealthDividends": {
+    "description": "X40 row."
+  },
+  "wealthEstimated": "Est.",
+  "@wealthEstimated": {
+    "description": "X40 row fact."
+  },
+  "wealthOwnOweSpoken": "You own {own}, you owe {owe}.",
+  "@wealthOwnOweSpoken": {
+    "description": "X40 split line spoken label."
+  }
 }

@@ -420,6 +420,7 @@ final class ContourRouter {
             AppRoute.wealth,
             X40Wealth(
               gateway: _wealth,
+              onInbox: () => context.push(AppRoute.inbox.path),
               onSettings: () => context.push(AppRoute.settings.path),
             ),
           ),

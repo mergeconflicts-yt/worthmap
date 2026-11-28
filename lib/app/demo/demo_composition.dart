@@ -636,10 +636,16 @@ final class DemoComposition {
     );
     final wealthGateway = SqlWealthGateway(
       accounts: accounts,
+      inbox: inboxRepository,
       today: () => today,
       // The same synthetic demo target as Home (SPEC 13.2 sample).
       targetMinor: 100000000,
       targetDate: LocalDate(2040, 12, 1),
+      // Synthetic "Not in net worth" values from the SCREENS X40 sample.
+      // The release path passes none until the records exist.
+      unvestedMinor: 3159500,
+      owedToYouMinor: 264000,
+      dividendsMinor: 24500,
     );
     final historyGateway = SqlHistoryGateway(
       history: historyRepository,

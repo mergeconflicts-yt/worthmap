@@ -8,6 +8,7 @@ library;
 import '../core/dates.dart';
 import '../core/money.dart';
 import '../data/repositories/accounts.dart';
+import '../data/repositories/inbox.dart';
 import '../domain/numbers/net_worth_target.dart';
 import '../domain/numbers/wealth_change.dart';
 import '../domain/periods/budget_month.dart';
@@ -18,15 +19,26 @@ import '../features/wealth/wealth_models.dart';
 final class SqlWealthGateway implements WealthGateway {
   SqlWealthGateway({
     required this.accounts,
+    required this.inbox,
     required this.today,
     this.currencyCode = 'USD',
     this.targetMinor,
     this.targetDate,
+    this.unvestedMinor,
+    this.owedToYouMinor,
+    this.dividendsMinor,
   });
 
   final AccountRepository accounts;
+  final InboxRepository inbox;
   final LocalDate Function() today;
   final String currencyCode;
+
+  /// Synthetic demo values for "Not in net worth". The release path passes
+  /// none, so the rows stay out until records exist.
+  final int? unvestedMinor;
+  final int? owedToYouMinor;
+  final int? dividendsMinor;
 
   /// The owner's target. Null in v1 until the goals record ships (G09).
   final int? targetMinor;
@@ -37,7 +49,7 @@ final class SqlWealthGateway implements WealthGateway {
     final date = today();
     final rows = await accounts.list();
     final points = <WealthPoint>[];
-    for (final pointDate in _dates(period, date)) {
+    for (final pointDate in await _dates(period, date)) {
       points.add(await _point(rows, pointDate));
     }
 
@@ -92,7 +104,19 @@ final class SqlWealthGateway implements WealthGateway {
       }
     }
     final last = points.isEmpty ? null : points.last.netWorthMinor;
-    final first = points.isEmpty ? null : points.first.netWorthMinor;
+    // MAX uses the earliest known reading; the other periods use their own
+    // start, so a short history stays Missing (SCREENS X40 5Y).
+    int? first;
+    if (period == WealthPeriod.max) {
+      for (final point in points) {
+        if (point.netWorthMinor != null) {
+          first = point.netWorthMinor;
+          break;
+        }
+      }
+    } else {
+      first = points.isEmpty ? null : points.first.netWorthMinor;
+    }
 
     final targetMinorNow = targetMinor;
     final targetDateNow = targetDate;
@@ -114,6 +138,7 @@ final class SqlWealthGateway implements WealthGateway {
 
     return WealthView(
       currencyCode: currencyCode,
+      today: date,
       period: period,
       netWorthMinor: last,
       changeMinor: wealthChangeMinor(startMinor: first, endMinor: last),
@@ -144,7 +169,11 @@ final class SqlWealthGateway implements WealthGateway {
           ),
       ],
       accountCount: rows.length,
+      inboxCount: await inbox.pendingCount(),
       target: target,
+      unvestedMinor: unvestedMinor,
+      owedToYouMinor: owedToYouMinor,
+      dividendsMinor: dividendsMinor,
     );
   }
 
@@ -198,13 +227,40 @@ final class SqlWealthGateway implements WealthGateway {
 
   /// The dates of the selected period, oldest first.
   ///
-  /// 1M is rolling 30 days (SCREENS X40). 1Y and 5Y use month ends, then
-  /// today, so the last point is never a future date.
-  List<LocalDate> _dates(WealthPeriod period, LocalDate today) {
-    if (period == WealthPeriod.oneMonth) {
-      return <LocalDate>[for (var i = 30; i >= 0; i--) addDays(today, -i)];
+  /// 1D, 1W and 1M are rolling days (SCREENS X40: 1M is 30 days). 1Y and 5Y
+  /// use month ends. MAX starts at the first anchor month. Every period ends
+  /// at today, never at a future date.
+  Future<List<LocalDate>> _dates(WealthPeriod period, LocalDate today) async {
+    switch (period) {
+      case WealthPeriod.oneDay:
+        return <LocalDate>[addDays(today, -1), today];
+      case WealthPeriod.oneWeek:
+        return <LocalDate>[for (var i = 7; i >= 0; i--) addDays(today, -i)];
+      case WealthPeriod.oneMonth:
+        return <LocalDate>[for (var i = 30; i >= 0; i--) addDays(today, -i)];
+      case WealthPeriod.oneYear:
+        return _monthEnds(today, 12);
+      case WealthPeriod.fiveYears:
+        return _monthEnds(today, 60);
+      case WealthPeriod.max:
+        final raw = await accounts.firstAnchorDate();
+        final anchor = raw == null ? null : LocalDate.tryParse(raw);
+        if (anchor == null) {
+          return <LocalDate>[today];
+        }
+        final monthStart = LocalDate(today.year, today.month, 1);
+        final start = LocalDate(anchor.year, anchor.month, 1);
+        var months = 0;
+        var cursor = start;
+        while (cursor.compareTo(monthStart) < 0) {
+          months++;
+          cursor = addMonths(cursor, 1);
+        }
+        return _monthEnds(today, months);
     }
-    final months = period == WealthPeriod.oneYear ? 12 : 60;
+  }
+
+  List<LocalDate> _monthEnds(LocalDate today, int months) {
     final monthStart = LocalDate(today.year, today.month, 1);
     return <LocalDate>[
       for (var i = months; i >= 1; i--)

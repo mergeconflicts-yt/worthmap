@@ -24,10 +24,12 @@ void main() {
 
     expect(find.text('NET WORTH'), findsOneWidget);
     expect(find.textContaining('184,028'), findsWidgets);
-    expect(find.text('You own / You owe'), findsOneWidget);
+    expect(find.text('YOU OWN'), findsOneWidget);
+    expect(find.text('YOU OWE'), findsOneWidget);
     expect(find.text('Cash and bank'), findsOneWidget);
     expect(find.text('Investments'), findsWidgets);
-    expect(find.text('Cards'), findsOneWidget);
+    expect(find.text('Not in net worth'), findsOneWidget);
+    expect(find.textContaining('31,595'), findsWidgets);
     // The demo history covers 12 months but not 5 years.
     expect(find.text('1Y'), findsOneWidget);
   });
