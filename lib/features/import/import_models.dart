@@ -38,9 +38,9 @@ final class ImportedFile {
   final Uint8List bytes;
 }
 
-/// The local file intake. One implementation per platform; the demo uses a
-/// synthetic file and the release path stays unavailable until the native
-/// share/file binding lands (P3-21, P3-22).
+/// The local file intake. One implementation per platform; the release router
+/// mounts the PDF picker (P3-21, P3-22). A platform without the binding keeps
+/// the factual unavailable state.
 abstract interface class ImportFileIntake {
   /// Returns null when the user cancels. Throws [ImportFailure] codes through
   /// [ImportIntakeError].

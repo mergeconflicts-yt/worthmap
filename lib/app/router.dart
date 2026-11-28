@@ -63,6 +63,7 @@ import '../features/start/x01_welcome.dart';
 import '../features/start/x02_lock.dart';
 import '../features/wealth/x40_wealth.dart';
 import '../l10n/generated/app_localizations.dart';
+import 'import_intake.dart';
 import 'payments_gateway.dart';
 import 'section_scope.dart';
 
@@ -174,7 +175,7 @@ final class ContourRouter {
         _history = history ?? const UnavailableHistoryGateway(),
         _home = home,
         _imports = imports ?? const UnavailableImportGateway(),
-        _importFiles = importFiles ?? const UnavailableFileIntake(),
+        _importFiles = importFiles ?? const PlatformImportFileIntake(),
         _importPasswords = importPasswords;
 
   final LockGate _gate;
@@ -224,7 +225,8 @@ final class ContourRouter {
   /// The PDF import port for X63.
   final ImportGateway _imports;
 
-  /// The local file intake for X63. Unavailable until a verified binding.
+  /// The local PDF intake for X63. The platform binding mounts the system
+  /// picker; a platform without it reports the factual unavailable state.
   final ImportFileIntake _importFiles;
 
   /// The X64 password vault. Null keeps the password in the dialog only.
