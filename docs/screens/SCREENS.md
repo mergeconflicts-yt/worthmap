@@ -32,7 +32,7 @@
 - **Buttons.** One primary action in action.primary.fill with text.onSection. Secondary: AppButton ghost or a text button. Delete: AppButton destructive (neutral grey, trash icon, explicit verb; DESTRUCTIVE-ROLE).
 - **Colours.** Section colour on chrome only. Flow glyphs ● spending, ◆ investing, ★ money in. Categories data.category (colours may repeat). Debts data.debt. Gain/loss only for signed change. Glow only on chart end points.
 - **Numbers.** Sample values follow SPEC Appendix A. Shares from Percent.split add to 100. Unknown = "Missing" or "None recorded", never 0. Estimates carry "Est."; future items "Expected".
-- **Charts.** Spoken label with all values and "Show as table" (except preview charts, PREVIEW-CHART). Shape stays when amounts are hidden.
+- **Charts.** One spoken label with all values. No chart shows a table. Shape stays when amounts are hidden.
 - **Hidden amounts (X12).** "$······" in text, spoken labels, tables, charts and amount inputs. Dates, counts and percentages stay.
 - **Text size.** At 200%, rows wrap, values move under labels, grids stack. Targets 44 × 44 pt or more.
 - **Older words.** Where an entry says "slab", read 0Hero + GlassCard(stage); superseded colour names map to DESIGN.md 2.3/2.4 roles (see DECISIONS.md, DESIGN-SYNC-001).

@@ -340,7 +340,6 @@ class _X30SpendingState extends State<X30Spending> {
               period: range,
               parts: parts,
               shareDecimals: 1,
-              showTable: false,
               columns: <String>[
                 l.homeSplitPart,
                 l.homeSplitAmount,

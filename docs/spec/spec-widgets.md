@@ -157,7 +157,7 @@ Test values (Appendix A, 13 Oct; SPEC 13): full sample as in the table above. Pa
 
 | KEY | NAME | POS | SHOWS | OPENS | MOVES | EMPTY |
 |-----|------|-----|-------|-------|-------|-------|
-| spending.byCategory | By category | 1 | Meta "October". Needs/wants split bar; ring per category, largest first: name, spent, "$X left" or "Paid"; Show as table (spent, limit, left, 12-month average). | Category detail (X36) | Yes | "No spending recorded in October." |
+| spending.byCategory | By category | 1 | Meta "October". Needs/wants split bar; ring per category, largest first: name, spent, "$X left" or "Paid". | Category detail (X36) | Yes | "No spending recorded in October." |
 | spending.repeatingMoneyIn | Repeating and money in * | 2 | Repeating "$2,084 a month · 7 payments · 3 changes"; Money in "$8,200 · October · avg $9,267 a month". | X34, X31 | Yes | each row "None recorded" |
 | spending.paymentsLimits | All payments and limits * | 3 | All payments "42 · October"; Edit limits "$5,200 · 8 categories". | Transactions (X37), Edit limits (X33) | Yes | "0 payments" (a known count); limits "None set" |
 
@@ -176,7 +176,7 @@ Fixed: hero with 1M · 6M · 1Y and "Where money in went".
 
 | KEY | NAME | POS | SHOWS | OPENS | MOVES | EMPTY |
 |-----|------|-----|-------|-------|-------|-------|
-| wealth.ownOwe | What you own and owe * | 1 | You own $197,540 / You owe $9,640 tabs; split bar and type tiles (Investments $129,800, Retirement $24,010, Cash & bank $21,450, Car $12,000, Deposits $10,280; empty types "None recorded"); You owe: Car loan $8,400, Visa $1,240; Show as table. | each type | No (own tabs) | empty types show "None recorded" |
+| wealth.ownOwe | What you own and owe * | 1 | You own $197,540 / You owe $9,640 tabs; split bar and type tiles (Investments $129,800, Retirement $24,010, Cash & bank $21,450, Car $12,000, Deposits $10,280; empty types "None recorded"); You owe: Car loan $8,400, Visa $1,240. | each type | No (own tabs) | empty types show "None recorded" |
 | wealth.notInNetWorth | Not in net worth | 2 | Meta "Expected". Unvested shares $31,595 "160 shares at today's price"; Owed to you $2,640; Dividends, next 6 months $245 "Est." (SPEC 4.3: owned is not expected; no total). | X49, X46, X43f | Yes | not shown when all three are "None recorded" |
 
 Fixed: hero (net worth, 1M · 1Y · 5Y, three-line chart and table).
@@ -207,7 +207,7 @@ Fixed: the Plan tabs (Calendar · Goals · Protect · Tax) and the top line.
 | KEY | NAME | POS | SHOWS | OPENS | MOVES | EMPTY |
 |-----|------|-----|-------|-------|-------|-------|
 | goals.netWorthTarget | Net worth target | 1 | Ring 18.8%, "$187,900 of $1,000,000", rows By Dec 2040 "$4,777 a month · Est.", At +$16,900 a year "2074 · Est.", Financial independence. | Tools (X59) | Yes | not shown with no target |
-| goals.glance | Goals at a glance * | 2 | Three equal vials: House deposit 66%, Emergency fund 50%, Japan trip 32%; Show as table. | Goal rows | Yes | not shown with no goal |
+| goals.glance | Goals at a glance * | 2 | Three equal vials: House deposit 66%, Emergency fund 50%, Japan trip 32%. | Goal rows | Yes | not shown with no goal |
 | goals.list | Goals | 3 | House deposit $39,440 "of $60,000 · Dec 2028 · Brokerage 40%"; Emergency fund $15,000; Japan trip $1,935. | Goal detail | Yes | "No goals yet." |
 
 Fixed: hero "ASSIGNED TO 3 GOALS $56,375".
@@ -216,7 +216,7 @@ Fixed: hero "ASSIGNED TO 3 GOALS $56,375".
 
 | KEY | NAME | POS | SHOWS | OPENS | MOVES | EMPTY |
 |-----|------|-----|-------|-------|-------|-------|
-| protect.premiums | Premiums this year * | 1 | Ring by policy: Health $2,520, Car $780, Term life $640; Show as table. | Policy detail (X56) | Yes | not shown with no policy |
+| protect.premiums | Premiums this year * | 1 | Ring by policy: Health $2,520, Car $780, Term life $640. | Policy detail (X56) | Yes | not shown with no policy |
 | protect.cover | Cover | 2 | Meta "3 of 6 types". Health $50,000; Car "Full cover"; Term life $500,000; Disability, Home, Travel "None recorded" (caption: "None recorded" is not "no cover"). | X56 | Yes | every type "None recorded" |
 | protect.policies | Policies | 3 | Health "Used this year: $1,200 of $50,000"; Car "Renews 4 Nov: $780 · last year $720"; Term life "$640 a year · next 3 Jan". | X56 | Yes | "No policies recorded." |
 | protect.emergencySheet | Emergency sheet | 4 | Meta "on this phone". "Accounts, policies, loans, contacts"; "Nominees: 7 of 9 entered · Will: not entered". | X57 | Yes | "Not started" |

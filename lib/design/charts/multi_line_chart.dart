@@ -224,7 +224,7 @@ class _MultiLinePainter extends CustomPainter {
     final plotHeight = size.height - padTop - padBottom;
     final span = max <= 0 ? 1.0 : max;
     // The right labels sit outside the plot so a label never covers a line.
-    final plotRight = size.width - (yLabels.isEmpty ? 0 : 44);
+    final plotRight = size.width - (yLabels.isEmpty ? 0 : 40);
     final stepX = count <= 1 ? 0.0 : (plotRight - 8) / (count - 1);
 
     Offset pointAt(int index, double value) {
@@ -242,7 +242,7 @@ class _MultiLinePainter extends CustomPainter {
     );
 
     if (yLabels.isNotEmpty) {
-      final style = AppText.labelCaps.copyWith(color: axis);
+      final style = AppText.chartAxis.copyWith(color: axis);
       for (var i = 0; i < yLabels.length; i++) {
         final value = i / (yLabels.length - 1);
         final text = TextPainter(
@@ -255,7 +255,7 @@ class _MultiLinePainter extends CustomPainter {
     }
 
     if (xLabels.isNotEmpty) {
-      final style = AppText.labelCaps.copyWith(color: axis);
+      final style = AppText.chartAxis.copyWith(color: axis);
       final positions = <double>[
         0,
         plotRight / 2,

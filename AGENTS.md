@@ -146,7 +146,7 @@ If the task conflicts with section 2 or a number definition is unclear, stop and
 
 - Every visible string and semantic label goes through l10n.
 - Every tappable widget has a semantic label.
-- Every chart has a label and "Show as table". A preview chart (small card chart that opens the full chart and table) has a spoken label with the main values and no table (PREVIEW-CHART).
+- Every chart has one spoken label with its exact values. No chart shows a table (CHART-NO-TABLE, owner decision 2026-11-28). A preview chart (small card chart that opens the full chart and table) has a spoken label with the main values.
 
 ## 7. Definition of done
 

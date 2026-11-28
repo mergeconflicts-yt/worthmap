@@ -8,7 +8,7 @@
 - Each entry gives content, actions, rules and states. Layout, kickers, labels, full sample rows and spoken labels: docs/screens/SCREENS.md (same ids). Chart and component look: DESIGN 6.7, 7.2.
 - All screens follow 3.3 and section 7. Each has an Obsidian hero (7.1). Entry words (DESIGN-HTML-014): **hero, card, row, facts** (two or three small figures), **sheet, dialog**.
 - Sample values come from Appendix A. Other prototype values (for example a receipt total or a claim amount) are design data only.
-- "→ X" = opens screen X. Every chart has "Show as table", except a preview chart (PREVIEW-CHART).
+- "→ X" = opens screen X. Every chart has one spoken label with its exact values.
 
 ### 6.1 Start
 

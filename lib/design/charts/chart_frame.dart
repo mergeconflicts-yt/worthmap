@@ -110,7 +110,7 @@ class ChartFrame extends StatefulWidget {
     required this.chart,
     this.table,
     this.preview = false,
-    this.showTable = true,
+    this.showTable = false,
     this.emptyLabel,
     this.tableLabel,
     this.initiallyOpen = false,
@@ -130,8 +130,9 @@ class ChartFrame extends StatefulWidget {
   /// PREVIEW-CHART: no table, label only.
   final bool preview;
 
-  /// Shows the "Show as table" disclosure. False when the visible labels
-  /// already list every value (X10 This month split).
+  /// Shows the "Show as table" disclosure. Off for every screen by default
+  /// (owner decision, 2026-11-28): the spoken label carries the exact values.
+  /// A component demo can turn it on.
   final bool showTable;
 
   /// The phrase for an empty table, for example "None recorded".

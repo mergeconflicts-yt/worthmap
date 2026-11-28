@@ -84,7 +84,7 @@
 
 ### Space, radius, size, motion
 
-- space.page = 20 on every screen. Templates apply the gaps between blocks; features add no gaps.
+- space.page = 16 on every screen. Templates apply the gaps between blocks; features add no gaps.
 - Radius: s 8, m 12, tile 18, card 26, sheet 28, pill 999.
 - size.touchMin = 44.
 - Motion (MOTION-002): plays once, explains a change, never loops, never counts up, never celebrates, same for gain and loss; screen complete by 700 ms; reduce motion sets all motion to 0.
@@ -146,7 +146,7 @@ Full detail (all palettes, data colours, every type style, space, size, elevatio
 ## 7. Charts (`lib/design/charts/`)
 
 - All charts are CustomPainters in a ChartFrame. They take a ChartTone and data with group keys; never raw colours, fonts or sizes. A chart never reads the section colour.
-- **Label and table.** One accessible name with exact values, and "Show as table" (ChartTable). Exception PREVIEW-CHART: a preview chart that opens the full chart has the label only.
+- **Label.** One accessible name with the exact values. No chart shows a "Show as table" row (CHART-NO-TABLE, owner decision 2026-11-28).
 - **Scalable text.** chartLabel 12 and chartAxis 11, up to 2.0. Remove middle ticks before end labels. Labels never overlap.
 - **Axis grammar.** Value labels right, 40 pt gutter, short form ("$150K"), 3–5 grid lines.
 - **Line grammar.** Main series 2.25 pt; second series 1.5 pt at 70%; reference lines 1 pt, dash 3 3; one end dot per series.

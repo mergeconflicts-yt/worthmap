@@ -228,7 +228,7 @@ Section colour marks only: the selected period chip, the selected segment tab, t
 | `AppText.bodyS` | 14 | 400 | 0 | 1.4 | secondary buttons, toast |
 | `AppText.caption` | 13 | 400 | 0 | 1.4 | context lines, notes, legends, tile facts (minimum size) |
 | `AppText.captionStrong` | 13 | 600 | 0 | 1.4 | tile names, field labels |
-| `AppText.label.caps` | 13 | 600 | 0.06 em or less, uppercase | 1.2 | kickers, card meta, sheet group labels, "Show as table" |
+| `AppText.label.caps` | 13 | 600 | 0.06 em or less, uppercase | 1.2 | kickers, card meta, sheet group labels |
 | `AppText.button` | 17 | 600 | 0 | 1.0 | primary buttons |
 | `AppText.buttonS` | 13 | 500 | 0 | 1.0 | chips, segment tabs, menus |
 | `AppText.tabLabel` | 12 | 500 / 600 selected | 0.04 em | 1.0 | tab bar and own/owe tab labels only |
@@ -255,8 +255,8 @@ Section colour marks only: the selected period chip, the selected segment tab, t
 | `space.m` | 12 | gaps in cards, row icon to text |
 | `space.card` | 14 | gap between cards |
 | `space.l` | 16 | gaps between groups in a card |
-| `space.page` | 20 | screen side padding on every screen (POLISH-001); only a hero chart goes edge to edge |
-| `space.cardPad` | 18 | card padding (top and sides) |
+| `space.page` | 16 | screen side padding on every screen (POLISH-001); only a hero chart goes edge to edge |
+| `space.cardPad` | 16 | card padding (top and sides) |
 | `space.xl` | 20 | sheet side padding |
 | `space.xxl` | 24 | dialog padding |
 | `space.xxxl` | 32 | empty-state spacing |
@@ -549,7 +549,7 @@ All charts are CustomPainters in a `ChartFrame`. **Charts never take raw colours
 A chart without these parts does not build (lint `chart_requires_table`).
 
 - **Label.** One accessible name: what, period, exact values in reading order. A dynamic chart keeps exact figures in a named group.
-- **"Show as table".** A ChartTable with the exact values and the same rows, under a `label.caps` disclosure, in the scroll flow, with a scroll cue when wide. Exception (PREVIEW-CHART): a preview chart on a card that opens the full chart (Home net worth line, Home Next 30 days) has no table; its label keeps the exact values.
+- **"Show as table".** No chart shows this row (CHART-NO-TABLE, owner decision 2026-11-28). The spoken label keeps the exact values.
 - **Scalable text.** `chartLabel` (12) and `chartAxis` (11), up to 2.0. If text does not fit, remove axis ticks between the ends, then direct labels on small marks. Axis ends and the end-point label stay. Removed labels stay in the table and label. **Open (CHART-SCALE):** the figures do not scale chart text at 200%; the build follows this rule.
 - **Collision.** Labels never overlap each other or a mark. Priority: end point, largest value, others. A colliding label moves to the other side of its mark, else it is removed (kept in table and label). Overlays never resize a segment, bar or bubble.
 - **Hidden state.** Shape stays on a hidden scale. Amount text hidden; dates, counts, % stay; no blank zones; label masks "$······". Area and bubble charts of amounts are not shown where a list exists (HoldingsCard).

@@ -1,9 +1,13 @@
 // DESIGN 6.7: `TypeTile` — one recorded or empty part of a wealth card.
 //
-// A recorded tile carries a tinted glyph, the name, the value and one fact.
-// An empty tile has the dashed edit outline and "None recorded". The caller
-// supplies every visible string; this component formats no money.
+// The tile copies the X30 category tile (DESIGN 7.2, `RingMeterVariant.card`):
+// a centred icon, name, number and one fact. The icon has no ring or circle
+// (owner request 28 Nov 2026). An empty tile has the dashed edit outline and
+// "None recorded". The caller supplies every visible string; this component
+// formats no money.
 library;
+
+import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
 
@@ -30,6 +34,7 @@ class TypeTile extends StatelessWidget {
     this.emptyLabel,
     this.hidden,
     this.onTap,
+    this.nameLines = 2,
     super.key,
   });
 
@@ -49,68 +54,107 @@ class TypeTile extends StatelessWidget {
   final bool? hidden;
   final VoidCallback? onTap;
 
+  /// The lines kept for the name in every tile of one grid. The grid reads the
+  /// longest name at the cell width, so all tiles share one height.
+  final int nameLines;
+
   @override
   Widget build(BuildContext context) {
     final tokens = context.tokens;
     final colours = ChartColours.of(context, ChartTone.onCard);
     final markColour = colours.mark(mark);
+    final nameStyle = AppText.bodyStrong.copyWith(color: tokens.textSecondary);
+    final valueStyle = AppText.numberXS.copyWith(color: tokens.textPrimary);
+    final factStyle = AppText.bodyS.copyWith(color: tokens.textSecondary);
+    // One slot height for every tile, so every row has one height. The name
+    // takes [nameLines] lines and a fact one line.
+    final nameSlot = _lineHeight(context, nameStyle) * nameLines;
+    final valueSlot = math.max(
+      _lineHeight(context, valueStyle),
+      _lineHeight(context, factStyle),
+    );
+    final factSlot = _lineHeight(context, factStyle);
+
     final body = Container(
-      constraints: const BoxConstraints(minHeight: 104),
-      padding: const EdgeInsets.all(Space.s),
+      // A filled tile takes the dashed outline's 6 pt gap as inner vertical
+      // padding, so a filled and an empty tile have the same outer height. The
+      // 1 pt border sits inside the box, so it comes off the padding. The width
+      // keeps the category tile's inset, so a long name does not break.
+      padding: empty
+          ? const EdgeInsets.symmetric(
+              horizontal: Space.xxs,
+              vertical: Space.s,
+            )
+          : const EdgeInsets.symmetric(
+              horizontal: Space.xxs,
+              vertical: Space.s + DashedOutline.gap - 1,
+            ),
       decoration: empty
           ? null
           : BoxDecoration(
               color: tokens.surfaceTile,
               borderRadius: BorderRadius.circular(RadiusTokens.m),
+              border: Border.all(color: tokens.borderChip),
             ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: markColour.withValues(alpha: 0.16),
-              borderRadius: BorderRadius.circular(RadiusTokens.s),
-            ),
-            child: Center(
-              child: AppIcon(
-                data: icon,
-                size: SizeTokens.iconS,
-                color: empty ? tokens.textSecondary : markColour,
+          AppIcon(
+            data: icon,
+            size: SizeTokens.iconS,
+            color: empty ? tokens.textSecondary : markColour,
+          ),
+          const VSpace(Space.xs),
+          SizedBox(
+            height: nameSlot,
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Text(
+                name,
+                textAlign: TextAlign.center,
+                maxLines: nameLines,
+                overflow: TextOverflow.ellipsis,
+                style: nameStyle,
               ),
             ),
           ),
-          const VSpace(Space.s),
-          Text(
-            name,
-            style: AppText.captionStrong.copyWith(
-              color: tokens.textPrimary,
+          if (!empty)
+            SizedBox(
+              height: valueSlot,
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: MoneyText(
+                  value!,
+                  hidden: hidden,
+                  trimZeroFraction: true,
+                  style: valueStyle,
+                ),
+              ),
             ),
-            maxLines: 2,
+          SizedBox(
+            height: empty ? valueSlot + factSlot : factSlot,
+            child: empty
+                ? Align(
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      emptyLabel ?? '',
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: factStyle,
+                    ),
+                  )
+                : fact == null
+                    ? null
+                    : Text(
+                        fact!,
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: factStyle,
+                      ),
           ),
-          const VSpace(Space.xxs),
-          if (value != null)
-            MoneyText(
-              value!,
-              hidden: hidden,
-              trimZeroFraction: true,
-              style: AppText.numberXS.copyWith(color: tokens.textPrimary),
-            )
-          else
-            Text(
-              emptyLabel ?? '',
-              style: AppText.caption.copyWith(color: tokens.textSecondary),
-            ),
-          if (fact != null) ...<Widget>[
-            const VSpace(Space.xxs),
-            Text(
-              fact!,
-              style: AppText.caption.copyWith(color: tokens.textSecondary),
-              maxLines: 2,
-            ),
-          ],
         ],
       ),
     );
@@ -134,9 +178,33 @@ class TypeTile extends StatelessWidget {
       ),
     );
   }
+
+  /// The line box of [style] at the active text scale.
+  double _lineHeight(BuildContext context, TextStyle style) {
+    final size = MediaQuery.textScalerOf(context).scale(style.fontSize ?? 14);
+    return size * (style.height ?? 1.2);
+  }
+
+  /// A copy for the grid, with the name space the grid found.
+  TypeTile withNameLines(int lines) => TypeTile(
+        name: name,
+        icon: icon,
+        mark: mark,
+        value: value,
+        fact: fact,
+        empty: empty,
+        emptyLabel: emptyLabel,
+        hidden: hidden,
+        onTap: onTap,
+        nameLines: lines,
+      );
 }
 
 /// Three tiles per row (two above 1.3 text scale).
+///
+/// Every row uses equal columns and one height, so all tiles share one size.
+/// The grid reads the longest name at the cell width, and every tile keeps
+/// that many name lines.
 class TypeTileGrid extends StatelessWidget {
   const TypeTileGrid({required this.tiles, super.key});
 
@@ -153,15 +221,64 @@ class TypeTileGrid extends StatelessWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final width =
-            (constraints.maxWidth - Space.m * (columns - 1)) / columns;
-        return Wrap(
-          spacing: Space.m,
-          runSpacing: Space.m,
-          children: <Widget>[
-            for (final tile in tiles) SizedBox(width: width, child: tile),
-          ],
+            (constraints.maxWidth - Space.s * (columns - 1)) / columns;
+        final nameLines = _nameLines(context, width);
+        final rows = <Widget>[];
+        for (var start = 0; start < tiles.length; start += columns) {
+          final cells = <Widget>[];
+          for (var offset = 0; offset < columns; offset++) {
+            if (offset > 0) {
+              cells.add(const HSpace(Space.s));
+            }
+            final index = start + offset;
+            cells.add(
+              Expanded(
+                child: index < tiles.length
+                    ? tiles[index].withNameLines(nameLines)
+                    : const SizedBox.shrink(),
+              ),
+            );
+          }
+          if (rows.isNotEmpty) {
+            rows.add(const VSpace(Space.s));
+          }
+          rows.add(
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: cells,
+              ),
+            ),
+          );
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: rows,
         );
       },
     );
+  }
+
+  /// Two name lines when any name needs them at [cellWidth], else one.
+  int _nameLines(BuildContext context, double cellWidth) {
+    final style = AppText.bodyStrong;
+    // The content width is one gap plus one padding smaller than the cell.
+    // The empty tile is the narrowest, so it sets the name space.
+    final textWidth = cellWidth - 2 * (Space.xxs + DashedOutline.gap);
+    final scaler = MediaQuery.textScalerOf(context);
+    for (final tile in tiles) {
+      final painter = TextPainter(
+        text: TextSpan(text: tile.name, style: style),
+        textDirection: Directionality.of(context),
+        textScaler: scaler,
+        maxLines: 2,
+      )..layout(maxWidth: textWidth > 0 ? textWidth : 0);
+      final lines = painter.computeLineMetrics().length;
+      painter.dispose();
+      if (lines > 1) {
+        return 2;
+      }
+    }
+    return 1;
   }
 }

@@ -123,22 +123,30 @@ class _X40WealthState extends State<X40Wealth> {
   List<Widget> _body(AppLocalizations l, WealthView view) {
     final currency = Currency.of(view.currencyCode);
     final target = view.target;
-    return <Widget>[
-      _top(l, view, currency),
-      if (target != null && target.share != null) ...<Widget>[
-        const VSpace(Space.xs),
-        TargetProgressLine(
-          share: target.share!,
-          label: l.netWorthTargetLine(
-            formatPercent(target.share!),
-            formatMoney(
-              wholeMoney(Money.fromMinor(target.amountMinor, currency)),
-              trimZeroFraction: true,
+    // X10 keeps the target line 4 pt below the number. It shares one block with
+    // the hero, because the template puts a card gap between two children.
+    final top = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        _top(l, view, currency),
+        if (target != null && target.share != null) ...<Widget>[
+          const VSpace(Space.xs),
+          TargetProgressLine(
+            share: target.share!,
+            label: l.netWorthTargetLine(
+              formatPercent(target.share!),
+              formatMoney(
+                wholeMoney(Money.fromMinor(target.amountMinor, currency)),
+                trimZeroFraction: true,
+              ),
+              formatMonthYear(target.date),
             ),
-            formatMonthYear(target.date),
           ),
-        ),
+        ],
       ],
+    );
+    return <Widget>[
+      top,
       const VSpace(Space.m),
       _chart(l, view, currency),
       const VSpace(Space.m),
@@ -214,7 +222,6 @@ class _X40WealthState extends State<X40Wealth> {
     // The change block ends on the number's baseline: the share sits on the
     // baseline, the amount floats above it.
     final side = _changeBlock(
-      context,
       amount: changeText,
       share: shareText,
       colour: colour,
@@ -232,50 +239,28 @@ class _X40WealthState extends State<X40Wealth> {
 
   /// The two-line change block with the share on the shared baseline.
   ///
-  /// A Column reports its first line as the baseline, so the share is the
-  /// Stack's first child and the amount is positioned above it.
-  Widget _changeBlock(
-    BuildContext context, {
+  /// A Column reports its first child's baseline. [VerticalDirection.up] puts
+  /// that first child at the bottom, so the share sets the baseline and the
+  /// amount sits above it.
+  Widget _changeBlock({
     required String amount,
     required String? share,
     required Color colour,
   }) {
     final amountStyle = AppText.bodyStrong.copyWith(color: colour);
     final shareStyle = AppText.caption.copyWith(color: colour);
-    final scaler = MediaQuery.textScalerOf(context);
     final shareLabel = share;
-    final amountPainter = TextPainter(
-      text: TextSpan(text: amount, style: amountStyle),
-      textDirection: TextDirection.ltr,
-      textScaler: scaler,
-    )..layout();
     if (shareLabel == null) {
       return Text(amount, style: amountStyle, textAlign: TextAlign.right);
     }
-    final sharePainter = TextPainter(
-      text: TextSpan(text: shareLabel, style: shareStyle),
-      textDirection: TextDirection.ltr,
-      textScaler: scaler,
-    )..layout();
-    return SizedBox(
-      width: amountPainter.width > sharePainter.width
-          ? amountPainter.width
-          : sharePainter.width,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: <Widget>[
-          Text(shareLabel, style: shareStyle, textAlign: TextAlign.right),
-          Positioned(
-            right: 0,
-            bottom: sharePainter.height,
-            child: Text(
-              amount,
-              style: amountStyle,
-              textAlign: TextAlign.right,
-            ),
-          ),
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      verticalDirection: VerticalDirection.up,
+      children: <Widget>[
+        Text(shareLabel, style: shareStyle, textAlign: TextAlign.right),
+        Text(amount, style: amountStyle, textAlign: TextAlign.right),
+      ],
     );
   }
 

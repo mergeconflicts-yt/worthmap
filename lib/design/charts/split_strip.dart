@@ -41,7 +41,7 @@ class SplitStrip extends StatelessWidget {
     required this.parts,
     required this.columns,
     this.shareDecimals = 1,
-    this.showTable = true,
+    this.showTable = false,
     this.emptyLabel,
     this.hidden,
     super.key,
@@ -58,7 +58,7 @@ class SplitStrip extends StatelessWidget {
   /// exactly 100% (SPEC 4.1).
   final int shareDecimals;
 
-  /// Shows the "Show as table" disclosure. False when the legend already
+  /// Shows the "Show as table" disclosure. Off by default; the legend already
   /// lists every value (X10 This month).
   final bool showTable;
 

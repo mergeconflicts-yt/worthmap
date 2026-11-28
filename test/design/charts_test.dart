@@ -24,7 +24,8 @@ Money _money(int major) => Money.fromMinor(major * 100, Currency.usd);
 
 void main() {
   group('P19 ChartFrame', () {
-    testWidgets('a chart has one label and an exact table', (tester) async {
+    testWidgets('a chart has one label and no table by default',
+        (tester) async {
       final semantics = tester.ensureSemantics();
       await tester.pumpWidget(
         _wrap(
@@ -46,14 +47,34 @@ void main() {
         find.bySemanticsLabel('Spent, October. 1 Oct \$10. 2 Oct \$20'),
         findsOneWidget,
       );
-      expect(find.text('Show as table'.toUpperCase()), findsOneWidget);
+      expect(find.text('Show as table'.toUpperCase()), findsNothing);
       expect(find.text(r'$10'), findsNothing);
+      semantics.dispose();
+    });
 
+    testWidgets('the optional table lists the exact values', (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          const ChartFrame(
+            label: 'Spent, October. 1 Oct \$10. 2 Oct \$20',
+            showTable: true,
+            chart: SizedBox(height: 80),
+            table: ChartTable(
+              columns: <String>['Date', 'Amount'],
+              rows: <List<String>>[
+                <String>['1 Oct', r'$10'],
+                <String>['2 Oct', r'$20'],
+              ],
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text(r'$10'), findsNothing);
       await tester.tap(find.text('Show as table'.toUpperCase()));
       await tester.pumpAndSettle();
       expect(find.text(r'$10'), findsOneWidget);
       expect(find.text(r'$20'), findsOneWidget);
-      semantics.dispose();
     });
 
     testWidgets('a preview chart has no table', (tester) async {
@@ -75,6 +96,7 @@ void main() {
           const ChartFrame(
             label: 'Spent. None recorded',
             emptyLabel: 'None recorded',
+            showTable: true,
             chart: SizedBox(height: 80),
             table: ChartTable(
               columns: <String>['Date', 'Amount'],
@@ -90,8 +112,7 @@ void main() {
   });
 
   group('P19 PeriodBarChart', () {
-    testWidgets('exact values appear in the label and the table',
-        (tester) async {
+    testWidgets('exact values appear in the label', (tester) async {
       final semantics = tester.ensureSemantics();
       await tester.pumpWidget(
         _wrap(
@@ -118,11 +139,7 @@ void main() {
       expect(label, contains(r'$30'));
       expect(label, contains(r'$25'));
       expect(label, contains(r'$40'));
-
-      await tester.tap(find.text('Show as table'.toUpperCase()));
-      await tester.pumpAndSettle();
-      expect(find.text(r'$20'), findsOneWidget);
-      expect(find.text(r'$30'), findsOneWidget);
+      expect(find.text('Show as table'.toUpperCase()), findsNothing);
       semantics.dispose();
     });
 
@@ -149,11 +166,8 @@ void main() {
           .whereType<String>();
       expect(labels.join(' '), isNot(contains(r'$20')));
       expect(labels.join(' '), contains(hiddenMask));
-
-      await tester.tap(find.text('Show as table'.toUpperCase()));
-      await tester.pumpAndSettle();
+      expect(find.text('Show as table'.toUpperCase()), findsNothing);
       expect(find.text(r'$20'), findsNothing);
-      expect(find.text('\$$hiddenMask'), findsOneWidget);
       semantics.dispose();
     });
 
@@ -211,8 +225,7 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Show as table'.toUpperCase()));
-      await tester.pumpAndSettle();
+      expect(find.text('Show as table'.toUpperCase()), findsNothing);
       expect(find.text('73.4%'), findsAtLeastNWidgets(1));
       expect(find.text('26.6%'), findsAtLeastNWidgets(1));
     });
@@ -234,8 +247,7 @@ void main() {
           ),
         ),
       );
-      await tester.tap(find.text('Show as table'.toUpperCase()));
-      await tester.pumpAndSettle();
+      expect(find.text('Show as table'.toUpperCase()), findsNothing);
       expect(find.text('0%'), findsAtLeastNWidgets(1));
     });
   });
@@ -287,8 +299,9 @@ void main() {
       semantics.dispose();
     });
 
-    testWidgets('the billing strip states paid and due in the table',
+    testWidgets('the billing strip states paid and due in the label',
         (tester) async {
+      final semantics = tester.ensureSemantics();
       await tester.pumpWidget(
         _wrap(
           BillingStrip(
@@ -311,11 +324,16 @@ void main() {
           ),
         ),
       );
-      await tester.tap(find.text('Show as table'.toUpperCase()));
-      await tester.pumpAndSettle();
-      expect(find.text('Rent'), findsOneWidget);
-      expect(find.text('Paid'), findsOneWidget);
-      expect(find.text('Due'), findsOneWidget);
+      final labels = tester
+          .widgetList<Semantics>(find.byType(Semantics))
+          .map((widget) => widget.properties.label)
+          .whereType<String>()
+          .join(' ');
+      expect(labels, contains('Rent'));
+      expect(labels, contains('Paid'));
+      expect(labels, contains('Due'));
+      expect(find.text('Show as table'.toUpperCase()), findsNothing);
+      semantics.dispose();
     });
   });
 

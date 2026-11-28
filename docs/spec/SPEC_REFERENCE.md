@@ -389,7 +389,7 @@ Look, themes, glow (GLOW-001), flow glyphs and motion (MOTION-002): DESIGN 14.1,
 - One hero number per screen, at most one chart.
 - Section colour on chrome only. Data never uses section colours; chrome never uses data colours.
 - Flow glyphs wherever a payment flow shows: ● spending, ◆ investing, ★ money in.
-- Every chart: spoken label with main values, and "Show as table" (preview charts: label only, PREVIEW-CHART). A short key states size and colour meaning where not obvious.
+- Every chart: one spoken label with its exact values. No chart shows a "Show as table" row (CHART-NO-TABLE). A short key states size and colour meaning where not obvious.
 - Obsidian Light is an equal designed theme. Both themes are golden-tested (16.2).
 - Motion never counts up money, never animates money changes "since last open", and treats gain and loss the same. Reduce motion: final state at once.
 
@@ -854,7 +854,7 @@ Request contract and fetch lifecycle: SYSTEM_DESIGN 11.
 
 ### 16.6 Accessibility
 
-- Screen-reader labels on all charts and controls. "Show as table" on every chart except preview charts (PREVIEW-CHART). Dynamic type to 200%. Respect reduce motion. Focus order follows visual order.
+- Screen-reader labels on all charts and controls with the exact values. No chart shows a "Show as table" row (CHART-NO-TABLE). Dynamic type to 200%. Respect reduce motion. Focus order follows visual order.
 - With amounts hidden, no amount shows in text, tables or spoken labels. Charts keep their shape without text (4.9).
 - Sideways regions (Quick look, Next 30 days) are focusable and scroll with the arrow keys.
 

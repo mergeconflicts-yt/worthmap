@@ -237,6 +237,34 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   `test/app/demo_wealth_test.dart` (1), and four X40 goldens (dark and light
   at 1.0 and 2.0), all checked.
 
+### CHART-NO-TABLE
+
+- Decision (2026-11-28, owner's request). No chart shows a "Show as table"
+  row. `ChartFrame.showTable` and `SplitStrip.showTable` default to false;
+  the components keep the option for a gallery demo.
+- Consequence. The spoken label stays the one accessible name with the exact
+  values. On X40 the month-end rows are no longer on screen. Where a chart
+  already listed its values in a legend or a tile (X10 split, X30 bars,
+  X40 own/owe), nothing visible is lost.
+- Sources changed: SPEC 6, 7 and 16.6; SPEC_REFERENCE 7 and 16.6; DESIGN 7;
+  DESIGN_REFERENCE typography and chart sections; AGENTS 6.9; SCREENS
+  "Charts"; spec-screens; spec-widgets; SYSTEM_DESIGN 9. This supersedes
+  PREVIEW-CHART as a table exception.
+- Evidence: `test/design/charts_test.dart`; every golden with a chart is
+  regenerated and checked.
+
+### WIDTH-RECLAIM
+
+- Decision (2026-11-28, owner request). Reclaim horizontal space:
+  - `space.page` 20 -> 16, `space.cardPad` 18 -> 16 (tokens.json, generated).
+  - Chart y-label gutter 44 -> 40 pt, and the axis labels use `chartAxis` 11
+    (DESIGN 7.2) instead of `labelCaps` 13.
+  - The X40 type tile grid gap 12 -> 8 pt.
+- Result at 402 pt: card content 326 -> 338 pt (84.1% of the screen); a chart in
+  a card plots 278 -> 302 pt (75.1%). The X40 chart on the page plots 322 pt.
+- Sources changed: DESIGN 5 (`space.page`); DESIGN_REFERENCE 4 (spacing table).
+- Evidence: `flutter test`, 221 goldens regenerated and checked.
+
 ### GOLDEN-DATE-STABILITY
 
 - Problem (2026-11-28). `FakePaymentsReadGateway` read `DateTime.now()` for its

@@ -166,7 +166,7 @@ Wrong numbers destroy trust. Everything in this section is required.
 ## 6. Screen specifications
 
 - Layout of each screen: `docs/screens/SCREENS.md`. Content, actions, rules and states per screen: the reference.
-- All screens follow 3.3 and section 7. Each has an Obsidian hero. Sample values come from Appendix A. Every chart has "Show as table" unless it is a preview chart (PREVIEW-CHART).
+- All screens follow 3.3 and section 7. Each has an Obsidian hero. Sample values come from Appendix A. Every chart has one spoken label with its exact values.
 
 | Area | Purpose | Main screens |
 |---|---|---|
@@ -202,7 +202,7 @@ DESIGN.md is the implementation guide and wins on style. All values come from `l
 - Metal cards with a fine silver rim (METAL-RIM-001); card titles sit above the cards (CARD-TITLE-OUT).
 - One luminous hero number per screen, at most one chart. Section colour on chrome only; data colours on data only; glow only on chart end-point marks.
 - Calm motion (MOTION-002): each chart draws in once (≤ 900 ms), no loops, no count-up of the hero, reduce motion = no animation.
-- Accessibility minimums: text 13 pt (12 pt tab labels, weekday headers, chart labels; 11 pt chart axes); touch 44 pt; contrast 4.5:1; font scale to 200%; every chart has a spoken label and "Show as table" (preview charts: label only).
+- Accessibility minimums: text 13 pt (12 pt tab labels, weekday headers, chart labels; 11 pt chart axes); touch 44 pt; contrast 4.5:1; font scale to 200%; every chart has one spoken label with its exact values.
 - Full detail: docs/spec/SPEC_REFERENCE.md §7 and DESIGN.md.
 
 ## 8. Data input

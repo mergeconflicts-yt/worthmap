@@ -455,7 +455,6 @@ class _X10HomeState extends State<X10Home> {
               title: l.homeIncomeSplit,
               period: formatMonthShort(summary.month),
               shareDecimals: 0,
-              showTable: false,
               parts: <SplitStripPart>[
                 if (split.needsMinor > 0)
                   SplitStripPart(

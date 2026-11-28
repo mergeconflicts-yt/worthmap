@@ -274,6 +274,7 @@ class ChartsGallery extends StatelessWidget {
             const _Heading('ChartFrame · disclosure open'),
             const ChartFrame(
               label: 'Spent, October: \$3,940',
+              showTable: true,
               initiallyOpen: true,
               chart: SizedBox(height: 64),
               table: ChartTable(

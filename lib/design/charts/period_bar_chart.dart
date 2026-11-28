@@ -223,7 +223,7 @@ class PeriodBarPainter extends CustomPainter {
   final double textScale;
 
   static const double _bottomAxis = 18;
-  static const double _valueGutter = 44;
+  static const double _valueGutter = 40;
 
   @override
   void paint(Canvas canvas, Size size) {

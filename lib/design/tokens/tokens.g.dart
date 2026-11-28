@@ -549,9 +549,9 @@ abstract final class SpaceTokens {
 
   static const double l = 16.0;
 
-  static const double page = 20.0;
+  static const double page = 16.0;
 
-  static const double cardPad = 18.0;
+  static const double cardPad = 16.0;
 
   static const double xl = 20.0;
 

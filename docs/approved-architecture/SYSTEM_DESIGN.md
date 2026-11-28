@@ -286,7 +286,7 @@ Current scalar keys use an explicit current-mode policy and stable as_of=0; actu
 
 ## 9 Charts and lists
 
-Flow: exact records → exact versioned series → metrics, cursor-paged exact table, and viewport reducer → bounded coordinates and bucket references → design-system painter → pointer resolves an exact point or labelled bucket in the series. Charts live in `lib/design/charts/` with ChartFrame, semantic labels, "Show as table" and DESIGN tokens. No chart server, web view or JavaScript runtime.
+Flow: exact records → exact versioned series → metrics, cursor-paged exact table, and viewport reducer → bounded coordinates and bucket references → design-system painter → pointer resolves an exact point or labelled bucket in the series. Charts live in `lib/design/charts/` with ChartFrame, semantic labels and DESIGN tokens. No chart server, web view or JavaScript runtime.
 
 - Sums, balances and returns are domain aggregates; skipping pixels is not aggregation.
 - Cap: min(2 × logicalWidth, 1200) points per visible series, max four series. Holding sparklines use DESIGN's 20–30 points. Never drop essential events silently.
