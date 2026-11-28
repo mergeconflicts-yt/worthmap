@@ -27,6 +27,17 @@
   - manual: value, date, optional reminder interval.
   - depreciation: purchase value, date, yearly rate.
   - capitalAccount: commitment, called, distributions, latest reported value.
+- Value projection basis (DECISIONS `P4-VALUE-METHOD-BASIS`, 28 Nov 2026):
+  - Days: actual days. One year is 365 days. A leap day counts once.
+  - Compounding: the method the user selects. A complete period uses the
+    period rate. The days after the last complete period use simple interest
+    at the annual rate.
+  - Contribution: each contribution grows from its own date at simple
+    pro-rata of the annual rate. No order is invented.
+  - Rounding: keep full precision and round once, half to even, to the
+    currency's minor unit.
+  - A maturity date stops growth. A renewal is a new write, not a projection.
+  - A missing input makes the value Missing, never zero (SPEC 4.3, 4.9).
 - CardDetails: accountId, creditLimitMinor, statementDay, dueDay, minimumRule (JSON), payingAccountId, annualFeeMinor, annualFeeDate.
 - LoanDetails: accountId, originalMinor, rate, rateType (fixed, floating), nextResetDate, emiMinor, emiDay, endDate, prepaymentRule (text), payingAccountId, linkedAssetId (nullable).
 - CardStatement: accountId, closeDate, dueDate, fullAmountMinor, minimumMinor, status (open, paid, partlyPaid), sourceRef.

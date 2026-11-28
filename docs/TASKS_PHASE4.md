@@ -123,8 +123,8 @@ task starts:
 - `P4-SCREEN-REFS` — `docs/screens/*.png` are absent in this checkout.
   Screens are built from `docs/screens/SCREENS.md`; record this per screen as
   Phase 2 and 3 did.
-- `P4-VALUE-METHOD-BASIS` — already recorded (28 Nov 2026). The value-method
-  formulas, day count and rounding rule. It blocks P4-01.
+- `P4-VALUE-METHOD-BASIS` — decided 28 Nov 2026. The fixture regeneration it
+  needs is P4-01b.
 
 ## Order and parallel tracks
 
@@ -136,6 +136,7 @@ task starts:
   P4-20), then P4-19 and P4-10.
 - Track D — close and recovery: P4-21 (needs P4-18 and P4-20), then P4-22
   (`G11`).
+- P4-01b lands after P4-01 and before P4-23.
 - P4-23 runs last.
 
 Shared files (`router.dart`, `tokens.json`, `pubspec.yaml`, database schema,
@@ -149,25 +150,45 @@ Shared files (`router.dart`, `tokens.json`, `pubspec.yaml`, database schema,
   that a new real value restarts the projection. Refs: SPEC 4.3–4.5, 9.2;
   SPEC 6.6; DATABASE_DESIGN 4.1; SCREENS X41c–X41f; DECISIONS
   `P4-VALUE-METHOD-BASIS`.
-- Depends on: the `P4-VALUE-METHOD-BASIS` decision. Blocks P4-02 to P4-08,
-  P4-10 and P4-11.
+- Depends on: none (basis decided 28 Nov 2026). Blocks P4-02 to P4-08, P4-10
+  and P4-11.
 - Owner: Domain builder. Files allowed: `lib/domain/values/*`,
   `lib/core/`, `test/domain/values/*`.
 - Contract: methods `marketPrice`, `interest`, `contribution`, `weightPrice`,
   `manual`, `depreciation`, `capitalAccount` (SPEC 9.2). Inputs are a real
-  value, its date, a rule and a `LocalDate` "as of". Outputs are `Known`,
-  `Estimated` (with the rule named) or `Missing`. No `DateTime.now()`, no
-  `double`, no advice words. The formulas follow the method definitions in
-  SPEC 9.2 and the screen samples in SCREENS X41b–X41f: compounding, a stop
-  at maturity, a renew, contribution plus growth, and straight-line
-  depreciation.
-- Acceptance: Appendix A fixtures reproduce the screen samples: deposit
-  $10,000 at 4.1% gives $10,280 today and $10,312 at maturity; pension
-  $22,700 plus $500 a month plus 5% a year gives $24,010; car $12,000 at
-  −10% a year gives the X41e values; a rule with a missing input returns
-  Missing, never zero.
-- Evidence: unit tests with SPEC 13 values, edge cases for maturity, leap
-  day and a rule date before the real value. Reviewer: product and finance.
+  value, its date, a rule and a `LocalDate` "as of". Outputs are real,
+  estimated (with the method named) or unavailable with a reason. No
+  `DateTime.now()`, no `double`, no advice words. The basis is SPEC 9.2:
+  actual days, 365-day year, the selected compounding, one half-even round,
+  a stop at maturity.
+- Acceptance: deposit $10,000 at 4.1% monthly gives $10,278 on 13 Oct 2026
+  and $10,312 at maturity; simple interest gives $10,272.96; pension $22,700
+  plus $500 a month plus 5% a year gives $23,933.95; depreciation stops at
+  zero; a leap day counts once; a missing price or rate is unavailable,
+  never zero.
+- Evidence: `test/domain/values/value_projection_test.dart` (26 tests).
+  Reviewer: product and finance.
+
+### P4-01b — Regenerate the Appendix A value fixtures
+
+- Objective: align Appendix A and the screen samples with the decided basis.
+- Refs: SPEC 4.7, 9.2; Appendix A in `docs/spec/spec-calculation.md`;
+  DECISIONS `P4-VALUE-METHOD-BASIS`; SCREENS X10, X40, X41b–X41f, X42b;
+  `docs/spec/spec-widgets.md`.
+- Depends on: P4-01. Blocks P4-23. Owner: Planner + design owner for the
+  goldens. Files allowed: SPEC and SCREENS documents, `docs/DECISIONS.md`,
+  feature test fixtures, `test/golden/*`.
+- Contract: change the retirement value to $23,934, the deposit to $10,278
+  and its interest to +$278, keep $10,312 at maturity, then recompute the
+  totals: what you own $197,462, net worth $187,822. Update the attribution
+  example to add a Values part of −$78 (4,260 + 1,780 − 550 − 78 = 5,412).
+  Update every screen sample, widget sample and test constant, and
+  regenerate the goldens.
+- Acceptance: every section 6 total comes from Appendix A; the attribution
+  adds up; no test constant keeps the old values; all AGENTS 4 commands pass
+  and every changed golden is checked.
+- Evidence: the document diff, the test list and the regenerated goldens.
+  Reviewer: product and finance + design and accessibility.
 
 ### P4-02 — Account and asset reads (data)
 
