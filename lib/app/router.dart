@@ -23,6 +23,7 @@ import '../data/speech/speech.dart';
 import '../design/design.dart';
 import '../features/accounts/account_draft.dart';
 import '../features/accounts/account_models.dart';
+import '../features/accounts/x42_add_chooser.dart';
 import '../features/accounts/x42b_account_editor.dart';
 import '../features/add/payment_draft.dart';
 import '../features/add/payment_models.dart';
@@ -74,6 +75,7 @@ enum AppRoute {
   welcome('/x01', 'X01'),
   lock('/x02', 'X02'),
   home('/x03', 'X03'),
+  addAsset('/x42', 'X42'),
   accountEditor('/x42b', 'X42b'),
   paymentAdd('/x20', 'X20'),
   transferAdd('/x26', 'X26'),
@@ -327,6 +329,20 @@ final class ContourRouter {
           ),
         ),
         GoRoute(
+          path: AppRoute.addAsset.path,
+          name: AppRoute.addAsset.screenId,
+          builder: (context, state) => _screenScaffold(
+            AppRoute.addAsset,
+            X42AddChooser(
+              gateway: _accounts,
+              onClose: () => context.pop(),
+              onPick: (AccountKind kind) => context.push(
+                '${AppRoute.accountEditor.path}?kind=${kind.name}',
+              ),
+            ),
+          ),
+        ),
+        GoRoute(
           path: AppRoute.accountEditor.path,
           name: AppRoute.accountEditor.screenId,
           builder: (context, state) => _screenScaffold(
@@ -334,6 +350,7 @@ final class ContourRouter {
             X42bAccountEditor(
               gateway: _accounts,
               drafts: _accountDrafts,
+              kind: _accountKind(state.uri.queryParameters['kind']),
               onClose: () => context.pop(),
               onSaved: (AccountSummary account) => context.pop(account),
             ),
@@ -799,4 +816,14 @@ final class _PlaceholderScreen extends StatelessWidget {
       child: const SizedBox.expand(),
     );
   }
+}
+
+/// X42: the type query value, or null when it is absent or unknown.
+AccountKind? _accountKind(String? name) {
+  for (final kind in AccountKind.values) {
+    if (kind.name == name) {
+      return kind;
+    }
+  }
+  return null;
 }

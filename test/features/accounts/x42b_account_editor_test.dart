@@ -45,11 +45,13 @@ Widget _wrap(Widget child) => MaterialApp(
     );
 
 class _Harness {
-  _Harness({this.controller, this.drafts}) : gateway = FakeAccountsGateway();
+  _Harness({this.controller, this.drafts, this.kind})
+      : gateway = FakeAccountsGateway();
 
   final FakeAccountsGateway gateway;
   final AccountSetupController? controller;
   final AccountDraftStore? drafts;
+  final AccountKind? kind;
   AccountSummary? saved;
   int closed = 0;
 
@@ -59,6 +61,7 @@ class _Harness {
           today: LocalDate(2026, 11, 22),
           controller: controller,
           drafts: drafts,
+          kind: kind,
           onClose: () => closed += 1,
           onSaved: (account) => saved = account,
         ),
@@ -290,6 +293,26 @@ void main() {
     await tester.ensureVisible(find.textContaining('A saved draft'));
     expect(find.textContaining('A saved draft'), findsOneWidget);
     expect(find.text('Discard draft'), findsOneWidget);
+  });
+
+  testWidgets('a fixed type hides the choices and saves that type',
+      (tester) async {
+    final harness = _Harness(kind: AccountKind.vehicle);
+    await _pump(tester, harness);
+
+    expect(find.byType(ChipRow), findsNothing);
+    await _enterAmount(tester, '12000');
+    await tester.enterText(find.byType(TextField).at(0), 'Car');
+    await tester.pumpAndSettle();
+    final save = tester.widget<AppButton>(
+      find.widgetWithText(AppButton, 'Save account'),
+    );
+    expect(save.onPressed, isNotNull, reason: 'Save stays disabled');
+    await tester.tap(find.widgetWithText(AppButton, 'Save account'));
+    await tester.pumpAndSettle();
+
+    expect(harness.gateway.last!.kind, AccountKind.vehicle);
+    expect(harness.gateway.last!.openingBalanceMinor, 1200000);
   });
 }
 

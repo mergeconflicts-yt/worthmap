@@ -275,9 +275,14 @@ Shared files (`router.dart`, `tokens.json`, `pubspec.yaml`, database schema,
     inclusive anchor and the `interest` rule with bounded JSON parameters in
     one commit. Tests: `test/features/accounts/account_setup_vault_test.dart`
     (two new cases).
-  - Remaining: the X42 chooser, the shared form family for pension, vehicle,
-    property, gold, loan, card and the manual types, the type facts and the
-    goldens.
+  - The X42 chooser is built with the groups Cash, Things, You owe and
+    Other. It shows the account count per group and returns the chosen type.
+    The editor accepts a fixed type, so nine types save today: bank, cash,
+    card, property, vehicle, loan, money borrowed, money lent and other.
+    Tests: `test/features/accounts/x42_add_chooser_test.dart` (2), the fixed
+    type case in `x42b_account_editor_test.dart`, and four X42 goldens.
+  - Remaining: the deposit, pension, gold and broker forms, the card and loan
+    detail fields, and the Retirement, Deposits and Investments groups.
 
 ### P4-04 — Account detail family (X41, X41c–X41f, X41b)
 

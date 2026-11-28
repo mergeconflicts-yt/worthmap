@@ -7,6 +7,7 @@ import 'package:contour/features/accounts/account_date_sheet.dart';
 import 'package:contour/features/accounts/account_models.dart';
 import 'package:contour/features/accounts/account_picker_sheet.dart';
 import 'package:contour/features/accounts/account_setup_controller.dart';
+import 'package:contour/features/accounts/x42_add_chooser.dart';
 import 'package:contour/features/accounts/x42b_account_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -48,12 +49,71 @@ AccountSetupController _draft({
   return controller;
 }
 
+final class _ChooserGateway implements AccountsGateway {
+  @override
+  Future<List<AccountSummary>> listAccounts() async => <AccountSummary>[
+        const AccountSummary(
+          id: 'a',
+          name: 'Checking',
+          kind: AccountKind.bank,
+          currencyCode: 'USD',
+          balanceMinor: 645000,
+        ),
+        const AccountSummary(
+          id: 'b',
+          name: 'Savings',
+          kind: AccountKind.bank,
+          currencyCode: 'USD',
+          balanceMinor: 1500000,
+        ),
+        const AccountSummary(
+          id: 'c',
+          name: 'Visa',
+          kind: AccountKind.card,
+          currencyCode: 'USD',
+          balanceMinor: -124000,
+        ),
+      ];
+
+  @override
+  Future<AccountSummary> createAccount(AccountSetup setup) async =>
+      throw UnimplementedError();
+}
+
 void main() {
   for (final theme in <(String, ThemeData)>[
     ('dark', AppTheme.dark()),
     ('light', AppTheme.light()),
   ]) {
     for (final scale in goldenScales) {
+      testWidgets('add type chooser ${theme.$1} ${scale}x', (tester) async {
+        await loadContourFonts();
+        await tester.binding.setSurfaceSize(
+          Size(420, scale == 1.0 ? 1500 : 2000),
+        );
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
+        await tester.pumpWidget(
+          goldenApp(
+            theme: theme.$2,
+            section: Section.wealth,
+            textScale: scale,
+            child: X42AddChooser(
+              gateway: _ChooserGateway(),
+              onClose: () {},
+              onPick: (_) {},
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile(
+            'screens_x42_add_type_${theme.$1}_${scale}x.png',
+          ),
+        );
+      });
       testWidgets('account editor ${theme.$1} ${scale}x', (tester) async {
         await loadContourFonts();
         await tester.binding.setSurfaceSize(

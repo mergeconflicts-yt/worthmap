@@ -4141,5 +4141,29 @@
   "wealthOwnOweSpoken": "You own {own}, you owe {owe}.",
   "@wealthOwnOweSpoken": {
     "description": "X40 split line spoken label."
-  }
+  },
+  "x42Kicker": "Add · choose a type",
+  "x42Title": "Add",
+  "x42Subline": "Something you own or owe",
+  "x42GroupCash": "Cash",
+  "x42GroupThings": "Things",
+  "x42GroupOwe": "You owe",
+  "x42GroupOther": "Other",
+  "x42GroupCount": "{count, plural, =0{None yet} =1{1 account} other{{count} accounts}}",
+  "@x42GroupCount": {"description": "The number of accounts in a group."},
+  "accountTypeProperty": "Property",
+  "accountTypeVehicle": "Vehicle",
+  "accountTypeLoan": "Loan",
+  "accountTypeMoneyBorrowed": "Money borrowed",
+  "accountTypeMoneyLent": "Money lent",
+  "accountTypeOther": "Other",
+  "x42HintBank": "Bills and savings",
+  "x42HintCash": "Notes and coins",
+  "x42HintProperty": "A home or land",
+  "x42HintVehicle": "A car or bike",
+  "x42HintCard": "Money you owe",
+  "x42HintLoan": "Money you owe",
+  "x42HintBorrowed": "Money you owe",
+  "x42HintLent": "Money owed to you",
+  "x42HintOther": "Anything else"
 }

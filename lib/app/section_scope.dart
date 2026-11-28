@@ -16,7 +16,10 @@ export '../design/theme/section.dart'
 Section sectionForRoute(AppRoute route) {
   return switch (route) {
     AppRoute.welcome || AppRoute.lock || AppRoute.home => Section.home,
-    AppRoute.wealth || AppRoute.accountEditor => Section.wealth,
+    AppRoute.wealth ||
+    AppRoute.addAsset ||
+    AppRoute.accountEditor =>
+      Section.wealth,
     AppRoute.plan => Section.plan,
     AppRoute.paymentAdd => Section.spending,
     AppRoute.transferAdd ||

@@ -28,6 +28,7 @@ class X42bAccountEditor extends StatefulWidget {
     this.today,
     this.controller,
     this.drafts,
+    this.kind,
     super.key,
   });
 
@@ -47,6 +48,9 @@ class X42bAccountEditor extends StatefulWidget {
 
   /// The durable draft store. Null keeps the form in memory only.
   final AccountDraftStore? drafts;
+
+  /// X42: a type chosen on the previous step. Null shows the three choices.
+  final AccountKind? kind;
 
   @override
   State<X42bAccountEditor> createState() => _X42bAccountEditorState();
@@ -75,6 +79,10 @@ class _X42bAccountEditorState extends State<X42bAccountEditor> {
   @override
   void initState() {
     super.initState();
+    final fixed = widget.kind;
+    if (fixed != null && _controller.kind == null) {
+      _controller.setKind(fixed);
+    }
     if (_controller.drafts != null) {
       _controller.loadDraft().then((_) {
         if (!mounted) {
@@ -105,7 +113,7 @@ class _X42bAccountEditorState extends State<X42bAccountEditor> {
       animation: _controller,
       builder: (BuildContext context, _) {
         final amount = _controller.openingAmount;
-        final kind = _controller.kind;
+        final kind = widget.kind ?? _controller.kind;
         final isCard = kind == AccountKind.card;
         return FormScreen(
           close: AppIconButton(
@@ -216,21 +224,23 @@ class _X42bAccountEditorState extends State<X42bAccountEditor> {
             textInputAction: TextInputAction.next,
             onChanged: _controller.setName,
           ),
-          const VSpace(Space.l),
-          Text(
-            l.accountTypeLabel,
-            style: AppText.captionStrong.copyWith(
-              color: context.tokens.textSecondary,
+          if (widget.kind == null) ...<Widget>[
+            const VSpace(Space.l),
+            Text(
+              l.accountTypeLabel,
+              style: AppText.captionStrong.copyWith(
+                color: context.tokens.textSecondary,
+              ),
             ),
-          ),
-          const VSpace(Space.xs),
-          ChipRow(
-            items: <ChipItem>[
-              _typeChip(l, l.accountTypeBank, AccountKind.bank, kind),
-              _typeChip(l, l.accountTypeCash, AccountKind.cash, kind),
-              _typeChip(l, l.accountTypeCard, AccountKind.card, kind),
-            ],
-          ),
+            const VSpace(Space.xs),
+            ChipRow(
+              items: <ChipItem>[
+                _typeChip(l, l.accountTypeBank, AccountKind.bank, kind),
+                _typeChip(l, l.accountTypeCash, AccountKind.cash, kind),
+                _typeChip(l, l.accountTypeCard, AccountKind.card, kind),
+              ],
+            ),
+          ],
           const VSpace(Space.l),
           Align(
             alignment: Alignment.centerLeft,
