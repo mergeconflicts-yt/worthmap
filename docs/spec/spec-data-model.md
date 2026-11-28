@@ -18,7 +18,7 @@
 ### 9.2 Accounts, assets and values
 
 - Account: name, type (bank, cash, wallet, card, brokerage, equityPlan, pension, deposit, property, vehicle, preciousMetal, privateFund, privateShares, insuranceCashValue, collectible, loan, payLater, moneyLent, moneyBorrowed, taxDue, other), currency, institution, isLiability, isLiquid, includeInNetWorth, ownershipPercent (default 100), minimumBalanceMinor (nullable, user), overdraftLimitMinor (nullable), archived, colour, personId (nullable).
-- BalanceSnapshot: accountId, date, balanceMinor, currency, source, sourceRef.
+- BalanceSnapshot: accountId, date, balanceMinor, currency, source, sourceRef. Statement row and anchor rules: SPEC 8.6.
 - ValuationRule: accountId, method, parameters (JSON), lastRealValueMinor, lastRealValueDate. A new real value restarts the projection.
   - marketPrice.
   - interest: principal, annual rate, compounding (simple, monthly, quarterly, yearly), start, maturity, renewsAutomatically. At maturity: "Matured", no growth.
@@ -83,8 +83,8 @@
 
 - NetWorthSnapshot: date, totalAssetsMinor, totalLiabilitiesMinor, currency, breakdown (JSON by type, currency, account), attribution (JSON: kept, markets, currency, values). "Save and finish" saves an immutable close revision (sequence, prior revision, cutoff, method version, source revisions, coverage) and pins its evidence. A correction adds a revision; never overwrite. Unsaved month-end views stay projections.
 - ImportBatch: source, fileName, fileHash, importedAt, rowCount, acceptedCount, rejectedCount, templateId, status (review, done, undone).
-- ImportMappingTemplate: name, source (csv, excel), headerSignature, columnMap (JSON), dateFormat, decimalSeparator, amountSign, accountId.
-- ParserTemplate: name, institution, sourceType (pdf, csv, email, notification), kind (statement, payslip, loanStatement, policy, broker), fingerprint, rules (JSON), version, origin (builtIn, user, importedFile). Data, never code.
+- ImportMappingTemplate: name, source (csv, excel), headerSignature, columnMap (JSON), dateFormat, decimalSeparator, amountSign, accountId. Fingerprint and mapping rules: SPEC 8.6.
+- ParserTemplate: name, institution, sourceType (pdf, csv, email, notification), kind (statement, payslip, loanStatement, policy, broker), fingerprint, rules (JSON), version, origin (builtIn, user, importedFile). Data, never code. Fingerprint and version rules: SPEC 8.6.
 - InboxItem: source, sourceRef, receivedAt, proposedEntity (JSON), matchedEntityId, suggestionType (new, merge, transfer, refund, recurring, categoryChange, vestConfirm, payslipMismatch), confidence, isTicked (default true only at high confidence), decision (pending, accepted, deleted, edited), decidedAt.
 - CaptureSource: type (notifications, financeKit, localFolder), enabled, settings (JSON), lastRunAt, lastRunResult.
 - MonthClose: month, startedAt, completedAt, steps (JSON).

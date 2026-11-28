@@ -245,16 +245,16 @@ flowchart LR
   Error --> Local
 ```
 
-1. Check type and release. Platform handoff stages locally; the app parses after unlock.
+1. Check type, size and release (SPEC 8.8). The handoff accepts one file of the listed types up to 100 MiB, writes it to protected staging with a staging-only capability and no ledger key, and stages nothing on refusal. A normal, localised, broken or repeated file takes the same intake path (F06-A); no source content, name or path enters a log or error, and the object is deleted after parsing (F06-D). The app parses after unlock.
 2. Encrypted → `X64PdfPassword`. "Remember" uses secure storage only. Wrong password keeps retry; no financial write.
-3. Known layout → `X65ImportPreview`. Unknown PDF → `X66TeachOnce`; CSV/Excel → `X67CsvMapping`. Save a layout only after a usable preview. Cancel changes no financial record.
-4. Preview: candidate rows, existing matches, new rows, source account, parsing uncertainties. Statement balance observations stay apart from transaction rows. `G01` stops replay of records already in a closing balance.
+3. Known layout → `X65ImportPreview`. Unknown PDF → `X66TeachOnce`; CSV/Excel → `X67CsvMapping`. Save a layout only after a usable preview. A saved layout applies only on an exact fingerprint match (SPEC 8.6): the header signature for CSV and Excel, the header words with their word anchors and the page width for PDF. A template version that this build no longer serves is not applied; the file returns to X66 or X67. Cancel changes no financial record.
+4. Preview: candidate rows, existing matches, new rows, source account, parsing uncertainties. Statement balance rows stay apart from transaction rows, never become Inbox items and never write a payment. An opening or closing balance is an observation: it becomes an anchor only through its own explicit acceptance, with the inclusive date rule and the correction path in SPEC 8.6; a row already covered by the selected anchor writes nothing, and Send to Inbox writes no anchor. `G01` stops replay of records already in a closing balance.
 5. Send to Inbox atomically saves batch and draft rows → `X68ImportDone`. Only Inbox counts change. Open Inbox → F07.
-6. Re-imported file/source identities are recognised. Equal content alone is not a duplicate. `X88ImportError` applies before staging; "Nothing from this file was added" must be true.
+6. Re-imported file/source identities are recognised. Equal content alone is not a duplicate. `X88ImportError` applies before staging; "Nothing from this file was added" must be true. Before any confirmation, "Undo this import" withdraws every staged row and Inbox item of the batch, sets it discarded and advances `inbox_revision`; it writes no financial record. After one confirmation it refuses, and the confirmed batch uses the 8.18 Undo (F07-D). A restart after the withdrawal does not restore the rows (F06-C).
 
 **Recovery:** retry parsing, teach another layout, read an image locally, or choose another file. A later confirmation error keeps staged drafts; never show "nothing added" then. Delete the temporary source copy after parsing; keep permitted fields and source identity.
 
-**Checks:** F06-A normal/localised/broken/repeated files; F06-B no totals change after staging; F06-C restart without duplicate staging; F06-D no source content in logs or retained raw files.
+**Checks:** F06-A normal/localised/broken/repeated files; F06-B no totals change after staging; F06-C restart without duplicate staging; F06-D no source content in logs or retained raw files; F06-E a saved layout applies to a second file with the same fingerprint with no question, a changed header or a retired template version asks again, and a cancelled or empty preview writes no template; F06-F one unconfirmed batch withdraws completely in one transaction, a batch with one confirmed item refuses and writes nothing, and a repeated withdrawal changes nothing (F07-D).
 
 ### F07 Review the Inbox
 

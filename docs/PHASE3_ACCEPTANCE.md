@@ -53,8 +53,7 @@ claimed.
 
 ## Known gaps (DECISIONS)
 
-`P3-BALANCE-ROWS`, `P3-TEMPLATE-TABLE`, `P3-INTAKE-BINDING`,
-`P3-CATEGORY-SUGGESTION`, `P3-HISTORY-OPEN`.
+`P3-INTAKE-BINDING`, `P3-CATEGORY-SUGGESTION`, `P3-HISTORY-OPEN`.
 
 Deferred formats and sources keep their tasks in `docs/TASKS_PHASE3.md`:
 CSV, Excel, OFX, QFX, QIF, CAMT.053, MT940, QR, receipt photo, holdings

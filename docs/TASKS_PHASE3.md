@@ -25,11 +25,20 @@ SPEC 17, "v1 Phase 3 — One-tap imports":
 PDF only, per the owner decision recorded in DECISIONS `P3-PDF-SUBSET`.
 
 - Built and tested:
-  - P3-01 (partial): layout fingerprint, column bands, save after a usable
-    preview and a template version.
-  - P3-05 (partial): balance rows are detected and kept out of staging; they do
-    not write an anchor (`P3-BALANCE-ROWS`).
-  - P3-06 (partial): withdrawal of a whole batch until one row is decided.
+  - P3-01 (documents closed 2026-11-23): the saved-layout contract in SPEC
+    8.6 — fingerprint per format, mapping fields, save rule, version and
+    unsupported state; the PDF reader computes the layout fingerprint and
+    column bands and saves a template after a usable preview.
+  - P3-02 (documents closed 2026-11-23): the share intake contract in SPEC
+    8.8 — one type list, one 100 MiB bound, protected staging, key lifetime,
+    refusal and retry messages.
+  - P3-05 (documents closed 2026-11-23; code partial): balance rows are
+    detected and kept out of staging; the acceptance, covered-row, correction
+    and Missing rules are SPEC 8.6. No anchor is written until the preview
+    acceptance action lands.
+  - P3-06 (documents closed 2026-11-23; code partial): withdrawal of a whole
+    batch until one row is decided; the scope, refusal, counts and states are
+    SPEC 8.6.
   - P3-07 to P3-08, P3-13 to P3-15: PDF reader, text and line extraction,
     statement values, dates, signs and fingerprints. No CSV, Excel or other
     bank formats.
@@ -39,17 +48,24 @@ PDF only, per the owner decision recorded in DECISIONS `P3-PDF-SUBSET`.
     hash of the file name, with the X64 "Remember for this layout" toggle.
     Tests: `test/features/import/import_password_test.dart` (8, including a
     fully RC4-encrypted statement).
+  - P3-21/P3-22 (partial): the in-app PDF picker on iOS and Android behind
+    `ImportFileIntake` (`contour/import_intake`): one file, 100 MiB and the
+    `%PDF-` signature; bytes in memory, no database row. Tests:
+    `test/app/import_intake_test.dart` (7). The share extension and share
+    intent stay planned (`P3-INTAKE-BINDING`).
+  - P3-18: statement balance observations over the P14 anchor path: one
+    imported anchor, the covered case, the correction and the inclusive
+    boundary. Tests: `test/data/import_balance_test.dart` (9).
   - P3-25, P3-26 and P3-28 units: X63 hub, X64 password, X65 preview, X66 Teach
     once, X68 done and X88 error, their widget tests and 16 goldens. Entries:
     X03 Get started step 2 and X80 Capture > Import layouts.
 - Deferred with no route, tile or switch:
-  - P3-02, P3-21, P3-22 (file picker and share intake), P3-03, P3-31 (broker
+  - P3-21, P3-22 (share extension and share intent), P3-03, P3-31 (broker
     and position imports), P3-04, P3-23, P3-24, P3-30 (OCR, QR and receipt
     photo), P3-09 to P3-12 (OFX, QIF, CAMT.053, MT940), P3-27 (CSV mapping),
     P3-29 (Inbox producer handover), P3-32 (full phase acceptance).
 - Open planning gaps:
-  `P3-BALANCE-ROWS`, `P3-TEMPLATE-TABLE`, `P3-INTAKE-BINDING`,
-  `P3-CATEGORY-SUGGESTION`, `P3-HISTORY-OPEN`.
+  `P3-INTAKE-BINDING`, `P3-CATEGORY-SUGGESTION`, `P3-HISTORY-OPEN`.
 
 ## Start state (Phase 2 accepted 2026-11-23)
 
@@ -85,12 +101,12 @@ documentation change in its own pull request before dependent feature code
 
 | Gate | Blocks in Phase 3 | Status | Task |
 |---|---|---|---|
-| `G01` Account prerequisites | Statement balance rows, opening and closing observations (F06 step 4) | Closed 2026-11-22; the statement-row sub-rule is missing | P3-05 |
+| `G01` Account prerequisites | Statement balance rows, opening and closing observations (F06 step 4) | Closed 2026-11-23; statement-row sub-rule in SPEC 8.6 | P3-05 |
 | `G03` Investment events | Broker CSV, holdings screenshot (X45), F12 position parsing | **Open** | P3-03 |
 | `G07` Local capture engines | PDF text, OCR, QR and barcode decode | Closed for voice 2026-11-22; no engine record for PDF/OCR/QR | P3-04 |
-| `G08` Provider capture | Share intake, no mail connector (X82 has no route) | Closed 2026-11-22; the intake bound (bytes, types) is missing | P3-02 |
-| `G15` Import template and mapping | CSV mapping (X67), Teach once (X66), saved layouts (X63) | **New, open** | P3-01 |
-| `G16` Import staging and withdrawal | Preview to Inbox, "Undo this import", batch scope | **New, open** | P3-06 |
+| `G08` Provider capture | Share intake, no mail connector (X82 has no route) | Closed 2026-11-22 for the provider question; intake types and bound in SPEC 8.8 (2026-11-23) | P3-02 |
+| `G15` Import template and mapping | CSV mapping (X67), Teach once (X66), saved layouts (X63) | Closed 2026-11-23; the saved-layout contract is SPEC 8.6 | P3-01 |
+| `G16` Import staging and withdrawal | Preview to Inbox, "Undo this import", batch scope | Closed 2026-11-23; the withdrawal contract is SPEC 8.6 | P3-06 |
 
 `G02`, `G05`, `G06` and `G12` stay closed and are used here as written. `G09`,
 `G10`, `G11` stay with Phases 4 and v1.1.
@@ -106,8 +122,10 @@ starts:
   check (licence, release date, no network).
 - `P3-ANDROID-OCR` — `CLOSED-G07-LOCAL-ENGINES` excludes ML Kit. Android needs
   an audited bundled OCR engine or the receipt-photo path is absent on Android.
-- `P3-PDF-TEXT` — no PDF text-extraction engine is selected. The choice decides
-  the `ParserTemplate` fingerprint input.
+- `P3-PDF-TEXT` — no PDF text-extraction engine is selected. SPEC 8.6 now
+  fixes the fingerprint input (header words, their x positions and the page
+  width), so the engine no longer decides template identity; it must return
+  text with word positions and page width.
 - `P3-MERCHANT-SIMILARITY` — SPEC 8.9 gives "merchant similarity ≥ 0.8" with no
   algorithm. A token or edit-distance rule must be named and tested.
 - `P3-CAMT-VARIANTS` — CAMT.053 and MT940 have bank and country variants. The
@@ -117,8 +135,6 @@ starts:
 - `P3-POSITION-CONFIRM` — SYSTEM_DESIGN 10 sends holdings observations to a
   direct confirmation, while F06 sends statements to the Inbox. X45 must state
   one path and its written records.
-- `P3-SHARE-BOUNDS` — SPEC 8.8 says "bounded local bytes" with no bound. The
-  native intake needs a byte and type limit, and an over-limit path.
 - `P3-INBOX-PRODUCER` — Phase 2 shipped the Inbox with a synthetic producer.
   The import path closes this gap; P3-29 owns the closure.
 
@@ -189,7 +205,8 @@ Platform tasks run beside data after their gate closes.
   the unsupported-template state after a parser change. No new financial rule.
 - Evidence: diff plus the gate entry closed. Reviewer: product and finance +
   privacy and security.
-- Status: planned.
+- Status: done 2026-11-23; gate closed in DECISIONS
+  `CLOSED-G15-IMPORT-TEMPLATE`.
 
 ### P3-02 — Share intake contract (G08 extension)
 
@@ -208,7 +225,8 @@ Platform tasks run beside data after their gate closes.
   message, and a statement that no URL is resolved and no cloud download starts.
   F06 checks A and D map to sentences.
 - Evidence: diff plus the gate entry closed. Reviewer: privacy and security.
-- Status: planned.
+- Status: done 2026-11-23; gate closed in DECISIONS
+  `CLOSED-G08-SHARE-INTAKE`.
 
 ### P3-03 — Investment import decisions (G03)
 
@@ -260,7 +278,7 @@ Platform tasks run beside data after their gate closes.
   It repeats that a missing balance is Missing, never zero.
 - Evidence: diff plus the sub-rule closed in DECISIONS. Reviewer: product and
   finance.
-- Status: planned.
+- Status: done 2026-11-23; sub-rule closed in DECISIONS `P3-BALANCE-ROWS`.
 
 ### P3-06 — Import withdrawal and batch scope (G16)
 
@@ -277,7 +295,8 @@ Platform tasks run beside data after their gate closes.
   the difference from a confirmed-batch Undo. It names F06-C and F07-D.
 - Evidence: diff plus the gate entry closed. Reviewer: product and finance +
   privacy and security.
-- Status: planned.
+- Status: done 2026-11-23; gate closed in DECISIONS
+  `CLOSED-G16-IMPORT-WITHDRAWAL`.
 
 ### P3-07 — Tabular reader and locale detection
 
@@ -483,7 +502,7 @@ Platform tasks run beside data after their gate closes.
   correction supersedes; the inclusive date rule holds at the boundary. Tests
   on Appendix A accounts.
 - Evidence: test log. Reviewer: product and finance.
-- Status: planned.
+- Status: done 2026-11-24; `test/data/import_balance_test.dart` (9).
 
 ### P3-19 — Import history and withdrawal
 
@@ -494,7 +513,7 @@ Platform tasks run beside data after their gate closes.
 - Owner: Data builder. Files allowed: `lib/data/repositories/import_history.dart`,
   `test/data/import_withdrawal_test.dart`.
 - Contract: commit boundary `WithdrawImport`; written records batch state,
-  claim state, counts, revisions, ChangeLog.
+  claim state, counts and revisions; no ChangeLog (P3-06).
 - Acceptance: withdrawal removes every staged row of the batch and changes no
   accepted payment; after one confirmed item the call returns the refusal and
   changes nothing; counts and cursor revisions move in one transaction; a
@@ -533,7 +552,7 @@ Platform tasks run beside data after their gate closes.
   extension works while the app is locked and writes no ledger row (F19-D).
 - Evidence: simulator log, the intake bound record. Reviewer: privacy and
   security.
-- Status: planned.
+- Status: partial 2026-11-23 (in-app PDF picker; share extension planned).
 
 ### P3-22 — Android share intent
 
@@ -546,7 +565,7 @@ Platform tasks run beside data after their gate closes.
 - Acceptance: the same cases as P3-21; no storage or SMS permission is
   requested; a content URI is read once and never re-fetched.
 - Evidence: emulator log. Reviewer: privacy and security.
-- Status: planned.
+- Status: partial 2026-11-23 (in-app PDF picker; share intent planned).
 
 ### P3-23 — PDF text and OCR engine
 

@@ -44,9 +44,33 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   shared contract 6).
 - Options. (a) Omit the search control on X30 and X37 until X15 ships.
   (b) Build a Phase 2 list filter as the only search and add X15 later.
-- Preferred. (a). Filters (X38) already cover the Phase 2 use, and one
-  search entry point with one behaviour avoids a second, incompatible
+- Preferred. (a). Filters (X38) already cover the Phase 2 use, and one  search entry point with one behaviour avoids a second, incompatible
   search in Phase 4.
+
+- Preferred. (a). Filters (X38) already cover the Phase 2 use, and one  search entry point with one behaviour avoids a second, incompatible
+  search in Phase 4.
+
+- `GL-TIMELINE-HEIGHT`. DESIGN_REFERENCE 6.7 gives the `GlyphTimeline`
+  sideways scroll region as 104 high. The reference photo of X10 (owner
+  image, 23 Nov 2026) shows a two-line name and amount label above the line,
+  the day numbers under it, and a two-line label below; those blocks do not
+  fit 104, and the top labels clip.
+- Options. (a) Build the region 118 high so every block fits as the
+  reference shows. (b) Keep 104 and drop the labels to one line.
+- Preferred. (a). The reference is the approved look; the 104 figure reads
+  as the axis height, not the whole region. Goldens use 118.
+  DECISION-PENDING: GL-TIMELINE-HEIGHT.
+
+- `X10-DUE-BASIS`. The X10 "Next 30 days" meta computes "$X due before
+  [today + 30 days]". SCREENS X10's sample is "$2,415 due before 1 Nov" —
+  before the next income. The Home read model carries no next-income date
+  (the upcoming list holds no income kind yet; see P2-SPEND-NEXT-INCOME).
+- Options. (a) Keep the today + 30 days window until the model carries the
+  next income, then change the meta basis in one change. (b) Derive the next
+  income from repeating income schedules now (option (c) there, which it
+  declines for Phase 2).
+- Preferred. (a). The window stays factual; the basis changes when the
+  calendar data exists.
 
 - `P2-TRANSFER-BOUNDARY`. F05-E says a transfer across the included/excluded
   net worth boundary "counts as Other recorded changes", but NUM-001 defines
@@ -54,8 +78,7 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   closed on that four-part form. A boundary transfer changes net worth
   without changing Kept, so the printed bridge cannot add up for that
   period. The REVIEW-002 F01 detail is absent from this checkout.
-  DECISION-PENDING: P2-TRANSFER-BOUNDARY.
-- Options. (a) Show the attribution as Missing for any period with a
+  DECISION-PENDING: P2-TRANSFER-BOUNDARY.- Options. (a) Show the attribution as Missing for any period with a
   boundary transfer; the totals stay correct (preferred for Phase 2).
   (b) Add a fifth part "Other recorded changes" to NUM-001 and extend the
   About sheet table and the Appendix A fixture. (c) Treat the leaving
@@ -142,6 +165,155 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   request per family, when a typed read is first needed.
 ## Decided
 
+### GOLDEN-DATE-STABILITY
+
+- Problem (2026-11-28). `FakePaymentsReadGateway` read `DateTime.now()` for its
+  synthetic rows, and X37 read the same clock for the "Today" and "Yesterday"
+  labels. The 24 category, payment-list and payment-detail goldens (dark and
+  light, scale 1.0 and 2.0) failed on 28 Nov 2026 because the rows moved from
+  24 Nov to 28 Nov. The screens had no defect; the fixture date moved with the
+  host clock and the baselines did not.
+
+- Decision. The fake takes an optional `today` and defaults to the fixed
+  `FakePaymentsReadGateway.defaultToday` (24 Nov 2026), so every test is
+  deterministic. `X37AllPayments` takes an optional `today`, as X10 already
+  does; the app composition passes none, so the screen reads the local date.
+
+- Evidence. The 24 regenerated images are byte-identical to the 24 Nov
+  baselines, which proves the only difference was the date. `flutter test test`
+  1173 pass; `flutter test --tags golden` 213 pass.
+
+- Files: `lib/features/spending/x37_all_payments.dart`,
+  `test/features/spending/fake_payments_read_gateway.dart`,
+  `test/features/spending/payments_screens_test.dart`,
+  `test/golden/design/payments_golden_test.dart`,
+  `test/golden/design/hidden_phase2_golden_test.dart`.
+
+### P4-HOME-SPLIT
+
+- Decision (2026-11-23, closing the Home design gaps). Schema version 9 adds
+  `categories.is_essential`: 1 = the user's need, 0 = want, NULL = not tagged.
+  SPEC 4.4 defines Needs and Wants from that tag; the app adds no judgement.
+  Migration 9 has a fresh-create path, a version 8 upgrade and a failed-upgrade
+  test that stays at 8.
+
+- The Home split is Needs, Wants, (Unclassified when any), Invested and In
+  cash. Shares use `Percent.split` over money in. In cash is money in minus
+  spent (kept); Invested is zero when there are no holdings, and Missing when
+  holdings exist but their cost basis is not read here. An untagged category
+  is Unclassified, never guessed into Needs or Wants.
+
+- Layout changes for the mockup: `HomeTileGrid` makes equal-height tiles per
+  row and shrinks a long value instead of wrapping digits; the hero change
+  figure sits at the right of the number; `GlyphTimeline` draws the date axis
+  with item labels; `SplitStrip` carries the four parts; the footer states the
+  account count because prices and recovery are off.
+
+- Still open: the net-worth target line and Goals progress need a goal record
+  (G09, v1.1), the bottom bar needs Wealth and Plan screens, Search needs X15,
+  and the split bar is horizontal rather than the mockup's vertical strip.
+
+### P4-HOME-MONTH
+
+- Decision (2026-11-23, owner's This month mockup for X10 Home). The two
+  tiles are Money in and Spent with no icon: the label, the value and the
+  facts alone. The Spent tile carries the limit line "of $5,200 limit · 76%"
+  and the `CapsuleMeter` inside the tile, with the today tick at the month
+  gone. The tile values are the largest element (`numberL`, DESIGN 6.4) and
+  whole amounts drop the ".00" (DESIGN 4); real cents stay.
+
+- Component changes. `HomeTile.icon` is optional and `HomeTile` gains
+  `footer` and `valueStyle`; `HomeTileGrid` defaults the value to `numberM`,
+  so Quick look values also grow. `CapsuleMeter.today` draws the tick with
+  integer weights only (no `double`).
+
+- Still open: the mockup's neutral capsule fill (#E4E5EA dark, #2A2C33 light,
+  DESIGN 6.4 METAL-RIM-001) needs its own colour token, and `tokens.json` changes
+  in a separate pull request. Until then the meter keeps the section colour.
+
+- Decision (2026-11-23, owner follow-up). X10 shows no decimal places in any
+  number: money rounds half up to whole currency units for the pixels and the
+  spoken amount (the read model keeps exact minor units), and shares use
+  `Percent.split(scale: 0)`, which still adds to exactly 100%. The two This
+  month tiles draw no bottom border (`HomeTile.openBottom`) and merge into the
+  split. The split has no "Show as table": its legend lists every value and the
+  chart label keeps them for the reader, so `ChartFrame(showTable: false)`
+  adds that one exception to AGENTS 6.9.
+
+- Decision (2026-11-23, Quick look mockup). A tile is three lines: the title
+  with a 36 pt neutral glyph (`size.badgeS`, `text.control`), the number, and
+  one small fact. The card tile drops the "Owes " prefix and its fact is the
+  card name (`HomeSummary.cardName`, one card only). Cash keeps "available
+  now" and Subscriptions "a month". Tiles stack at 200% (SCREENS X10).
+
+- Still open: the mockup's card fact "Visa · 22 Oct" needs a statement date,
+  and the investment fact "+$550 today" needs the holdings and prices read
+  (Phase 5). Both lines stay absent or name-only until that data exists.
+
+- Decision (2026-11-23, owner follow-up). The hero change and "12 months"
+  align their bottom to the net worth number's bottom, and the net worth line
+  is 72 high (was 96). A Quick look glyph is a bare 16 pt `text.control` icon
+  with no tile or border, level with the title. The investments line is
+  "+/− amount today" in `state.gain` or `state.loss` (zero and hidden use
+  `text.secondary`). The debug demo passes the synthetic $550 through
+  `SqlHomeGateway.investmentsTodayMinor`; the release path passes none.
+
+### P4-TAB-BAR
+
+- Decision (2026-11-23, owner asked for the bottom menu). SPEC 5.1's tab bar
+  now mounts on the four roots: Home `/x03`, Spending `/x30`, Wealth `/x40`
+  and Plan `/x50`, with the Add pill between Spending and Wealth. A detail
+  screen has no bar. `sectionForRoute` maps Home to `Section.home` (it
+  wrongly used Wealth), Wealth to `Section.wealth` and Plan to `Section.plan`.
+- Wealth and Plan are placeholders: `TabRootScreen`, a title and one
+  "Not available in this version." card. `X40Wealth` and `X50Plan` carry no
+  numbers until the screens ship.
+- Geometry (owner follow-up): the bar floats 8 pt from the sides (was 16) and
+  uses 8 pt at both ends and between the five items, so the padding is equal.
+- Still open: the Add opens the expense form (X20) on every tab until the
+  chooser (X29) exists; the long-press voice entry and the Home Inbox badge
+  on the tab are not wired. The tab bar is not in the X10 golden, which
+  renders the screen alone.
+
+
+### P4-HOME-TOP
+
+- Decision (2026-11-23, owner's top-section mockup for X10 Home). The top
+  line is the kicker "NET WORTH" with the hide, Inbox (with a count badge) and
+  Settings controls at the right. X10 shows no "Today" title or date line; the
+  number, the 12-month change, the optional target line and the net worth line
+  follow. This resolves AS-OF-DATE for X10 only; X03 keeps its title and date
+  line, and the SPEC open item remains for the other screens.
+
+- Order. Line 1 kicker and controls. Line 2 net worth, with the signed change
+  at the right in `state.gain` or `state.loss` and "12 months" under it. At
+  large text the change moves under the number and the number fits on one
+  line. Line 3 the target line only when a target exists and net worth is
+  known: a 36 pt bar and "18.8% of $1,000,000 target · Dec 2040". Line 4 one
+  plain line chart with an end dot, no fill, baseline or axis labels.
+
+- Target data. The goals record (G09) is v1.1 and does not exist. The read
+  model carries an optional `HomeNetWorthTarget`; `SqlHomeGateway` accepts the
+  target amount and date and computes the share with SPEC 13.2
+  (`netWorthTargetShare`, exact and rounded once). The debug demo passes the
+  synthetic $1,000,000 target by Dec 2040; the release composition passes
+  none, so the line is absent. A missing net worth or a zero target hides the
+  bar, never shows 0%.
+
+- Hidden state. The target amount masks as "$······" and the spoken line says
+  "Amount hidden"; the share and the date stay. The 12-month change and the
+  chart follow the existing hidden rules.
+
+- Components. `ScreenHeader.title` is optional and its kicker takes the free
+  space so actions stay at the right. `ObHero.kicker` is optional and
+  `ObHero.minFontSize` is settable. `AreaLineChart` gains a `line` variant.
+  New `TargetProgressLine` and `CountBadge` (also used by the tab bar).
+  `formatMonthYear` and `formatMoney(trimZeroFraction:)` live in
+  `lib/design/format/`.
+
+- Still open: the line does not open Goals until X52 ships; Search (X15) is
+  not on X10 yet; the release target waits for the goals record.
+
 ### P4-LOCAL-DEMO-VAULT
 
 - Decision (2026-11-23, owner asked for the app's real database). The debug
@@ -205,6 +377,242 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   At 2.0 the six-digit hero wraps at the group boundary as `HeroAmount` already
   documents; no digit is lost.
 
+
+### CLOSED-G16-IMPORT-WITHDRAWAL
+
+- Gate: TASKS_PHASE3 G16 "Import staging and withdrawal": preview to Inbox,
+  "Undo this import" and batch scope. The printed sources put withdrawal in
+  EXECUTION_SAFETY 2.7 and SPEC 8.18 ("Staging is not Undo"), but the boundary,
+  the refusal, the counts and the screen states were not written. Sources:
+  SCREENS X63, X68; flows F06 steps 5–6, F07 step 5; SPEC 8.18;
+  SYSTEM_DESIGN 10; EXECUTION_SAFETY 2.
+
+- Decision (2026-11-23, P3-06). SPEC 8.6 "Import withdrawal (G16)" is
+  normative:
+  - Scope. One batch: its staged rows and Inbox items only. The batch becomes
+    `discarded`, its staged source claims become `discarded`, the publication
+    marker stays as evidence and the source identities stay reserved. No
+    confirmed payment, other batch, parse configuration, saved layout or
+    balance observation changes.
+  - Boundary. Only while no item is confirmed. A deleted Inbox item does not
+    block it: its claim is already `discarded` and its staged row is gone.
+    After one confirmation the batch refuses and writes nothing; that payment
+    uses its own Undo or its confirmed batch Undo (8.18).
+  - Counts. One transaction removes the remaining undecided items, lowers the
+    pending Inbox count by the number of pending items it removes and advances
+    `inbox_revision` once. No balance, spending total or net worth changes. No
+    partial withdrawal. A repeated call is refused with the withdrawn state.
+  - Not Undo. No operation receipt, ChangeLog, compensating posting or Activity
+    history entry. A confirmed batch is reversed only by the 8.18 Undo
+    (F07-D).
+  - States. X68 offers the action while the batch has at least one pending
+    item and no confirmed item; after one confirmation it is absent. A
+    withdrawn batch leaves the X63 history list and its Inbox rows; the batch
+    row and claims stay as evidence. A restart after the commit does not
+    restore the rows (F06-C).
+
+- Conflict resolved (AGENTS 9). P3-19's contract line lists ChangeLog, but
+  8.18 says staging is not Undo and ChangeLog records confirmed authored
+  changes. Winner: a withdrawal writes no ChangeLog; P3-19's contract line is
+  corrected in this change. The EXECUTION_SAFETY 2 rule also holds: a batch
+  reaches `done` only with no pending candidate; a withdrawal is `discarded`,
+  never `done`.
+
+- Consequences. G16 closes; P3-19 builds on the rule and P3-29 follows. The
+  built withdrawal already matches the scope and the confirmed-item refusal,
+  but it refuses any claim that is not `staged`, so a deleted Inbox item also
+  blocks it; P3-19 narrows the refusal to accepted claims. The X68 action state
+  (absent after one confirmation) is a screen change outside this gate. No new
+  financial rule.
+
+### P3-BALANCE-ROWS
+
+- Gap: TASKS_PHASE3 P3-05 and the G01 row. `CLOSED-G01-ACCOUNT-PREREQUISITES`
+  fixed the inclusive anchor and the replay ban, but not how a statement's
+  opening and closing rows become observations. The PDF slice detects and
+  excludes balance rows and writes no anchor, so the gap stayed open. Sources:
+  flows F06 step 4; SPEC 8.6, 4.3; DECISIONS
+  `CLOSED-G01-ACCOUNT-PREREQUISITES`; DATABASE_DESIGN 4; table-map 3, 17.
+
+- Decision (2026-11-23, P3-05). SPEC 8.6 "Statement balance rows (G01)" is
+  normative:
+  - Row kinds. A row is a payment, a credit or a balance; opening, closing and
+    available or limit lines are balance rows, and only opening and closing
+    balances are account observations.
+  - Separation. Balance rows are never Inbox items, never count as new rows and
+    never write a payment; Send to Inbox writes no anchor.
+  - Acceptance. Its own confirmed command writes one `BalanceSnapshot` (source
+    account, local date, account currency, exact minor amount) and selects it.
+    Nothing is auto-selected.
+  - Inclusive date. The amount is the account balance at the end of its local
+    date and already contains every posting on or before it. Imported rows on or
+    before that date stay as history and are never counted twice.
+  - Covered. A row dated on or before the selected anchor's date writes nothing
+    and the import re-adds nothing.
+  - Correction. A different amount for the selected anchor's date is a new
+    observation with `supersedes_anchor_id`; the pointer moves to it and the
+    old row is never updated. A row later than the selected anchor is a new
+    observation for its date.
+  - Currency. Only the account currency is accepted (10.5).
+  - Missing. No balance row, or no acceptance, keeps the selected anchor or
+    leaves the balance Missing; an imported row never writes zero.
+
+- Conflict resolved (AGENTS 9). SPEC 9 lists `BalanceSnapshot`; the schema
+  stores `balance_anchors` with `inclusive = 1`, `supersedes_anchor_id` and the
+  `current_balance_anchors` selection pointer. Winner: one authored observation
+  selected by pointer, not a second balance table. No schema change.
+
+- Consequences. P3-05 and the G01 statement sub-rule close; P3-18 can carry the
+  balance rows without staging them, and the acceptance remains its own
+  confirmed command. The preview acceptance control is a screen change outside
+  this gate (SCREENS is not in P3-05's file list); until it lands, the code
+  keeps the rows out of staging and writes no anchor, which matches the safety
+  rule. `P3-BALANCE-ROWS` closes. The `docs/PHASE3_ACCEPTANCE.md` known-gaps
+  line loses it (file-list deviation, T11/T12 precedent). No new financial
+  rule; G01 is reused.
+
+### PDF-INTAKE-PICKER
+
+- Decision (2026-11-23, PDF build). The release router mounts
+  `PlatformImportFileIntake` over the `contour/import_intake` method channel.
+  iOS presents `UIDocumentPickerViewController(forOpeningContentTypes:
+  [.pdf], asCopy: true)`; Android opens `ACTION_OPEN_DOCUMENT` for
+  `application/pdf`. Both return one file of at most 100 MiB whose first bytes
+  are `%PDF-`. The adapter checks the bound and the signature again, holds the
+  bytes only in memory, maps a cancel to null and a native refusal to a typed
+  `ImportFailure`. The iOS picker deletes its temporary copy after the read.
+  There is no permission request, database row, network call or log.
+
+- Why no staging object. The in-app picker runs with the app unlocked and
+  reads the file the user chose directly. The protected staging object and its
+  key belong to the share path, where the app is not running (SPEC 8.8;
+  P3-21, P3-22). This build keeps that path unchanged.
+
+- Scope. This is the X63 "Import a file" path only. The share extension, the
+  share intent and the share staging key stay planned (`P3-INTAKE-BINDING`;
+  P3-21, P3-22). The debug demo keeps `SyntheticFileIntake`, so the recorded
+  `P3-PDF-SUBSET` demo behaviour is unchanged. CSV, Excel, OFX, QIF, CAMT.053,
+  MT940, broker files, OCR, QR and receipt photos stay deferred.
+
+- Evidence. `test/app/import_intake_test.dart` (7) and
+  `flutter build ios --simulator --debug`. Android is not built here (no
+  Android SDK in this environment); its build and emulator evidence stays
+  open. The X88 `tooLarge` copy still reads "This file is too large to read."
+  and does not name the 100 MB bound; the bound message in SPEC 8.8 stays with
+  the share path.
+
+### CLOSED-G08-SHARE-INTAKE
+
+- Gate: flows G08 "Provider capture" and the TASKS_PHASE3 note that "the
+  intake bound (bytes, types) is missing". The printed sources fix the
+  principle but give no number: SPEC 8.8 says "bounded local bytes",
+  "protected staging", "no ledger or database key" and "never resolve remote
+  URLs or trigger cloud downloads"; SYSTEM_DESIGN 10 gives the per-format
+  parser limits and the staging capability; DATABASE_DESIGN 9–10 give the
+  source lease, the staging-key separation, retention and the install epoch;
+  EXECUTION_SAFETY 2 keeps parsing private.
+
+- Decision (2026-11-23, P3-02). SPEC 8.8 "Share into the app" is normative:
+  - Types. One extension list for iOS and Android: data (CSV, TSV, TXT, OFX,
+    QFX, QIF, XML), document (PDF), sheet (XLS, XLSX) and image (JPG, JPEG,
+    PNG, HEIC, HEIF, WebP). The first bytes and a successful decode decide;
+    the platform UTI/MIME maps to the list.
+  - Bound. One file, 100 MiB encoded, the same on both platforms. It is the
+    largest parser limit; PDF 50 MiB, image 20 MiB and the XLSX expansion cap
+    stay parser limits with their own factual message.
+  - Staging. One opaque object, exact bytes, encrypted with the object key,
+    written once, no user text in the name, with an authenticated descriptor
+    of at most 4 KiB (display name, type, size, digest, time, install epoch,
+    lease and key reference). The extension writes no database row and no
+    `import_sources` row; the app creates them after unlock and stamps its own
+    database epoch. An Android content URI is read once.
+  - Protection. iOS complete file protection; Android credential-encrypted
+    app-private storage; excluded from backup and device transfer. The device
+    must be unlocked; an app lock does not block intake.
+  - Key. Random 256 bits per object, wrapped by the platform key store and
+    separate from the ledger and recovery keys. The extension holds a staging
+    capability and an epoch-scoped writer lease only.
+  - Lifetime. Until the app parses the file, the user discards the import, the
+    install epoch rotates or a restore replaces the database epoch; no
+    wall-clock expiry. Orphans are deleted at the next unlocked start after
+    reconciliation, never while a lease is live or unknown. Snapshots omit the
+    object and key; a restore marks the batch `sourceNeeded`.
+  - Refusal and retry. A factual message per condition, no bytes staged, and a
+    new share as the only retry; no queue, background retry or download.
+
+- Conflict resolved (AGENTS 9). The gate asks for one bound, while
+  SYSTEM_DESIGN 10 has four per-format limits. Option not taken: per-type
+  intake bounds, because each platform would need several admission paths and
+  the filter could disagree with the parser. Winner: one 100 MiB intake bound;
+  the parser keeps its smaller per-format limits. SPEC 8.8 also says "images"
+  without a list, so the decision names the six image extensions.
+
+- Consequences. The intake-bound part of G08 lifts for P3-21 (iOS share
+  extension) and P3-22 (Android share intent); P3-20's staging-key adapter
+  reads the same key and lifetime rules. `P3-INTAKE-BINDING` stays open:
+  the release still mounts `UnavailableFileIntake` until those pull requests
+  land. `P3-SHARE-BOUNDS` closes. No new dependency, network path or financial
+  rule. F06 step 1 now states the F06-A and F06-D intake sentences, and the
+  intake path logs an event name and a count only.
+
+### CLOSED-G15-IMPORT-TEMPLATE
+
+- Gate: TASKS_PHASE3 G15 — "Import template and mapping". It was open because
+  the saved-layout contract was absent: no fingerprint input per format, no
+  mapping field list, no save rule, no versioning rule and no unsupported state.
+  Sources: SPEC 8.6; flows F06 steps 3–4; SCREENS X63, X65, X66, X67;
+  SYSTEM_DESIGN 10; DATABASE_DESIGN 5.
+
+- Decision (2026-11-23, P3-01). SPEC 8.6 "Saved layouts" is normative:
+  - Identity. One fingerprint per format, and the source account is not part
+    of it. CSV and Excel use the header signature: SHA-256, lower-case hex,
+    of the normalised header cells, sorted in ascending byte order and joined
+    with `U+001F`. Column order is not identity; the mapping applies by header
+    name. Delimiter, encoding, header row number, date order, decimal mark,
+    sign convention and column mapping are mapping, not identity. PDF uses the
+    layout fingerprint: SHA-256 of the normalised detected header line, each
+    word's x position in 10 pt bands, and the first page width in whole
+    points. The word positions are the word anchors; with the page width and
+    the column bands they are the table geometry. No row value, amount, date,
+    merchant, account number, file name, file hash or content enters a
+    fingerprint.
+  - Mapping fields. CSV/Excel: date, details, amount or money out and money
+    in, optional balance column, sign convention, decimal mark, date order,
+    encoding, delimiter. PDF: date, details and amount bands, optional
+    balance band, money-out and money-in words, decimal mark, date order.
+    Balance rows stay out of staging (P3-05).
+  - Save rule. A template is saved only after a usable preview: one row with a
+    date and an amount, and no unresolved password, decryption or parser
+    failure. A cancelled, failed or empty preview writes no template and no
+    batch. A re-teach writes a newer row; the older row stays for its batches.
+  - Version. A template version starts at 1 and names its mapping semantics.
+    A parser change that alters them increments the version. A stored template
+    that the installed parser does not serve is unsupported: it is never
+    reinterpreted or migrated, X65 shows no match, and the next file opens X66
+    or X67. Each batch records the parser and template versions it used.
+
+- Conflict resolved (AGENTS 9). SPEC 9 lists `ImportMappingTemplate` and
+  `ParserTemplate` as entities, but the reference schema has no such tables.
+  Option not taken: add two tables and a migration before any template exists.
+  Winner: the logical-entity reading. `import_parse_configs` already holds an
+  immutable parser version, identity version, config version and config JSON,
+  is append-only by trigger, and is linked from `import_batches` and
+  `import_job_inputs` (SYSTEM_DESIGN 10; DATABASE_DESIGN 5, table-map 39).
+  `parser_id` is `pdf-template` or `csv-mapping`. This closes the planning gap
+  `P3-TEMPLATE-TABLE`; a dedicated table stays a later, reviewed migration.
+
+- Consequences. G15 lifts for F06 steps 3–4 and for P3-08 (header signature
+  and column mapping), P3-17 (template storage), P3-27 (CSV mapping) and
+  P3-28 (Teach once). `P3-PDF-TEXT` now covers only the text engine: the
+  fingerprint input no longer depends on the engine choice, but the engine
+  must return text with word x positions and page width. The built PDF reader
+  already computes this fingerprint and stores the column bands; P3-08 must
+  compute the header signature exactly, and P3-17 stores `csv-mapping` rows
+  when the CSV path lands. No new financial rule and no dependency. G15 has no
+  row in the flows gate table (it was raised in TASKS_PHASE3 and closes here),
+  so no flows table change is made. The P3-01 file list did not name
+  `docs/PHASE3_ACCEPTANCE.md`; its known-gaps line loses `P3-TEMPLATE-TABLE`
+  in this change (recorded, T11/T12 precedent).
 
 ### P3-PDF-SUBSET
 
@@ -2357,6 +2765,64 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   absent (P2-SEARCH-ENTRY) and Next income stays absent
   (P2-SPEND-NEXT-INCOME).
 
+### P26-SPEND-LAYOUT
+
+- Owner request, 23 Nov 2026, from the Home reference photos. X30 now matches
+  the Home card language. The top line is the `SPENT` kicker with the Home
+  actions (hide amounts and the sliders Edit limits button), not a "Spending"
+  title and date line.
+- Hero order: the number, the line "of $5,200 limit", then the range and the
+  limit status. A current (partial) period says "$1,260 left"; a closed period
+  says "within the limit" or "$X over the limit". This follows SPEC 6.5 and
+  SCREENS X30.
+- Block order is hero, `PeriodBarChart`, period chips, same-days line,
+  `By category`, rows. This puts the time-period control after the chart, as
+  the owner asked; SCREENS X30 lists the chips before the chart. Owner
+  decision, recorded here; SPEC and SCREENS keep their own text.
+- `By category` shows the Needs/Wants `SplitStrip` (`Percent.split`, one
+  decimal) above a fixed three-ring grid. Untagged spending keeps an
+  `Unclassified` part so the strip covers the whole period. Large text drops
+  the grid to one ring per row.
+- Owner follow-up, 23 Nov 2026. The limit moved onto the number line
+  ("$3,940 of $5,200 limit") through `ObHero.numberSuffix`; at large text the
+  suffix moves under the number so the hero stays on one line. Each category
+  is now a `RingMeterVariant.card`: `surface.tile` fill, `radius.m`, a 44 pt
+  ring with its track and no today tick, centred name, spent and status, and
+  the name in `text.secondary`, the spent in `numberXS`, and the status in
+  `bodyS`. The grid uses one equal gap (`Space.m`) in both directions and one
+  row height.
+- Owner follow-up, 23 Nov 2026: X30 shows no decimals. `wholeMoney` in
+  `lib/design/format/money_format.dart` rounds half-up to whole currency
+  units, and every amount on the page uses it: hero, limit, status, chart
+  bars and average, same-days line, ring values and the rows. The table and
+  legend keep the same whole values.
+- Owner follow-up, 23 Nov 2026: the six rows are three cards, in the
+  reference order: Repeating and Money in; Where it goes and Budget; All
+  payments and Edit limits. Each row has a grey line and a right value.
+  `SpendingGateway.loadRows` reads the monthly summaries:
+  `SpendingRowsView` (budget month, left, limit, category count, money in and
+  its 12-month average, payment count, repeating count, this month's price
+  changes, monthly repeating total). `SqlSpendingGateway` takes the
+  `RepeatingGateway` and `PaymentsReadGateway` for these reads.
+  `RepeatingView.changesThisMonth` counts schedules with a price change this
+  month. The rows use the budget month, not the chart period.
+- `SelectRow.stackValue` moves the value under the line at large text, so a
+  long line such as "October · avg $9,267 a month" keeps its width. The X30
+  rows set it. At normal text the value stays at the right, as in the
+  reference.
+- The X30 row cards use `GlassCardVariant.list`: 18 pt left, 12 pt right,
+  12 pt top and bottom. The right value allows for the chevron glyph's optical
+  inset, so the text and the chevron look equally inset. With `SelectRow`'s
+  12 pt vertical padding, the space above the first row, between two rows and
+  below the last row is 24 pt. The normal card padding (18 top, 10 bottom)
+  gave three different spaces.
+- Additions: `SpendingCategoryView.isEssential` (filled by
+  `SqlSpendingGateway` from the P12 category rows), `RingMeter.iconUsesMark`,
+  `RingMeterVariant.card`, `RingMeterGrid.maxColumns`, and five Lucide category
+  icons (basket, utensils, bag, zap, ticket) under the existing ISC licence.
+  The icon gallery goldens gain five cells; the X30, X32, chart and hidden
+  goldens were regenerated and checked.
+
 ### P27-PAYMENTS
 
 - New P27 reads: `PaymentReadRepository` (filtered list, exact count, one
@@ -2415,8 +2881,30 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
 - X35 shows the last six occurrences as rows with their state, not as the
   six-column chart of the reference (`P28-HISTORY-CHART`).
 
-### P29-HIDDEN-CONTROL
+### P29-SETTINGS-LAYOUT
 
+- Owner request, 24 Nov 2026, from `design-mockups/dark/IMG_5139.png`. X80
+  now follows the mock: a kicker-only `‹ SETTINGS` header, the statement
+  "Everything is on this phone.", then five cards with icon rows.
+- The header differs from SCREENS X80, which names a "Settings" title and the
+  sub-line "on this phone". The mock shows only the kicker. The mock wins for
+  this screen; SPEC content does not change.
+- Rows use `IconTile` (neutral variant), the name, an optional grey line, a
+  right value in `bodyS` `text.primary`, and a chevron. Values come from the
+  mock/SCREENS samples until their reads are wired: 3 on, 16 categories /
+  24 rules, 3 saved, USD, 9 accounts, 1st, 1,234.56, the ten screen widget
+  counts, Face ID, Last snapshot / Sun 11 Oct, Prices only, Simple mode,
+  System, Version 1.0.
+- `Investments` shows 5 widgets in the mock; SCREENS X80 shows 0. The mock
+  value is used and the conflict is recorded here.
+- Activity history stays as the last App row. The mock does not show it, but
+  Settings is the only entry to C06. It is placed after About so the first
+  three App rows match the mock.
+- Additions: `IconTileVariant.neutral` (a `surface.tile` tile with the same
+  edge and icon), five `x80` strings for the sections, and the row values.
+  The X80 and component goldens were regenerated and checked.
+
+### P29-HIDDEN-CONTROL
 - `HiddenAmountsControllerScope` exposes the one presentation controller; the
   reusable `HideAmountsButton` sits in six headers: X03, X30, X36, X37, X39 and
   X60. The button is absent when no controller is mounted (previews and simple
@@ -2485,3 +2973,24 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   the live numbers, payments and history.
 - Voice stays unavailable (no verified engine). The Inbox stays empty (no
   producer). Both show their factual states in the demo.
+
+### GOLDEN-IMAGES-IGNORED
+
+- Decision (2026-11-24, owner request). Golden PNG baselines are local test
+  output, not source. `.gitignore` now ignores `test/golden/**/*.png` and
+  `test/golden/**/failures/`, and the eight committed baselines
+  (`components_*`, `gallery_*`) are removed from the index.
+
+- What stays tracked: the golden harness, the `*_golden_test.dart` files and
+  the update command. `flutter test --tags golden --update-goldens` writes a
+  fresh baseline on any machine; a reviewer compares those local images.
+
+- Conflict with AGENTS.md 7 ("screen changes have goldens") and AGENTS.md 8
+  (reference images in the pull request). The rule is unchanged: a screen
+  change still needs a reviewed golden. Only the storage changes, so the
+  review compares a generated image instead of a committed one.
+
+- Consequence: a clean clone has no baseline. Golden tests fail until the
+  first `--update-goldens` run, and no diff can prove that a baseline did not
+  silently change. If the review evidence must be auditable in git, revert
+  this entry and commit the images again.

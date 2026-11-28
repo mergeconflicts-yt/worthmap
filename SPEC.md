@@ -210,10 +210,14 @@ DESIGN.md is the implementation guide and wins on style. All values come from `l
 - Input ladder (8.1): use the highest level available: 1. Automatic (0 taps: repeating, vests, values, prices; v1.1 notifications, FinanceKit, watched folder); 2. One tap (shared statements, QR, receipt photo, screenshot); 3. One sentence (voice, quick add); 4. Form (about 3 taps).
 - All sources feed the Inbox (or the form). Each fact is stored once and used everywhere (8.2).
 - Drafts (8.16): a form keeps its structured fields across Back, Close, lock and process death; Discard deletes them; Save clears them after commit. No expiry, no silent overwrite. Audio, transcripts and raw files are never kept.
+- Saved layouts (8.6): a layout is identified by a header signature (CSV, Excel) or a PDF layout fingerprint. The mapping holds date, details, amount or money out and in, sign, balance column, decimal mark and date order. Save only after a usable preview. A template version the parser no longer serves is unsupported: never reinterpret it, ask the user to teach the layout again.
+- Statement balances (8.6): an opening or closing balance row is an observation, never a payment. It becomes an anchor only on explicit acceptance; the date is inclusive, a covered row writes nothing, a correction supersedes the old anchor, and a missing balance is Missing, never zero.
 - Expected payments (8.17): a rule or a match makes a payment Expected; one confirmation or one accepted match makes it actual. Content alone never proves a duplicate, and generation never writes an actual payment.
 - Undo (8.18): a confirmed event or batch can be reversed from a 5-second toast or from Activity history; a later dependent record blocks it until resolved; old values are never written over newer edits.
+- Import withdrawal (8.6): before any item is confirmed, one import batch can be withdrawn. It removes its staged rows and Inbox items, changes no financial record and leaves Activity history alone. After one confirmation it refuses; the confirmed batch uses Undo (8.18).
 - Local engines (8.19): speech, text recognition and QR/barcode run on the phone. An engine with telemetry, a model download or a cloud fallback is not used. An unsupported device keeps typed or file entry.
 - Parsing, OCR, QR and voice run on the device only. Audio is never saved. Parsers never write to the database.
+- Share intake (8.8): one file of the listed types up to 100 MiB, on iOS and Android. The extension writes protected staging with its own key, no database key and no database row. No URL is resolved and no cloud download starts.
 - No email connection of any kind; local attachments use the normal import path (8.12). Never request SMS permission.
 - Full detail (parser grammar, voice test sentences, dedupe, drafts, matching, templates): docs/spec/SPEC_REFERENCE.md §8.
 

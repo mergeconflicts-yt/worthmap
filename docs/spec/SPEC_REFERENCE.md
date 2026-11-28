@@ -482,12 +482,34 @@ One line, on-device rules, no AI service.
 
 ### 8.6 Files and statements
 
-- **CSV/Excel:** detect delimiter, encoding (UTF-8, UTF-16, Windows-1252), header row, date format, decimal mark. First import: mapping X67CsvMapping, saved as `ImportMappingTemplate` keyed by header signature.
+- **CSV/Excel:** detect delimiter, encoding (UTF-8, UTF-16, Windows-1252), header row, date format, decimal mark. First import: mapping X67CsvMapping, saved as `ImportMappingTemplate` keyed by header signature (saved layouts below).
 - **OFX/QFX, QIF, CAMT.053, MT940.**
 - **Broker CSV:** map ticker, quantity, price, value, date, type. Presets are data files.
 - **PDF statements:** on-device text (stored PDF password), table columns, `ParserTemplate` fingerprint. Match: import with no questions. No match: Teach once (X66TeachOnce): user taps date, details, amount (and sign words) of one row; app builds, previews and saves a template. Templates stay in encrypted storage; export disabled (10.5).
 - **Payslip, loan, policy:** same PDF pipeline (`ParserTemplate.kind = payslip | loanStatement | policy`), Teach once, review (X69, X69b).
 - After parsing, delete the temporary copy; keep parsed rows and file hash.
+
+**Statement balance rows (G01).** A statement row is a payment, a credit or a balance; an opening balance, a closing balance and an available or limit line are balance rows, and only an opening or closing balance is an account observation. Balance rows are never Inbox items, never count as new rows and never write a payment; the preview keeps them apart from transaction rows, and Send to Inbox writes no anchor. An observation becomes an anchor only through its own explicit balance acceptance, one confirmed command that writes one `BalanceSnapshot` with the source account, the row's local calendar date, the account currency and the exact minor amount, and selects it. The date is inclusive: the amount is the account balance at the end of that date and already contains every posting dated on or before it, so the imported rows on or before that date stay as history and are never counted twice. A row dated on or before the selected anchor's date is already covered: it writes no new observation and the import re-adds nothing. A different amount for the selected anchor's date is a correction: a new observation with `supersedes_anchor_id` names the selected anchor and the pointer moves to it; the old row is never updated. A row later than the selected anchor is a new observation for its date. Only the account currency is accepted (10.5). With no balance row, or with no accepted observation, the account keeps its selected anchor or stays Missing; an imported row never writes zero.
+
+**Saved layouts (G15).** One contract for X63, X65, X66 and X67. It adds no financial rule.
+
+- **Identity.** A saved layout has one fingerprint for each format. The source account is a preview choice and is not part of identity.
+  - CSV and Excel: the header signature. SHA-256, lower-case hex, of the header row cells after normalisation (a non-breaking space becomes a space, each run of whitespace becomes one space, the text is trimmed and case-folded), sorted in ascending byte order and joined with `U+001F`. Column order is not identity: the same headers in another order give the same signature, and the mapping applies by header name; a duplicated header name appears once for each occurrence. Delimiter, encoding, header row number, date order, decimal mark, sign convention and column mapping are not identity: X67 corrects them without a new signature.
+  - PDF: the layout fingerprint. SHA-256, lower-case hex, of the normalised detected table header line, the x position of each word on that line in 10 pt bands, and the first page width in whole points. The word positions are the word anchors; with the page width and the column bands of the taught row they are the table geometry. A file with no detected header line uses the text `noheader` and the page width.
+  - Never in a fingerprint: a row value, amount, date, merchant, account number, file name, file hash or file content. The file hash stays the duplicate check (8.9); it is not layout identity.
+- **Mapping fields.** CSV and Excel: date column, details column, amount column or a money-out and a money-in column, optional balance column, sign convention (signed amount, a sign column, or DR/CR words), decimal mark, date order, encoding and delimiter. PDF: date band, details band, amount band, optional balance band, money-out and money-in sign words, decimal mark and date order. A balance column or band marks balance rows; those rows stay out of staging (P3-05).
+- **When a layout may be saved.** Only after a usable preview: at least one candidate row with a date and an amount, and no unresolved password, decryption or parser failure. For a new layout, Save writes the template first, then the preview can be sent. A cancelled, failed or empty preview writes no template and no batch. Re-teaching a known fingerprint writes a newer template row; the newest row for a fingerprint is applied and the older row is kept for the batches that used it.
+- **Version and unsupported state.** A template version starts at 1 and names its mapping semantics: the fingerprint input, the column or band meanings and the row rules. A parser change that alters any of them increments the version; a stored row keeps the version it was written with. A stored template whose version the installed parser does not serve is unsupported. It is never reinterpreted or migrated: the next file with that fingerprint opens X66 Teach once (PDF) or X67CsvMapping (CSV/Excel), and X65 shows no match. Teaching the layout again inserts a newer row. Each batch records the parser and template versions it used.
+- **Storage.** Saved layouts use `import_parse_configs`: append-only and immutable by trigger, with `parser_id` `pdf-template` or `csv-mapping`, the template version in `config_version`, and the fingerprint inside `config_json`. Other rows in that table describe one import and are not saved layouts. `ImportMappingTemplate` and `ParserTemplate` (SPEC 9) are logical entities over this table, not new tables (P3-TEMPLATE-TABLE). A dedicated table is a later, reviewed migration.
+
+**Import withdrawal (G16).** "Undo this import" on X68 withdraws one import batch before any of its items is confirmed.
+
+- **Scope.** It removes the remaining staged rows and Inbox items of that batch, sets the batch to `discarded`, marks its staged source claims `discarded`, keeps the publication marker as evidence and keeps the source identities reserved. It does not touch a confirmed payment, another batch, the parse configuration, the saved layout or a balance observation.
+- **Boundary.** It is allowed only while no item of the batch is confirmed. A deleted Inbox item does not block it: its claim is already `discarded` and its staged row is gone. After one confirmation, the whole batch is not withdrawable: the command refuses and writes nothing. That payment is removed by its own Undo or its confirmed batch Undo (8.18).
+- **Counts and revisions.** One transaction removes the remaining undecided items, lowers the pending Inbox count by the number of pending items it removes and advances `inbox_revision` once. No balance, spending total or net worth changes. A partial withdrawal is not possible. A repeated withdrawal is refused with the withdrawn state and writes nothing.
+- **Not Undo.** It is a staging action, not a financial command: no operation receipt, no ChangeLog, no compensating posting and no Activity history entry. A confirmed batch is reversed only by the 8.18 Undo, which writes compensating records and appears in Activity history (F07-D).
+- **States.** X68 offers the action while the batch has at least one pending item and no confirmed item; after one confirmation it is absent and the confirmed items use Activity history. A withdrawn batch leaves the X63 history list and its Inbox rows; the batch row and claims stay stored as evidence. A restart after the commit does not restore the rows (F06-C).
+- **Recovery.** A lost reply resolves the same batch; the owner reads its status before a retry. A proven rollback leaves the batch and its rows unchanged.
 
 ### 8.7 Screenshot of holdings
 
@@ -495,9 +517,42 @@ One line, on-device rules, no AI service.
 
 ### 8.8 Share into the app
 
-- iOS share extension and Android share intent accept CSV, XLS/XLSX, OFX, QFX, QIF, XML, TXT, PDF, images.
-- The extension writes bounded local bytes to protected staging, only while file protection permits. It has no ledger or database key. Parsing and confirmation wait for the unlocked app.
-- Never resolve remote URLs or trigger cloud downloads. Reject unavailable content with a retry path.
+- **Entry.** The iOS share extension (iOS 16+) and the Android share intent and file-open intent (Android 8.0+). One file per share; a multi-item share is refused. Intake works while the app is locked, but only while the device is unlocked (protection below); an app lock does not block intake.
+- **Types.** One list for iOS and Android. The first bytes and a successful decode decide the type; the file name and the declared type are hints. A file outside the list is refused before any byte is staged. iOS maps its uniform type identifiers and Android its MIME types to this list.
+
+| Group | Extensions | Read as |
+|---|---|---|
+| Data | `.csv`, `.tsv`, `.txt` | delimited text, plain text or MT940 |
+| Data | `.ofx`, `.qfx`, `.qif` | bank exchange text |
+| Data | `.xml` | XML, including CAMT.053 |
+| Document | `.pdf` | PDF |
+| Sheet | `.xls` | OLE2 workbook |
+| Sheet | `.xlsx` | ZIP workbook |
+| Image | `.jpg`, `.jpeg`, `.png`, `.heic`, `.heif`, `.webp` | local image |
+
+An archive, a folder, an alias or shortcut, a link and an executable are not in the list.
+
+- **Bound.** One file of at most 100 MiB encoded, the same on both platforms. This is the largest parser limit (SYSTEM_DESIGN 10), so one check runs before staging. A type with a smaller limit keeps it after intake: PDF 50 MiB and 500 pages, image 20 MiB encoded and 12 megapixels decoded, XLSX 50 MiB encoded and 250 MiB expanded. The parser reports its own limit in a factual message.
+- **Staging object.** The extension writes the exact received bytes once to one new opaque staging object and never appends, truncates or rewrites it. The bytes are encrypted with the object key. The name is 16–128 characters of `A-Z`, `a-z`, `0-9`, `_` and `-`, with no user text. The extension also writes an authenticated descriptor of at most 4 KiB: display name (at most 255 characters), format hint, byte count, SHA-256 digest, creation time, install epoch and a lease reference. The descriptor holds no financial value, account, category, parsed row or key. The extension writes no database row and no `import_sources` row; the app creates those after unlock and stamps its own database epoch.
+- **Protection.** iOS: complete file protection (`NSFileProtectionComplete`). Android: credential-encrypted, app-private storage. The staging object and its descriptor are excluded from OS backup and device transfer. No temporary plaintext copy and no external storage. Bytes are accepted only while the device is unlocked and that class is available; if the write cannot get it, nothing is kept.
+- **Staging key.** Each object has its own random 256-bit key, wrapped by the platform key store and independent of the ledger key and the recovery keys. The extension holds a staging capability and an epoch-scoped writer lease, never the database key, the ledger or a financial DTO (SYSTEM_DESIGN 10; DATABASE_DESIGN 10). The descriptor holds the key reference (`staging_key_reference`), never the key.
+- **Lifetime.** The object and its key live until the app parses the file, the user discards the import, the install epoch rotates or a restore replaces the database epoch; then both are deleted. There is no wall-clock expiry. An object with no descriptor or no live lease is an orphan: it is deleted at the next unlocked start after reconciliation, never while a lease is live or unknown. A recovery snapshot omits the object and its key; a restore marks the batch `sourceNeeded`.
+- **Refusal and retry.** A refused share stages no bytes and creates no batch or Inbox row:
+
+| Condition | Message |
+|---|---|
+| Type not in the list | "This app cannot read this file type." |
+| Over 100 MiB | "This file is <size>. The largest file this app can read is 100 MB." |
+| More than one file | "Share one file at a time." |
+| A link, not a file | "This is a link. This app reads files, not links." |
+| Content not on this phone | "This file is not on this phone yet. Share it again when it is." |
+| Protection or staging failure | "The file could not be saved on this phone. Share it again." |
+| No free space | "The file could not be saved on this phone. Free some space and share it again." |
+
+`<size>` is the formatted encoded size. No message contains a file name, path, amount or content. Retry is a new share of the same file, which makes a new object; nothing is queued, retried in the background or downloaded. The intake never resolves a URL, starts a cloud download, opens an iCloud or Drive placeholder, or asks a provider for bytes that are not already local. An iCloud item whose download status is not current is refused with the "not on this phone" message.
+
+- **Logs.** The intake path logs an event name and a count only. No file name, path, amount, account, merchant, digest or content enters a log, an error or a crash field; an error carries a safe code.
+- The app parses only after unlock and only from the staging object, then deletes the object. F06-A: a normal, localised, broken or repeated file takes the same intake path; a refused or broken file stages nothing. F06-D: no source content is logged, and no raw file is kept after parsing.
 
 ### 8.9 Duplicates, merchants, categories, repeating items
 
@@ -610,7 +665,7 @@ Every record can be added and edited by hand; this is the fallback for everythin
 - Occurrences. Undoing a confirmed occurrence decision adds a compensating decision and keeps the occurrence identity; it never reopens a suppressed proposal by dropping a pointer (8.17).
 - Attachment files. A soft-deleted record keeps the files that Undo, history and recovery need; explicit deletion removes them after those references go (DATABASE_DESIGN 10).
 - Editor Undo is separate. The widget editor's Undo reverses one edit-session action before Done and writes nothing (W5; DATABASE_DESIGN 5.1). It is not an entry in Activity history.
-- Staging is not Undo. "Undo this import" (X68) removes staged rows before any confirmation and changes no financial record; it is not an entry in Activity history.
+- Staging is not Undo. "Undo this import" (X68) withdraws the staged rows and Inbox items of one unconfirmed batch, changes no financial record and writes no ChangeLog, receipt or Activity history entry; a batch with one confirmed item is not withdrawable (8.6).
 - Privacy. Activity history is personal data on this phone. It never appears in a log, an error message or a network request.
 
 ### 8.19 Local capture engines

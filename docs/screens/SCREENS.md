@@ -320,8 +320,8 @@
 
 1. Kicker "IMPORT · READ ON THIS PHONE"; lead "Choose what to import. The app reads the file on this phone and sends drafts to the Inbox. You confirm each one." No hero number.
 2. GlassCard "Import types" (meta "8"), tiles: Bank or card statement "PDF, CSV, Excel"; Broker positions "CSV or screenshot"; Payslip "Income, tax, pension, benefits"; Loan statement "Balance, interest, next EMI" (data.debt); Insurance policy "Cover, premium, renewal"; Receipt photo "Camera or photos"; QR receipt "Camera"; OFX, QIF, CAMT.053, MT940 "Bank formats".
-3. GlassCard "Saved layouts" (meta "3"): First Bank, checking "PDF · used 4 times" (X66); Visa card statement "CSV · used 6 times" (X67); Harbor Securities "CSV · used 2 times" (X67).
-4. GlassCard "History" (meta "2 files"): First Bank statement, Oct "13 Oct · 36 new · 7 already in app" 36; Visa card statement, Sep "2 Oct · 41 new" 41 (each X68; spoken "Import of 13 Oct: First Bank statement, Oct. 36 new, 7 already in app."). Caption "Open an import to undo it. Undo works until you confirm its items."
+3. GlassCard "Saved layouts" (meta "3"): First Bank, checking "PDF · used 4 times" (X66); Visa card statement "CSV · used 6 times" (X67); Harbor Securities "CSV · used 2 times" (X67). One row per usable layout, newest first; the row shows the layout name, the format and how many imports applied it. The card is absent when no layout is saved. A layout whose template version this build no longer serves is not listed; its next file opens X66 (PDF) or X67 (CSV, Excel).
+4. GlassCard "History" (meta "2 files"): First Bank statement, Oct "13 Oct · 36 new · 7 already in app" 36; Visa card statement, Sep "2 Oct · 41 new" 41 (each X68; spoken "Import of 13 Oct: First Bank statement, Oct. 36 new, 7 already in app."). Caption "Open an import to undo it. Undo works until you confirm its items." A withdrawn batch leaves this card; a batch with one confirmed item stays, and its X68 shows no undo action.
 5. Caption "Tip: share a file from your bank app or Files directly to this app."
 
 **X64 PDF password** — centred AppDialog (title once, no grabber) over Import (row "Harbor_Bank_Oct.pdf" dimmed) · Home (v_pdf_password)
@@ -333,7 +333,7 @@
 
 **X65 Import, preview** — DetailScreen (flow step, no tab bar), Close, "Import", sub-line "First Bank statement, October" · Home (v_import_preview)
 
-1. 0Hero (number): kicker "IMPORT PREVIEW · FIRST BANK · OCTOBER"; 36; line "new payments to send to the Inbox." FactRow: Rows 43 "in the file"; Already in app 7 "not sent again"; New 36 "to the Inbox". Check line "Matched your saved layout "First Bank, checking"".
+1. 0Hero (number): kicker "IMPORT PREVIEW · FIRST BANK · OCTOBER"; 36; line "new payments to send to the Inbox." FactRow: Rows 43 "in the file"; Already in app 7 "not sent again"; New 36 "to the Inbox". Check line "Matched your saved layout "First Bank, checking"". The check line shows only on an exact fingerprint match (SPEC 8.6). A different header or layout, or a retired template version, shows no check line and routes to X66 (PDF) or X67 (CSV, Excel).
 2. GlassCard "Preview" (meta "Date · details · amount"), static DateRows: 01 Oct ● RENT PAYMENT "Money out" −$1,800.00; 02 Oct ● ZARA 0231 −$39.90; 03 Oct ★ SALARY ACME INC "Money in" +$8,200.00; 04 Oct ● SHELL 4471 −$52.10; 05 Oct ● WHOLEFDS MKT −$121.30. Caption "And 38 more rows."
 3. AppButton primary "Send 36 to the Inbox"; link "Wrong layout? Teach again" (X66); caption "The file copy is deleted after import."
 
@@ -342,14 +342,14 @@
 1. Kicker "TEACH ONCE · HARBOR BANK"; lead "Tap the parts of one row. The app learns this layout and reads the next statement without asking."
 2. GlassCard (stage) "Statement" (meta "page 1"), monospace "HARBOR BANK · STATEMENT OF ACCOUNT", columns Date, Details, Amount. Row 1: "01/10" solid box (done), "RENT PAYMENT" dashed box (tap now), "1,800.00 DR". Rows: 02/10 ZARA 0231 39.90 DR; 03/10 SALARY ACME INC 8,200.00 CR. Full spoken label.
 3. GlassCard "Steps" (meta "1 of 3 done"): check "Date · 01/10"; current "2 · Details · Tap it now" (aria-current step); "3 · Amount · Next".
-4. GlassCard "Sign words": "Money out is shown as" DR; "Money in is shown as" CR. AppButton primary "Continue".
+4. GlassCard "Sign words": "Money out is shown as" DR; "Money in is shown as" CR. AppButton primary "Continue". The template stores the column bands and word anchors of the tapped row, the sign words, the date order and the decimal mark. It stores no row values and no file content. Continue needs a date, a details cell and an amount; the layout is saved only when the parsed rows give a usable preview (SPEC 8.6). A re-teach of the same fingerprint writes a newer template version.
 
 **X67 CSV mapping** — DetailScreen (flow step, no tab bar) "Match the columns", sub-line "visa_sept.csv" · Home (v_csv_mapping)
 
 1. Kicker "MATCH THE COLUMNS · VISA_SEPT.CSV"; lead "Tell the app what each column means. It remembers for the next file with the same columns."
 2. GlassCard "Columns" (meta "5"), letter badges: A "Posting date" → Date; B "Description" → Details; C "Debit" → Money out; D "Credit" → Money in; E "Balance" → Ignore. Spoken "Column A, Posting date: Date".
 3. GlassCard "Format": Date format "DD/MM/YYYY"; Decimal mark "Point (1,234.56)".
-4. GlassCard "Preview" (meta "2 rows"): 2 Sep ● AMAZON MKTP −$42.99; 5 Sep ★ PAYMENT THANK YOU +$980.00. AppButton primary "Save layout and continue".
+4. GlassCard "Preview" (meta "2 rows"): 2 Sep ● AMAZON MKTP −$42.99; 5 Sep ★ PAYMENT THANK YOU +$980.00. AppButton primary "Save layout and continue". "Save layout and continue" writes the mapping only when the preview shows at least one row with a date and an amount; Cancel writes nothing. The layout is remembered by its header signature (SPEC 8.6), so the next file with the same columns needs no mapping; a changed header asks again.
 
 **X69 Import a payslip** — FormScreen, Close, "Payslip", sub-line "Acme Inc, October 2026" · Home (v_payslip)
 
@@ -369,8 +369,8 @@
 **X68 Import, done** — DetailScreen (flow step, no tab bar) "Import", sub-line "First Bank statement, October" · Home (v_import_done)
 
 1. 0Hero (number): kicker "IMPORT · DONE · FIRST BANK · OCTOBER"; 36; line "sent to the Inbox. 29 are ready to confirm. 3 need a decision. 4 have no category." 52 pt check badge top right. SplitBar: Ready to confirm 29 (81%), Need a decision 3 (8%), No category 4 (11%). Table.
-2. AppButton primary "Open the Inbox" (link to X60); AppButton ghost "Undo this import".
-3. Caption "Undo removes every item from this file. You can undo until you confirm them."
+2. AppButton primary "Open the Inbox" (link to X60); AppButton ghost "Undo this import". The ghost action is present while the file has a pending item and no confirmed item; after one confirmation it is absent and the confirmed items use Activity history.
+3. Caption "Undo removes every item from this file. You can undo until you confirm them." A withdrawn import returns to X63 with no Inbox rows and no history list row.
 
 **X88 Import error** — DetailScreen (flow step, no tab bar) "Import", sub-line "scan_0412.pdf" · Home (v_import_error)
 
