@@ -25,12 +25,16 @@ final class SpendingController extends ChangeNotifier {
   SpendingLoadState _state = SpendingLoadState.loading;
   SpendingView? _view;
   LimitsView? _limits;
+  SpendingRowsView? _rows;
   SpendingErrorCode? _errorCode;
 
   SpendingPeriod get period => _period;
   SpendingLoadState get state => _state;
   SpendingView? get view => _view;
   LimitsView? get limits => _limits;
+
+  /// The monthly row summaries. Null when the summary read failed.
+  SpendingRowsView? get rows => _rows;
   SpendingErrorCode? get errorCode => _errorCode;
 
   /// Reads the period and the limits (the rings need both).
@@ -45,6 +49,8 @@ final class SpendingController extends ChangeNotifier {
       _limits = limits;
       _state = SpendingLoadState.ready;
       notifyListeners();
+      _rows = await _safeRows();
+      notifyListeners();
     } on Object {
       _state = SpendingLoadState.failed;
       _errorCode = SpendingErrorCode.loadFailed;
@@ -55,6 +61,14 @@ final class SpendingController extends ChangeNotifier {
   Future<LimitsView?> _safeLimits() async {
     try {
       return await gateway.loadLimits();
+    } on Object {
+      return null;
+    }
+  }
+
+  Future<SpendingRowsView?> _safeRows() async {
+    try {
+      return await gateway.loadRows();
     } on Object {
       return null;
     }

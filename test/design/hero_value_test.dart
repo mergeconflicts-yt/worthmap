@@ -33,6 +33,15 @@ void main() {
       expect(hero.parts.fraction, '');
     });
 
+    test('zero cents leave no fraction part (SPEC Appendix B)', () {
+      final hero = formatHeroValue(
+        ValueSpec.real(Money.fromMinor(18790000, Currency.usd)),
+      );
+      expect(hero.parts.whole, '187,900');
+      expect(hero.parts.fraction, '');
+      expect(hero.semanticsLabel, r'$187,900');
+    });
+
     test('a hidden amount keeps the mark and the mask only', () {
       final hero = formatHeroValue(ValueSpec.real(amount), hidden: true);
       expect(hero.parts.signMark, r'$');

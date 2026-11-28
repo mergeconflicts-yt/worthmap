@@ -93,6 +93,20 @@ void main() {
     expect(await count('SELECT count(*) FROM transactions'), 0);
   });
 
+  test('loadRows reads the budget month and the empty summaries', () async {
+    final rows = await gateway.loadRows();
+    expect(rows.month, LocalDate(2026, 10, 1));
+    expect(rows.whereCount, 0);
+    expect(rows.leftMinor, isNull);
+    expect(rows.limitMinor, isNull);
+    expect(rows.moneyInMinor, isNull);
+    expect(rows.moneyInAverageMinor, isNull);
+    expect(rows.paymentsCount, isNull);
+    expect(rows.repeatingCount, 0);
+    expect(rows.repeatingChanges, 0);
+    expect(rows.repeatingMonthlyMinor, isNull);
+  });
+
   test('a fresh save is one command with a receipt', () async {
     await gateway.saveLimits(<String, int>{
       '00000000-0000-7000-8000-0000000003b6': 100000,

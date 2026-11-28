@@ -4,11 +4,13 @@ import 'package:contour/features/spending/payments_models.dart';
 
 /// In-memory payment reads for the P27 tests. It writes no database.
 final class FakePaymentsReadGateway implements PaymentsReadGateway {
-  FakePaymentsReadGateway() {
-    final now = DateTime.now();
-    _today = LocalDate(now.year, now.month, now.day);
-    _yesterday = addDays(_today, -1);
-    _before = addDays(_today, -2);
+  /// The default local date of the synthetic rows.
+  ///
+  /// It is fixed, not the wall clock: tests and goldens must not change with
+  /// the day they run. A test that needs another date passes one.
+  static final LocalDate defaultToday = LocalDate(2026, 11, 24);
+
+  FakePaymentsReadGateway({LocalDate? today}) : _today = today ?? defaultToday {
     items = <PaymentListItem>[
       PaymentListItem(
         id: 'p1',
@@ -57,9 +59,9 @@ final class FakePaymentsReadGateway implements PaymentsReadGateway {
     ];
   }
 
-  late LocalDate _today;
-  late LocalDate _yesterday;
-  late LocalDate _before;
+  final LocalDate _today;
+  late final LocalDate _yesterday = addDays(_today, -1);
+  late final LocalDate _before = addDays(_today, -2);
   late List<PaymentListItem> items;
 
   final List<PaymentFilter> counted = <PaymentFilter>[];

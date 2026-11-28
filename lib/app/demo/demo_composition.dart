@@ -241,6 +241,12 @@ final class DemoComposition {
         'Subscriptions',
       ];
       final expenseIds = <String, String>{};
+      const essentials = <String>{
+        'Rent',
+        'Groceries',
+        'Transport',
+        'Utilities',
+      };
       for (var index = 0; index < expenseNames.length; index++) {
         final id = nextId();
         expenseIds[expenseNames[index]] = id;
@@ -250,6 +256,7 @@ final class DemoComposition {
             name: expenseNames[index],
             kind: 'expense',
             sortOrder: index,
+            isEssential: essentials.contains(expenseNames[index]),
           ),
           'category.create',
           'category',
@@ -568,15 +575,6 @@ final class DemoComposition {
       today: () => today,
       newId: nextId,
     );
-    final spendingGateway = SqlSpendingGateway(
-      spending: spendingProjection,
-      moneyIn: moneyIn,
-      budgets: budgets,
-      categories: categories,
-      commands: commands,
-      today: () => today,
-      newOperationId: nextId,
-    );
     final paymentsReadGateway = SqlPaymentsReadGateway(
       payments: payments,
       paymentReads: PaymentReadRepository(db: db),
@@ -597,6 +595,17 @@ final class DemoComposition {
       today: () => today,
       newOperationId: nextId,
     );
+    final spendingGateway = SqlSpendingGateway(
+      spending: spendingProjection,
+      moneyIn: moneyIn,
+      budgets: budgets,
+      categories: categories,
+      commands: commands,
+      today: () => today,
+      newOperationId: nextId,
+      repeating: repeatingGateway,
+      paymentsRead: paymentsReadGateway,
+    );
     final inboxGateway = SqlInboxGateway(
       inbox: inboxRepository,
       today: () => today,
@@ -605,11 +614,19 @@ final class DemoComposition {
     final importGateway = SqlImportGateway(imports: importStaging);
     final homeGateway = SqlHomeGateway(
       accounts: accounts,
+      categories: categories,
       inbox: inboxRepository,
       schedules: schedules,
       occurrences: occurrences,
       spending: spendingGateway,
       today: () => today,
+      // Synthetic demo target (SPEC 13.2 sample). The release path passes
+      // none until the goals record ships (G09, v1.1).
+      netWorthTargetMinor: 100000000,
+      netWorthTargetDate: LocalDate(2040, 12, 1),
+      // Synthetic demo "today" change for the Quick look investment line.
+      // Real holdings and prices arrive in Phase 5.
+      investmentsTodayMinor: 55000,
     );
     final historyGateway = SqlHistoryGateway(
       history: historyRepository,

@@ -22,6 +22,7 @@ class SelectRow extends StatelessWidget {
     this.chevron = true,
     this.onTap,
     this.semanticLabel,
+    this.stackValue = false,
     super.key,
   }) : assert(onTap == null || semanticLabel != null);
 
@@ -48,9 +49,23 @@ class SelectRow extends StatelessWidget {
   /// The spoken description (AGENTS 6.9). Required when the row is tappable.
   final String? semanticLabel;
 
+  /// Large text puts the value under the line instead of beside it, so the
+  /// name and line keep the full width (X30 rows).
+  final bool stackValue;
+
   @override
   Widget build(BuildContext context) {
     final tokens = context.tokens;
+    final largeText = MediaQuery.textScalerOf(context).scale(13) >= 13 * 1.3;
+    final stack = stackValue && largeText;
+    final valueText = value == null
+        ? null
+        : Text(
+            value!,
+            style: AppText.body.copyWith(color: tokens.textSecondary),
+            textAlign: TextAlign.end,
+          );
+    final stackedValue = trailing ?? valueText;
     final content = ConstrainedBox(
       constraints: const BoxConstraints(minHeight: SizeTokens.rowS),
       child: Row(
@@ -74,19 +89,20 @@ class SelectRow extends StatelessWidget {
                     ),
                   ),
                 ],
+                if (stack && stackedValue != null) ...[
+                  const SizedBox(height: Space.xs),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: stackedValue,
+                  ),
+                ],
               ],
             ),
           ),
-          if (trailing != null)
+          if (!stack && trailing != null)
             trailing!
-          else if (value != null)
-            Flexible(
-              child: Text(
-                value!,
-                style: AppText.body.copyWith(color: tokens.textSecondary),
-                textAlign: TextAlign.end,
-              ),
-            ),
+          else if (!stack && valueText != null)
+            Flexible(child: valueText),
           if (chevron) ...[
             const SizedBox(width: Space.s),
             AppIcon(

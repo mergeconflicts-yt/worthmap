@@ -89,6 +89,10 @@ String formatDate(LocalDate date, DateStyle style) {
 /// DESIGN 4: the short month name of [date], for a monthly chart axis.
 String formatMonthShort(LocalDate date) => _shortMonths[date.month - 1];
 
+/// DESIGN 4: the short month and the year, for example "Dec 2040".
+String formatMonthYear(LocalDate date) =>
+    '${_shortMonths[date.month - 1]} ${date.year}';
+
 /// DESIGN 4: an inclusive date range, for example "1–13 Oct 2026".
 ///
 /// One month: "1–13 Oct 2026". Two months in one year: "25 Sep – 24 Oct 2026".

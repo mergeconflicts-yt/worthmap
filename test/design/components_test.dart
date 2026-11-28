@@ -74,6 +74,23 @@ void main() {
       );
     });
 
+    test('can trim a zero fraction for a whole target amount', () {
+      expect(
+        formatMoney(
+          Money.fromMinor(100000000, Currency.usd),
+          trimZeroFraction: true,
+        ),
+        r'$1,000,000',
+      );
+      expect(
+        formatMoney(
+          Money.fromMinor(100000050, Currency.usd),
+          trimZeroFraction: true,
+        ),
+        r'$1,000,000.50',
+      );
+    });
+
     test('formats the accepted USD minimum exactly', () {
       expect(
         formatMoney(Money.fromMinor(Money.minMinor.toInt(), Currency.usd)),
@@ -89,6 +106,20 @@ void main() {
       final p = formatValueState(ValueSpec.real(amount));
       expect(p.text, r'$4,123.65');
       expect(p.semanticsLabel, r'$4,123.65');
+    });
+
+    test('trimZeroFraction drops a zero fraction and keeps real cents', () {
+      final whole = formatValueState(
+        ValueSpec.real(Money.fromMinor(18790000, Currency.usd)),
+        trimZeroFraction: true,
+      );
+      expect(whole.text, r'$187,900');
+      expect(whole.semanticsLabel, r'$187,900');
+      final cents = formatValueState(
+        ValueSpec.real(amount),
+        trimZeroFraction: true,
+      );
+      expect(cents.text, r'$4,123.65');
     });
 
     test('estimated shows the Est. marker in pixels and semantics', () {

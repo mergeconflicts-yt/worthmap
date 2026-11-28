@@ -79,6 +79,8 @@ HeroValue formatHeroValue(
     hidden: hidden,
     hiddenLabel: hiddenLabel,
     mark: mark,
+    // DESIGN 4 (reference): hero cents show only when the value has cents.
+    trimZeroFraction: true,
   );
   final amount = spec.amount;
   final hasAmount = switch (spec.state) {

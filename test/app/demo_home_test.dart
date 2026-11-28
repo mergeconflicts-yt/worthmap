@@ -17,7 +17,8 @@ void main() {
     expect(find.text('This month'), findsOneWidget);
     // A real number, not the Missing dash of the first-run Home.
     expect(find.textContaining('Add an account balance'), findsNothing);
-    expect(find.text('Money in'), findsOneWidget);
+    // The This month tile and the timeline legend both say "Money in".
+    expect(find.text('Money in'), findsWidgets);
     expect(find.text('Spent'), findsOneWidget);
   });
 }

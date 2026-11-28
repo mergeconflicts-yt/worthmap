@@ -5,6 +5,8 @@ import '../components/buttons/app_button.dart';
 import '../components/buttons/icon_button.dart';
 import '../components/buttons/info_button.dart';
 import '../components/hero/ob_hero.dart';
+import '../components/rows/icon_tile.dart';
+import '../components/rows/select_row.dart';
 import '../components/surfaces/glass_card.dart';
 import '../components/surfaces/screen_header.dart';
 import '../components/surfaces/widget_slot.dart';
@@ -58,6 +60,28 @@ class ComponentsGallery extends StatelessWidget {
               child: Text(
                 'Wide body',
                 style: AppText.body.copyWith(color: tokens.textPrimary),
+              ),
+            ),
+            const VSpace(Space.l),
+            const GlassCard(
+              variant: GlassCardVariant.list,
+              child: Column(
+                children: <Widget>[
+                  SelectRow(
+                    leading: IconTile(
+                      icon: AppIcons.mic,
+                      variant: IconTileVariant.neutral,
+                    ),
+                    name: 'Repeating',
+                    line: r'7 payments · 3 changes',
+                    value: r'$2,084 a month',
+                  ),
+                  SelectRow(
+                    name: 'Money in',
+                    line: r'October · avg $9,267 a month',
+                    value: r'$8,200',
+                  ),
+                ],
               ),
             ),
             const VSpace(Space.xxl),

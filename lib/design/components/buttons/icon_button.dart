@@ -2,7 +2,10 @@ import 'package:flutter/widgets.dart';
 
 import '../../icons/app_icons.dart';
 import '../../theme/app_theme.dart';
+import '../../theme/section.dart';
+import '../../tokens/space.dart';
 import '../../tokens/tokens.g.dart';
+import '../feedback/count_badge.dart';
 import '../interaction/app_interaction.dart';
 
 /// DESIGN 6.3: `IconButton` variants.
@@ -25,6 +28,7 @@ class AppIconButton extends StatelessWidget {
     required this.semanticLabel,
     this.onPressed,
     this.variant = AppIconButtonVariant.onPage,
+    this.badgeCount,
     super.key,
   });
 
@@ -32,6 +36,10 @@ class AppIconButton extends StatelessWidget {
   final String semanticLabel;
   final VoidCallback? onPressed;
   final AppIconButtonVariant variant;
+
+  /// A count badge at the top right of the button. Zero or null hides it. The
+  /// spoken [semanticLabel] must include the count; the badge is decorative.
+  final int? badgeCount;
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +65,28 @@ class AppIconButton extends StatelessWidget {
           child: SizedBox(
             width: SizeTokens.touchMin,
             height: SizeTokens.touchMin,
-            child: Center(
-              child: AppIcon(
-                data: icon,
-                size: SizeTokens.iconM,
-                color: onPressed == null ? tokens.disabled : tokens.textPrimary,
-              ),
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: <Widget>[
+                AppIcon(
+                  data: icon,
+                  size: SizeTokens.iconM,
+                  color:
+                      onPressed == null ? tokens.disabled : tokens.textPrimary,
+                ),
+                if ((badgeCount ?? 0) > 0)
+                  Positioned(
+                    right: 0,
+                    top: -Space.xs,
+                    child: ExcludeSemantics(
+                      child: CountBadge(
+                        count: badgeCount!,
+                        color: tokens.role(context.section).gradientStart,
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
         ),

@@ -18,6 +18,11 @@ enum GlassCardVariant {
 
   /// A wider card for side-by-side layouts.
   wide,
+
+  /// A card of rows with no title. The top and bottom padding equal the gap
+  /// between two rows, and the right padding allows for the chevron glyph's
+  /// optical inset, so a short menu reads evenly (X30 row cards).
+  list,
 }
 
 /// DESIGN 6.7: a metal surface: `surface.glass`, `elevation.glass`,
@@ -58,12 +63,19 @@ class GlassCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final tokens = context.tokens;
     final effectivePadding = padding ??
-        const EdgeInsets.only(
-          top: Space.cardPad,
-          left: Space.cardPad,
-          right: Space.cardPad,
-          bottom: Space.cardTitleGap,
-        );
+        (variant == GlassCardVariant.list
+            ? const EdgeInsets.only(
+                left: Space.cardPad,
+                right: Space.m,
+                top: Space.m,
+                bottom: Space.m,
+              )
+            : const EdgeInsets.only(
+                top: Space.cardPad,
+                left: Space.cardPad,
+                right: Space.cardPad,
+                bottom: Space.cardTitleGap,
+              ));
     final card = DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(RadiusTokens.card),

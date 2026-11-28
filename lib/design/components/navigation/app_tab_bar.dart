@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import '../../icons/app_icons.dart';
 import '../../theme/app_theme.dart';
@@ -7,6 +7,7 @@ import '../../tokens/space.dart';
 import '../../tokens/token_types.dart';
 import '../../tokens/tokens.g.dart';
 import '../../typography/app_text.dart';
+import '../feedback/count_badge.dart';
 import '../interaction/app_interaction.dart';
 
 /// One tab in the [AppTabBar].
@@ -33,6 +34,10 @@ final class AppTabItem {
 /// SPEC 5.1 / DESIGN 6.7: `AppTabBar`. A floating 64 pt bar with four section
 /// tabs and one centre Add pill. The active tab uses its section colour. The
 /// Add is the only add control; a long press starts voice input.
+///
+/// The bar floats outside the page's [Material] (see `PageBackground`), so it
+/// supplies a transparent one; without it the labels draw the framework's
+/// error text style (yellow double underline).
 class AppTabBar extends StatelessWidget {
   const AppTabBar({
     required this.items,
@@ -59,67 +64,74 @@ class AppTabBar extends StatelessWidget {
     final tokens = context.tokens;
     final iconOnly = MediaQuery.textScalerOf(context).scale(1) > 1.3;
 
-    return Align(
-      heightFactor: 1,
-      child: Semantics(
-        container: true,
-        explicitChildNodes: true,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: tokens.elevationNav.fill ?? tokens.surfaceSheet,
-            borderRadius: BorderRadius.circular(RadiusTokens.pill),
-            border: Border.all(color: tokens.surfaceGlassEdge),
-            boxShadow: tokens.elevationNav.shadows,
-          ),
-          child: SizedBox(
-            height: SizeTokens.tabBar,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Space.xxs),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: _Tab(
-                      item: items[0],
-                      selected: selected == items[0].section,
-                      onPressed: () => onSelect(items[0].section),
-                      iconOnly: iconOnly,
-                    ),
-                  ),
-                  Expanded(
-                    child: _Tab(
-                      item: items[1],
-                      selected: selected == items[1].section,
-                      onPressed: () => onSelect(items[1].section),
-                      iconOnly: iconOnly,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 56,
-                    child: Center(
-                      child: _AddPill(
-                        semanticLabel: addSemanticLabel,
-                        onAdd: onAdd,
-                        onVoice: onVoice,
+    return Material(
+      type: MaterialType.transparency,
+      child: Align(
+        heightFactor: 1,
+        child: Semantics(
+          container: true,
+          explicitChildNodes: true,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: tokens.elevationNav.fill ?? tokens.surfaceSheet,
+              borderRadius: BorderRadius.circular(RadiusTokens.pill),
+              border: Border.all(color: tokens.surfaceGlassEdge),
+              boxShadow: tokens.elevationNav.shadows,
+            ),
+            child: SizedBox(
+              height: SizeTokens.tabBar,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Space.s),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: _Tab(
+                        item: items[0],
+                        selected: selected == items[0].section,
+                        onPressed: () => onSelect(items[0].section),
+                        iconOnly: iconOnly,
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: _Tab(
-                      item: items[2],
-                      selected: selected == items[2].section,
-                      onPressed: () => onSelect(items[2].section),
-                      iconOnly: iconOnly,
+                    const HSpace(Space.s),
+                    Expanded(
+                      child: _Tab(
+                        item: items[1],
+                        selected: selected == items[1].section,
+                        onPressed: () => onSelect(items[1].section),
+                        iconOnly: iconOnly,
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: _Tab(
-                      item: items[3],
-                      selected: selected == items[3].section,
-                      onPressed: () => onSelect(items[3].section),
-                      iconOnly: iconOnly,
+                    const HSpace(Space.s),
+                    SizedBox(
+                      width: 56,
+                      child: Center(
+                        child: _AddPill(
+                          semanticLabel: addSemanticLabel,
+                          onAdd: onAdd,
+                          onVoice: onVoice,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                    const HSpace(Space.s),
+                    Expanded(
+                      child: _Tab(
+                        item: items[2],
+                        selected: selected == items[2].section,
+                        onPressed: () => onSelect(items[2].section),
+                        iconOnly: iconOnly,
+                      ),
+                    ),
+                    const HSpace(Space.s),
+                    Expanded(
+                      child: _Tab(
+                        item: items[3],
+                        selected: selected == items[3].section,
+                        onPressed: () => onSelect(items[3].section),
+                        iconOnly: iconOnly,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -181,7 +193,10 @@ class _Tab extends StatelessWidget {
                       right: -Space.s,
                       top: -Space.s,
                       child: ExcludeSemantics(
-                        child: _Badge(count: badge, colour: role.gradientStart),
+                        child: CountBadge(
+                          count: badge,
+                          color: role.gradientStart,
+                        ),
                       ),
                     ),
                 ],
@@ -200,39 +215,6 @@ class _Tab extends StatelessWidget {
                 ),
               ],
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Badge extends StatelessWidget {
-  const _Badge({required this.count, required this.colour});
-
-  final int count;
-  final Color colour;
-
-  @override
-  Widget build(BuildContext context) {
-    final tokens = context.tokens;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colour,
-        borderRadius: BorderRadius.circular(RadiusTokens.pill),
-      ),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Space.xs),
-          child: Center(
-            child: Text(
-              '$count',
-              style: AppText.tabLabel.copyWith(
-                color: tokens.textOnSection,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
           ),
         ),
       ),

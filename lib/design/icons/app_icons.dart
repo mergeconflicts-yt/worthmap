@@ -57,6 +57,13 @@ abstract final class AppIcons {
   static const AppIconData calendar = AppIconData('$_base/calendar.svg');
   static const AppIconData check = AppIconData('$_base/check.svg');
 
+  /// Spending category glyphs (DESIGN 2.11, P26 categories).
+  static const AppIconData basket = AppIconData('$_base/shopping-basket.svg');
+  static const AppIconData utensils = AppIconData('$_base/utensils.svg');
+  static const AppIconData bag = AppIconData('$_base/shopping-bag.svg');
+  static const AppIconData zap = AppIconData('$_base/zap.svg');
+  static const AppIconData ticket = AppIconData('$_base/ticket.svg');
+
   /// Every icon, for the gallery.
   static const Map<String, AppIconData> all = <String, AppIconData>{
     'add': add,
@@ -95,6 +102,11 @@ abstract final class AppIcons {
     'phone': phone,
     'calendar': calendar,
     'check': check,
+    'basket': basket,
+    'utensils': utensils,
+    'bag': bag,
+    'zap': zap,
+    'ticket': ticket,
   };
 }
 

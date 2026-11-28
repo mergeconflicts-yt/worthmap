@@ -40,6 +40,7 @@ import '../features/import/import_models.dart';
 import '../features/import/x63_import.dart';
 import '../features/inbox/inbox_models.dart';
 import '../features/inbox/x60_inbox.dart';
+import '../features/plan/x50_plan.dart';
 import '../features/settings/x80_settings.dart';
 import '../features/settings/x86_privacy.dart';
 import '../features/spending/c02_schedule_editor.dart';
@@ -60,6 +61,8 @@ import '../features/spending/x39_payment_detail.dart';
 import '../features/spending/x84_rules.dart';
 import '../features/start/x01_welcome.dart';
 import '../features/start/x02_lock.dart';
+import '../features/wealth/x40_wealth.dart';
+import '../l10n/generated/app_localizations.dart';
 import 'payments_gateway.dart';
 import 'section_scope.dart';
 
@@ -76,6 +79,8 @@ enum AppRoute {
   inbox('/x60', 'X60'),
   importHub('/x63', 'X63'),
   spending('/x30', 'X30'),
+  wealth('/x40', 'X40'),
+  plan('/x50', 'X50'),
   whereItGoes('/x30c', 'X30c'),
   moneyIn('/x31', 'X31'),
   budget('/x32', 'X32'),
@@ -393,6 +398,22 @@ final class ContourRouter {
           ),
         ),
         GoRoute(
+          path: AppRoute.wealth.path,
+          name: AppRoute.wealth.screenId,
+          builder: (context, state) => _screenScaffold(
+            AppRoute.wealth,
+            const X40Wealth(),
+          ),
+        ),
+        GoRoute(
+          path: AppRoute.plan.path,
+          name: AppRoute.plan.screenId,
+          builder: (context, state) => _screenScaffold(
+            AppRoute.plan,
+            const X50Plan(),
+          ),
+        ),
+        GoRoute(
           path: AppRoute.whereItGoes.path,
           name: AppRoute.whereItGoes.screenId,
           builder: (context, state) => _screenScaffold(
@@ -640,22 +661,82 @@ final class ContourRouter {
     );
   }
 
-  /// Wraps the screen in the route's SectionScope (DESIGN 3).
+  /// Wraps the screen in the route's SectionScope (DESIGN 3). A tab root also
+  /// carries the floating tab bar (SPEC 5.1).
   Widget _screenScaffold(AppRoute route, Widget screen) {
     if (route == AppRoute.gallery) {
       onLog?.call(RouterLogEvent.galleryOpened);
     }
+    final section = sectionForRoute(route);
     return SectionScope(
-      section: sectionForRoute(route),
-      child: screen,
+      section: section,
+      child: _isTabRoot(route)
+          ? Builder(
+              builder: (context) => TabShell(
+                tabBar: _tabBar(context, section),
+                child: screen,
+              ),
+            )
+          : screen,
     );
   }
 
-  /// A tab re-select returns to the tab root (SPEC 5.1). Phase 1 has one
-  /// tab (Home); the API takes the section so T10's tab bar can call it.
+  /// Home, Spending, Wealth and Plan are tab roots; their detail screens are
+  /// not (SPEC 5.1).
+  static bool _isTabRoot(AppRoute route) =>
+      route == AppRoute.home ||
+      route == AppRoute.spending ||
+      route == AppRoute.wealth ||
+      route == AppRoute.plan;
+
+  /// SPEC 5.1: Home, Spending, Add, Wealth, Plan. The Add opens the expense
+  /// form on every tab until the chooser ships (X29).
+  AppTabBar _tabBar(BuildContext context, Section selected) {
+    final l = AppLocalizations.of(context);
+    return AppTabBar(
+      items: <AppTabItem>[
+        AppTabItem(
+          section: Section.home,
+          label: l.tabHome,
+          semanticLabel: l.tabHome,
+          icon: AppIcons.house,
+        ),
+        AppTabItem(
+          section: Section.spending,
+          label: l.tabSpending,
+          semanticLabel: l.tabSpending,
+          icon: AppIcons.chart,
+        ),
+        AppTabItem(
+          section: Section.wealth,
+          label: l.tabWealth,
+          semanticLabel: l.tabWealth,
+          icon: AppIcons.bank,
+        ),
+        AppTabItem(
+          section: Section.plan,
+          label: l.tabPlan,
+          semanticLabel: l.tabPlan,
+          icon: AppIcons.calendar,
+        ),
+      ],
+      selected: selected,
+      onSelect: (section) => selectTab(section, context),
+      onAdd: () => context.push(AppRoute.paymentAdd.path),
+      addSemanticLabel: l.tabAdd,
+    );
+  }
+
+  /// A tab select opens the section root (SPEC 5.1); a re-select logs and
+  /// stays on the root.
   void selectTab(Section section, BuildContext context) {
-    final root = section == Section.home ? AppRoute.home.path : null;
-    final target = root ?? AppRoute.home.path;
+    final target = switch (section) {
+      Section.home => AppRoute.home.path,
+      Section.spending => AppRoute.spending.path,
+      Section.wealth => AppRoute.wealth.path,
+      Section.plan => AppRoute.plan.path,
+      Section.income => AppRoute.home.path,
+    };
     final current = GoRouterState.of(context).matchedLocation;
     if (current == target) {
       onLog?.call(RouterLogEvent.tabReselect);

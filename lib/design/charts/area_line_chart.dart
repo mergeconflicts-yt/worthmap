@@ -14,9 +14,20 @@ import '../format/hidden_amounts.dart';
 import '../format/money_format.dart';
 import '../format/value_presentation.dart';
 import '../theme/app_theme.dart';
+import '../tokens/tokens.g.dart';
 import '../typography/app_text.dart';
 import 'chart_frame.dart';
 import 'chart_tone.dart';
+
+/// DESIGN 7.2: how much chart chrome the preview draws.
+enum LineChartVariant {
+  /// A filled area, a baseline and the first and last axis labels.
+  area,
+
+  /// One plain line and its end dot, with no fill, baseline or axis labels
+  /// (X10 Home top section).
+  line,
+}
 
 /// One point of the line. A null [amount] is Missing and leaves a gap.
 class LinePoint {
@@ -36,6 +47,7 @@ class AreaLineChart extends StatelessWidget {
     this.hidden,
     this.mark = ChartMark.neutral,
     this.height = 96,
+    this.variant = LineChartVariant.area,
     super.key,
   });
 
@@ -47,6 +59,7 @@ class AreaLineChart extends StatelessWidget {
   final bool? hidden;
   final ChartMark mark;
   final double height;
+  final LineChartVariant variant;
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +91,7 @@ class AreaLineChart extends StatelessWidget {
             formatMoney(last),
             title,
           );
+    final area = variant == LineChartVariant.area;
     return ChartFrame(
       preview: true,
       label: label,
@@ -90,9 +104,13 @@ class AreaLineChart extends StatelessWidget {
             mark: ChartColours.of(context, ChartTone.onCard).mark(mark),
             grid: ChartColours.of(context, ChartTone.onCard).chrome.grid,
             axis: ChartColours.of(context, ChartTone.onCard).chrome.axis,
-            fill: ChartColours.of(context, ChartTone.onCard)
-                .mark(mark)
-                .withValues(alpha: 0.16),
+            fill: area
+                ? ChartColours.of(context, ChartTone.onCard)
+                    .mark(mark)
+                    .withValues(alpha: 0.16)
+                : null,
+            showBaseline: area,
+            showAxisLabels: area,
           ),
         ),
       ),
@@ -107,13 +125,17 @@ class _LinePainter extends CustomPainter {
     required this.grid,
     required this.axis,
     required this.fill,
+    required this.showBaseline,
+    required this.showAxisLabels,
   });
 
   final List<LinePoint> points;
   final Color mark;
   final Color grid;
   final Color axis;
-  final Color fill;
+  final Color? fill;
+  final bool showBaseline;
+  final bool showAxisLabels;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -177,12 +199,33 @@ class _LinePainter extends CustomPainter {
     area.lineTo(lastX ?? size.width, size.height - padBottom);
     area.close();
 
-    canvas.drawPath(
-      area,
-      Paint()
-        ..color = fill
-        ..style = PaintingStyle.fill,
-    );
+    if (fill != null) {
+      canvas.drawPath(
+        area,
+        Paint()
+          ..color = fill!
+          ..style = PaintingStyle.fill,
+      );
+    }
+    // The end dot glow (DESIGN 7.1: glow only on an end-point mark).
+    if (lastX != null) {
+      final lastValue = _lastValue();
+      if (lastValue != null) {
+        final end = pointAt(points.length - 1, lastValue);
+        canvas.drawCircle(
+          end,
+          GlowTokens.haloRadius,
+          Paint()
+            ..color = mark.withValues(alpha: GlowTokens.markMaxOpacity * 0.25),
+        );
+        canvas.drawCircle(
+          end,
+          GlowTokens.haloRadius / 2,
+          Paint()
+            ..color = mark.withValues(alpha: GlowTokens.markMaxOpacity * 0.4),
+        );
+      }
+    }
     canvas.drawPath(
       line,
       Paint()
@@ -197,20 +240,26 @@ class _LinePainter extends CustomPainter {
       final lastValue = _lastValue();
       if (lastValue != null) {
         final end = pointAt(points.length - 1, lastValue);
-        canvas.drawCircle(end, 3.5, Paint()..color = mark);
+        canvas.drawCircle(
+          end,
+          GlowTokens.endDotDiameter / 2,
+          Paint()..color = mark,
+        );
       }
     }
-    // The baseline.
-    canvas.drawLine(
-      Offset(0, size.height - padBottom),
-      Offset(size.width, size.height - padBottom),
-      Paint()
-        ..color = grid
-        ..strokeWidth = 1,
-    );
-    // The first and last axis labels.
-    _label(canvas, size, points.first.label, 0, alignEnd: false);
-    _label(canvas, size, points.last.label, size.width, alignEnd: true);
+    if (showBaseline) {
+      canvas.drawLine(
+        Offset(0, size.height - padBottom),
+        Offset(size.width, size.height - padBottom),
+        Paint()
+          ..color = grid
+          ..strokeWidth = 1,
+      );
+    }
+    if (showAxisLabels) {
+      _label(canvas, size, points.first.label, 0, alignEnd: false);
+      _label(canvas, size, points.last.label, size.width, alignEnd: true);
+    }
   }
 
   double? _lastValue() {
@@ -242,5 +291,9 @@ class _LinePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_LinePainter oldDelegate) =>
-      oldDelegate.points != points || oldDelegate.mark != mark;
+      oldDelegate.points != points ||
+      oldDelegate.mark != mark ||
+      oldDelegate.fill != fill ||
+      oldDelegate.showBaseline != showBaseline ||
+      oldDelegate.showAxisLabels != showAxisLabels;
 }

@@ -46,11 +46,18 @@ final class SqlRepeatingGateway implements RepeatingGateway {
     var monthlyTotal = 0;
     var monthlyCount = 0;
     var yearlyCount = 0;
+    var changes = 0;
+    final current = today();
     for (final row in rows) {
       final frequency = _frequencyOf(row.rrule, row.isOneOff);
       final history = await occurrences.listForSchedule(row.id);
       final next = _nextDate(row, frequency);
       final paid = _paidThisMonth(history);
+      final prices = await schedules.priceChanges(row.id);
+      if (prices
+          .any((PriceChangeRow change) => _inMonth(change.date, current))) {
+        changes += 1;
+      }
       items.add(
         RepeatingItem(
           id: row.id,
@@ -85,6 +92,7 @@ final class SqlRepeatingGateway implements RepeatingGateway {
       currencyCode: currencyCode,
       monthlyCount: monthlyCount,
       yearlyCount: yearlyCount,
+      changesThisMonth: changes,
     );
   }
 
@@ -306,6 +314,13 @@ final class SqlRepeatingGateway implements RepeatingGateway {
       }
     }
     return false;
+  }
+
+  bool _inMonth(String date, LocalDate today) {
+    final parsed = LocalDate.tryParse(date);
+    return parsed != null &&
+        parsed.year == today.year &&
+        parsed.month == today.month;
   }
 
   int _monthlyEquivalent(int amount, RepeatFrequency frequency) =>

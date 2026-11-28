@@ -42,15 +42,39 @@ final class HomeUpcomingItem {
 final class HomeIncomeSplit {
   const HomeIncomeSplit({
     required this.moneyInMinor,
+    required this.needsMinor,
+    required this.wantsMinor,
+    required this.unclassifiedMinor,
     required this.investedMinor,
     required this.inCashMinor,
     required this.currencyCode,
   });
 
   final int moneyInMinor;
+  final int needsMinor;
+  final int wantsMinor;
+  final int unclassifiedMinor;
   final int investedMinor;
   final int inCashMinor;
   final String currencyCode;
+}
+
+/// The net worth target: the amount and the date, plus the share reached.
+///
+/// SPEC 13.2: the target measures net worth and assigns no money. The share is
+/// null when net worth is Missing or the target is zero, so no bar is drawn.
+final class HomeNetWorthTarget {
+  const HomeNetWorthTarget({
+    required this.amountMinor,
+    required this.date,
+    required this.share,
+  });
+
+  final int amountMinor;
+  final LocalDate date;
+
+  /// The reached share in percentage points. Null is not available.
+  final Percent? share;
 }
 
 /// The Home screen summary.
@@ -67,9 +91,12 @@ final class HomeSummary {
     required this.upcoming,
     this.netWorthMinor,
     this.netWorthChangeMinor,
+    this.netWorthTarget,
     this.cashMinor,
     this.cardOwedMinor,
+    this.cardName,
     this.investmentsMinor,
+    this.investmentsTodayMinor,
     this.subscriptionsMonthlyMinor,
     this.moneyInMinor,
     this.spentMinor,
@@ -89,10 +116,23 @@ final class HomeSummary {
 
   /// The change from the first known point to the last, over 12 months.
   final int? netWorthChangeMinor;
+
+  /// The owner's net worth target. Null when no target exists (v1: goals
+  /// record G09 is not shipped; the line stays absent).
+  final HomeNetWorthTarget? netWorthTarget;
   final List<HomeSeriesPoint> netWorthSeries;
   final int? cashMinor;
   final int? cardOwedMinor;
+
+  /// The name of the one card the bill belongs to. Null when there is no card
+  /// or more than one.
+  final String? cardName;
+
   final int? investmentsMinor;
+
+  /// The change in the investments value today. Null when it is not read.
+  final int? investmentsTodayMinor;
+
   final int? subscriptionsMonthlyMinor;
   final int? moneyInMinor;
   final int? spentMinor;

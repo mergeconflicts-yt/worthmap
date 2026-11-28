@@ -11,7 +11,7 @@ import '../../typography/app_text.dart';
 /// Up to three icon buttons sit right.
 class ScreenHeader extends StatelessWidget {
   const ScreenHeader({
-    required this.title,
+    this.title,
     this.dateLine,
     this.kicker,
     this.leading,
@@ -20,7 +20,9 @@ class ScreenHeader extends StatelessWidget {
     super.key,
   }) : assert(actions.length <= 3, 'At most three actions');
 
-  final String title;
+  /// The screen title. Null when the screen's hero carries the name and the
+  /// top line holds only the kicker and the actions (X10 Home).
+  final String? title;
   final String? dateLine;
 
   /// The section kicker label (for example "HOME · THIS MONTH").
@@ -48,7 +50,7 @@ class ScreenHeader extends StatelessWidget {
         if (tabs != null)
           Expanded(child: tabs!)
         else if (kicker != null)
-          Flexible(
+          Expanded(
             child: Text(
               kicker!.toUpperCase(),
               style: AppText.labelCaps.copyWith(color: role.text),
@@ -69,13 +71,15 @@ class ScreenHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         topLine,
-        const VSpace(Space.s),
-        Text(
-          title,
-          style: AppText.titleScreen.copyWith(color: tokens.textPrimary),
-        ),
+        if (title != null) ...<Widget>[
+          const VSpace(Space.s),
+          Text(
+            title!,
+            style: AppText.titleScreen.copyWith(color: tokens.textPrimary),
+          ),
+        ],
         if (dateLine != null) ...<Widget>[
-          const VSpace(Space.xxs),
+          VSpace(title == null ? Space.s : Space.xxs),
           Text(
             dateLine!,
             style: AppText.caption.copyWith(color: tokens.textSecondary),

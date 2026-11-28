@@ -25,6 +25,7 @@ final class SpendingCategoryView {
     required this.name,
     required this.amountMinor,
     required this.currencyCode,
+    this.isEssential,
   });
 
   /// The category identity, or `uncategorised`.
@@ -32,6 +33,9 @@ final class SpendingCategoryView {
   final String name;
   final int amountMinor;
   final String currencyCode;
+
+  /// SPEC 4.4: the user's Needs tag. Null is not tagged yet.
+  final bool? isEssential;
 }
 
 /// One chart bucket of the period.
@@ -57,6 +61,7 @@ final class SpendingView {
     required this.period,
     required this.rangeStart,
     required this.rangeEnd,
+    required this.month,
     required this.currencyCode,
     required this.partial,
     required this.moneyOutMinor,
@@ -74,6 +79,9 @@ final class SpendingView {
   final SpendingPeriod period;
   final LocalDate rangeStart;
   final LocalDate rangeEnd;
+
+  /// The first day of the budget month. The row summaries use this month.
+  final LocalDate month;
   final String currencyCode;
 
   /// True when the range end is today or later (an incomplete period).
@@ -119,6 +127,43 @@ final class SpendingView {
       for (final row in categories) Decimal.fromInt(row.amountMinor),
     ]);
   }
+}
+
+/// X30 row summaries for the budget month.
+///
+/// The rows show the current month's money in, payments, repeating and limits.
+/// They do not follow the chart period. Null is "not recorded" (SPEC 4.3).
+final class SpendingRowsView {
+  const SpendingRowsView({
+    required this.month,
+    required this.leftMinor,
+    required this.limitMinor,
+    required this.whereCount,
+    required this.moneyInMinor,
+    required this.moneyInAverageMinor,
+    required this.paymentsCount,
+    required this.repeatingCount,
+    required this.repeatingChanges,
+    required this.repeatingMonthlyMinor,
+  });
+
+  /// The first day of the budget month.
+  final LocalDate month;
+  final int? leftMinor;
+  final int? limitMinor;
+
+  /// The number of categories with spending this month.
+  final int whereCount;
+  final int? moneyInMinor;
+
+  /// The 12-month average, or null when no money in is recorded.
+  final int? moneyInAverageMinor;
+  final int? paymentsCount;
+  final int repeatingCount;
+
+  /// The number of schedules with a price change this month.
+  final int repeatingChanges;
+  final int? repeatingMonthlyMinor;
 }
 
 /// Money in for one period (X31).
@@ -196,6 +241,9 @@ abstract interface class SpendingGateway {
   /// Money in for the same period.
   Future<MoneyInView> loadMoneyIn(SpendingPeriod period);
 
+  /// The X30 row summaries for the budget month.
+  Future<SpendingRowsView> loadRows();
+
   /// The current budget month and every expense category with its limit.
   Future<LimitsView> loadLimits();
 
@@ -231,6 +279,10 @@ final class UnavailableSpendingGateway implements SpendingGateway {
 
   @override
   Future<MoneyInView> loadMoneyIn(SpendingPeriod period) async =>
+      throw const SpendingError(SpendingErrorCode.notWired);
+
+  @override
+  Future<SpendingRowsView> loadRows() async =>
       throw const SpendingError(SpendingErrorCode.notWired);
 
   @override

@@ -15,6 +15,8 @@ import '../data/repositories/categories.dart';
 import '../domain/numbers/spending_totals.dart';
 import '../domain/periods/budget_month.dart';
 import '../domain/periods/period_range.dart';
+import '../features/spending/payments_models.dart';
+import '../features/spending/repeating_models.dart';
 import '../features/spending/spending_models.dart';
 
 /// P15 + P26 + P12 behind the Spending feature port.
@@ -27,6 +29,8 @@ final class SqlSpendingGateway implements SpendingGateway {
     required this.commands,
     required this.today,
     required this.newOperationId,
+    this.repeating,
+    this.paymentsRead,
     this.currencyCode = 'USD',
     this.startDay = 1,
   });
@@ -38,6 +42,13 @@ final class SqlSpendingGateway implements SpendingGateway {
   final CommandRepository commands;
   final LocalDate Function() today;
   final String Function() newOperationId;
+
+  /// The repeating summary for the X30 rows. Null hides the values.
+  final RepeatingGateway? repeating;
+
+  /// The payment count for the X30 rows. Null hides the count.
+  final PaymentsReadGateway? paymentsRead;
+
   final String currencyCode;
   final int startDay;
 
@@ -52,7 +63,10 @@ final class SqlSpendingGateway implements SpendingGateway {
       startDay: startDay,
     );
     final snapshot = await spending.project(request);
-    final names = await _categoryNames();
+    final categories = <String, CategoryRow>{
+      for (final row in await this.categories.list(kind: 'expense'))
+        row.id: row,
+    };
     final buckets = <SpendingBucketView>[
       for (final bucket in snapshot.buckets)
         SpendingBucketView(
@@ -68,15 +82,17 @@ final class SqlSpendingGateway implements SpendingGateway {
       for (final category in snapshot.categories)
         SpendingCategoryView(
           id: category.categoryId,
-          name: names[category.categoryId] ?? '',
+          name: categories[category.categoryId]?.name ?? '',
           amountMinor: category.amount.minor,
           currencyCode: category.amount.currency.code,
+          isEssential: categories[category.categoryId]?.isEssential,
         ),
     ];
     return SpendingView(
       period: period,
       rangeStart: snapshot.range.start,
       rangeEnd: snapshot.range.end,
+      month: request.budgetMonth.start,
       currencyCode: currencyCode,
       partial: snapshot.partial,
       moneyOutMinor: _minorOf(snapshot.moneyOut),
@@ -119,6 +135,54 @@ final class SqlSpendingGateway implements SpendingGateway {
           ),
       ],
     );
+  }
+
+  @override
+  Future<SpendingRowsView> loadRows() async {
+    final monthView = await loadSpending(SpendingPeriod.month);
+    final moneyInView = await loadMoneyIn(SpendingPeriod.month);
+    final yearView = await loadMoneyIn(SpendingPeriod.year);
+    RepeatingView? repeatingView;
+    try {
+      repeatingView = await repeating?.loadRepeating();
+    } on Object {
+      repeatingView = null;
+    }
+    int? payments;
+    try {
+      payments = await paymentsRead?.countPayments(
+        const PaymentFilter(
+          period: PaymentPeriod.thisMonth,
+          show: PaymentShowFilter.moneyOut,
+        ),
+      );
+    } on Object {
+      payments = null;
+    }
+    return SpendingRowsView(
+      month: monthView.month,
+      leftMinor: monthView.leftMinor,
+      limitMinor: monthView.limitMinor,
+      whereCount: monthView.categories.length,
+      moneyInMinor: moneyInView.amountMinor,
+      moneyInAverageMinor: _averageMoneyIn(yearView),
+      paymentsCount: payments,
+      repeatingCount: repeatingView?.items.length ?? 0,
+      repeatingChanges: repeatingView?.changesThisMonth ?? 0,
+      repeatingMonthlyMinor: repeatingView?.monthlyTotalMinor,
+    );
+  }
+
+  /// The 12-month average of recorded money in, or null when none is recorded.
+  int? _averageMoneyIn(MoneyInView view) {
+    if (view.amountMinor == null || view.buckets.isEmpty) {
+      return null;
+    }
+    var total = 0;
+    for (final bucket in view.buckets) {
+      total += bucket.amountMinor ?? 0;
+    }
+    return total ~/ view.buckets.length;
   }
 
   @override
@@ -181,13 +245,6 @@ final class SqlSpendingGateway implements SpendingGateway {
         throw const SpendingError(SpendingErrorCode.saveFailed);
       }
     }
-  }
-
-  Future<Map<String, String>> _categoryNames() async {
-    final rows = await categories.list(kind: 'expense');
-    return <String, String>{
-      for (final row in rows) row.id: row.name,
-    };
   }
 
   int? _minorOf(Total total) => switch (total) {

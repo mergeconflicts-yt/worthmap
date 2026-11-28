@@ -1,3 +1,4 @@
+import '../../core/decimal.dart';
 import '../../core/money.dart';
 
 /// DESIGN 2.6, 8: currency marks. The mark is not the code; the code is the
@@ -21,6 +22,15 @@ String currencyMark(Currency currency) =>
 
 /// The true minus sign (U+2212). Not the ASCII hyphen (DESIGN 4; CR-06).
 const String minusSign = '\u2212';
+
+/// DESIGN 4, 8: [money] in whole currency units, rounded half-up. One rounding
+/// feeds the pixels and the spoken amount, so a hero or category number shows
+/// no decimal. X30 uses it for every amount on the page.
+Money wholeMoney(Money money) => Money.fromDecimal(
+      roundToScale(money.toDecimal(), 0, RoundingMode.halfUp),
+      money.currency,
+      mode: RoundingMode.halfUp,
+    );
 
 /// The gain sign (DESIGN 4: a change always has a sign; gains carry +).
 const String plusSign = '+';
@@ -47,6 +57,7 @@ String formatMoney(
   bool showSymbol = true,
   String? mark,
   SignStyle sign = SignStyle.negativeOnly,
+  bool trimZeroFraction = false,
 }) {
   // The magnitude comes from BigInt, never `minor.abs()`: native abs() at the
   // minimum 64-bit value overflows and would leave the sign in place (R03).
@@ -60,6 +71,9 @@ String formatMoney(
   final fraction = money.currency.minorUnits == 0
       ? ''
       : '.${digits.substring(digits.length - money.currency.minorUnits)}';
+  final zeroFraction =
+      fraction.isNotEmpty && fraction.substring(1).replaceAll('0', '').isEmpty;
+  final shownFraction = trimZeroFraction && zeroFraction ? '' : fraction;
   final grouped = _group(units);
   final signText = switch (sign) {
     SignStyle.none => '',
@@ -67,7 +81,7 @@ String formatMoney(
     SignStyle.always => money.isNegative ? minusSign : plusSign,
   };
   final symbol = showSymbol ? (mark ?? currencyMark(money.currency)) : '';
-  return '$signText$symbol$grouped$fraction';
+  return '$signText$symbol$grouped$shownFraction';
 }
 
 String _group(String digits) {

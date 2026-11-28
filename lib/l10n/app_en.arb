@@ -328,6 +328,108 @@
   "@x80RowOpen": {
     "description": "Semantic suffix for tappable Settings rows."
   },
+  "x80CategoriesLine": "16 categories",
+  "@x80CategoriesLine": {
+    "description": "X80 Categories row: the category count."
+  },
+  "x80RulesValue": "24 rules",
+  "@x80RulesValue": {
+    "description": "X80 Categories row: the rule count."
+  },
+  "x80AccountsValue": "9",
+  "@x80AccountsValue": {
+    "description": "X80 Accounts row value."
+  },
+  "x80ScreensHome": "Home",
+  "@x80ScreensHome": {
+    "description": "X80 Screens and widgets row: Home."
+  },
+  "x80ScreensSpending": "Spending",
+  "@x80ScreensSpending": {
+    "description": "X80 Screens and widgets row: Spending."
+  },
+  "x80ScreensMoneyIn": "Money in",
+  "@x80ScreensMoneyIn": {
+    "description": "X80 Screens and widgets row: Money in."
+  },
+  "x80ScreensWealth": "Wealth",
+  "@x80ScreensWealth": {
+    "description": "X80 Screens and widgets row: Wealth."
+  },
+  "x80ScreensInvestments": "Investments",
+  "@x80ScreensInvestments": {
+    "description": "X80 Screens and widgets row: Investments."
+  },
+  "x80ScreensCalendar": "Calendar",
+  "@x80ScreensCalendar": {
+    "description": "X80 Screens and widgets row: Calendar."
+  },
+  "x80ScreensGoals": "Goals",
+  "@x80ScreensGoals": {
+    "description": "X80 Screens and widgets row: Goals."
+  },
+  "x80ScreensProtect": "Protect",
+  "@x80ScreensProtect": {
+    "description": "X80 Screens and widgets row: Protect."
+  },
+  "x80ScreensTax": "Tax",
+  "@x80ScreensTax": {
+    "description": "X80 Screens and widgets row: Tax."
+  },
+  "x80WidgetsShown": "{count} shown",
+  "@x80WidgetsShown": {
+    "description": "X80 Screens and widgets value: shown on Home.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "x80WidgetsCount": "{count, plural, =1{1 widget} other{{count} widgets}}",
+  "@x80WidgetsCount": {
+    "description": "X80 Screens and widgets value: widget count.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "x80RestoreWidgets": "Restore the default widgets",
+  "@x80RestoreWidgets": {
+    "description": "X80 Screens and widgets text action."
+  },
+  "x80RecoveryLine": "Last snapshot",
+  "@x80RecoveryLine": {
+    "description": "X80 Recovery row line."
+  },
+  "x80RecoveryValueDate": "Sun 11 Oct",
+  "@x80RecoveryValueDate": {
+    "description": "X80 Recovery row value."
+  },
+  "x80Features": "Features",
+  "@x80Features": {
+    "description": "X80 App row: Features."
+  },
+  "x80FeaturesValue": "Simple mode",
+  "@x80FeaturesValue": {
+    "description": "X80 App row: Features value."
+  },
+  "x80Appearance": "Appearance",
+  "@x80Appearance": {
+    "description": "X80 App row: Appearance."
+  },
+  "x80AppearanceValue": "System",
+  "@x80AppearanceValue": {
+    "description": "X80 App row: Appearance value."
+  },
+  "x80About": "About and open source",
+  "@x80About": {
+    "description": "X80 App row: About and open source."
+  },
+  "x80AboutValue": "Version 1.0",
+  "@x80AboutValue": {
+    "description": "X80 App row: About value."
+  },
   "x86Title": "Privacy and network",
   "@x86Title": {
     "description": "X86 Privacy and network header title."
@@ -1909,17 +2011,52 @@
   "@spendingIncomplete": {
     "description": "P26 Spending screen string."
   },
-  "spendingHeroLimitLine": "{left} left of {limit}",
-  "@spendingHeroLimitLine": {
-    "description": "P26 Spending screen string.",
+  "spendingHeroOfLimit": "of {limit} limit",
+  "@spendingHeroOfLimit": {
+    "description": "X30 hero: the period limit after the spent number.",
     "placeholders": {
-      "left": {
-        "type": "String"
-      },
       "limit": {
         "type": "String"
       }
     }
+  },
+  "spendingWithinLimit": "within the limit",
+  "@spendingWithinLimit": {
+    "description": "X30 hero: the closed period stayed at or under its limit."
+  },
+  "spendingOverLimit": "{amount} over the limit",
+  "@spendingOverLimit": {
+    "description": "X30 hero: the closed period passed its limit.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "spendingLeftAmount": "{amount} left",
+  "@spendingLeftAmount": {
+    "description": "X30 hero: the current period has this much of the limit left.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "spendingRangeStatus": "{range} · {status}",
+  "@spendingRangeStatus": {
+    "description": "X30 hero: the period range and its limit status.",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "spendingNeedsWants": "Needs and wants",
+  "@spendingNeedsWants": {
+    "description": "X30 By category: the needs/wants strip chart label."
   },
   "spendingByCategoryTitle": "By category",
   "@spendingByCategoryTitle": {
@@ -1932,6 +2069,61 @@
   "spendingBudgetRow": "Budget",
   "@spendingBudgetRow": {
     "description": "P26 Spending screen string."
+  },
+  "spendingBudgetRowLine": "Left of the {month} limit",
+  "@spendingBudgetRowLine": {
+    "description": "X30 Budget row: the month of the limit.",
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "spendingWhereRowLine": "{month} by category",
+  "@spendingWhereRowLine": {
+    "description": "X30 Where it goes row: the month and the grouping.",
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "spendingMoneyInRowLine": "{month} · avg {average} a month",
+  "@spendingMoneyInRowLine": {
+    "description": "X30 Money in row: the month and the 12-month average.",
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "average": {
+        "type": "String"
+      }
+    }
+  },
+  "spendingRepeatingRowLine": "{payments, plural, =1{1 payment} other{{payments} payments}} · {changes, plural, =1{1 change} other{{changes} changes}}",
+  "@spendingRepeatingRowLine": {
+    "description": "X30 Repeating row: the payment count and this month's changes.",
+    "placeholders": {
+      "payments": {
+        "type": "int"
+      },
+      "changes": {
+        "type": "int"
+      }
+    }
+  },
+  "spendingPerMonth": "a month",
+  "@spendingPerMonth": {
+    "description": "X30 Repeating row: the monthly amount suffix."
+  },
+  "spendingCategoriesLine": "{count, plural, =1{1 category} other{{count} categories}}",
+  "@spendingCategoriesLine": {
+    "description": "X30 Edit limits row: the number of categories with a limit.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "spendingMoneyInRow": "Money in",
   "@spendingMoneyInRow": {
@@ -3445,6 +3637,21 @@
   "@x10NoBalance": {
     "description": "X10 hero Missing line."
   },
+  "netWorthTargetLine": "{percent} of {target} target · {date}",
+  "@netWorthTargetLine": {
+    "description": "X10 hero target line (share of the target and its date).",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "x10QuickLook": "Quick look",
   "@x10QuickLook": {
     "description": "X10 card title."
@@ -3477,9 +3684,17 @@
   "@x10Spent": {
     "description": "X10 this-month row."
   },
-  "x10OfLimit": "{percent} of the limit",
-  "@x10OfLimit": {
-    "description": "X10 spent line."
+  "x10SpentOfLimit": "of {limit} limit · {percent}",
+  "@x10SpentOfLimit": {
+    "description": "X10 spent line: the limit and the share used.",
+    "placeholders": {
+      "limit": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
   },
   "x10NoLimit": "No limit set",
   "@x10NoLimit": {
@@ -3509,13 +3724,25 @@
   "@x10DayOf": {
     "description": "X10 month meta."
   },
-  "x10Owes": "Owes ",
-  "@x10Owes": {
-    "description": "X10 card balance prefix."
-  },
   "chartLineSpoken": "{title}: from {first} to {last}.",
   "@chartLineSpoken": {
     "description": "Preview line chart spoken label."
+  },
+  "chartToday": "Today",
+  "@chartToday": {
+    "description": "GlyphTimeline label over the today dot."
+  },
+  "chartLegendSpending": "Spending",
+  "@chartLegendSpending": {
+    "description": "GlyphTimeline legend word for the spending flow glyph."
+  },
+  "chartLegendInvesting": "Investing",
+  "@chartLegendInvesting": {
+    "description": "GlyphTimeline legend word for the investing flow glyph."
+  },
+  "chartLegendMoneyIn": "Money in",
+  "@chartLegendMoneyIn": {
+    "description": "GlyphTimeline legend word for the money-in flow glyph."
   },
   "homeTileSpoken": "{label}, {value}",
   "@homeTileSpoken": {
@@ -3581,9 +3808,42 @@
   "@homeNetWorthChart": {
     "description": "Home hero line chart spoken title."
   },
+  "tabHome": "Home",
+  "@tabHome": {
+    "description": "Tab bar label and spoken name."
+  },
+  "tabSpending": "Spending",
+  "@tabSpending": {
+    "description": "Tab bar label and spoken name."
+  },
+  "tabWealth": "Wealth",
+  "@tabWealth": {
+    "description": "Tab bar label and spoken name."
+  },
+  "tabPlan": "Plan",
+  "@tabPlan": {
+    "description": "Tab bar label and spoken name."
+  },
+  "tabAdd": "Add",
+  "@tabAdd": {
+    "description": "Tab bar Add control spoken name."
+  },
+  "sectionNotAvailable": "Not available in this version.",
+  "@sectionNotAvailable": {
+    "description": "A tab root whose screen has not shipped yet."
+  },
   "homeCashLine": "available now",
   "@homeCashLine": {
     "description": "Home cash tile line."
+  },
+  "homeInvestmentsToday": "{change} today",
+  "@homeInvestmentsToday": {
+    "description": "Home investments tile line: the value change today.",
+    "placeholders": {
+      "change": {
+        "type": "String"
+      }
+    }
   },
   "homeSubscriptionsLine": "a month",
   "@homeSubscriptionsLine": {
@@ -3592,5 +3852,29 @@
   "homeDueBefore": "before {date}",
   "@homeDueBefore": {
     "description": "Home timeline meta line."
+  },
+  "homeSplitNeeds": "Needs",
+  "@homeSplitNeeds": {
+    "description": "Home split part (user tag)."
+  },
+  "homeSplitWants": "Wants",
+  "@homeSplitWants": {
+    "description": "Home split part (user tag)."
+  },
+  "homeSplitUnclassified": "Unclassified",
+  "@homeSplitUnclassified": {
+    "description": "Home split part for untagged spending."
+  },
+  "homeSplitPart": "Part",
+  "@homeSplitPart": {
+    "description": "Home split table column."
+  },
+  "homeSplitAmount": "Amount",
+  "@homeSplitAmount": {
+    "description": "Home split table column."
+  },
+  "homeFooterAccounts": "Prices off · {count} accounts read",
+  "@homeFooterAccounts": {
+    "description": "Home footer facts."
   }
 }

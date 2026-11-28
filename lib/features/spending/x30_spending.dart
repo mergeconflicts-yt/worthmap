@@ -11,10 +11,10 @@ import 'package:flutter/material.dart';
 import '../../app/hide_amounts_button.dart';
 import '../../core/dates.dart';
 import '../../core/money.dart';
-import '../../core/percent.dart';
 import '../../design/design.dart';
 import '../../domain/periods/period_math.dart';
 import '../../l10n/generated/app_localizations.dart';
+import 'category_style.dart';
 import 'spending_controller.dart';
 import 'spending_models.dart';
 
@@ -74,15 +74,12 @@ class _X30SpendingState extends State<X30Spending> {
         final view = _controller.view;
         return TabRootScreen(
           header: ScreenHeader(
-            title: l.spendingTitle,
-            dateLine: view == null
-                ? null
-                : formatDateRange(view.rangeStart, view.rangeEnd),
+            kicker: l.spendingSpentKicker,
             actions: <Widget>[
               const HideAmountsButton(),
               if (widget.onEditLimits != null)
                 AppIconButton(
-                  icon: AppIcons.filter,
+                  icon: AppIcons.settings,
                   variant: AppIconButtonVariant.onPage,
                   semanticLabel: l.spendingEditLimitsRow,
                   onPressed: widget.onEditLimits,
@@ -101,11 +98,11 @@ class _X30SpendingState extends State<X30Spending> {
               ),
             ] else if (view != null) ...<Widget>[
               _hero(l, view),
-              _chips(l),
               _chart(l, view),
+              _chips(l),
               _sameDays(l, view),
               _byCategory(l, view),
-              _rows(l, view),
+              ..._rowCards(l, view),
             ],
           ],
         );
@@ -114,40 +111,84 @@ class _X30SpendingState extends State<X30Spending> {
   }
 
   Widget _hero(AppLocalizations l, SpendingView view) {
-    final money = view.moneyOutMinor;
+    final currency = Currency.of(view.currencyCode);
+    final hidden = HiddenAmountsScope.resolve(context, null);
     final limit = view.limitMinor;
-    final left = view.leftMinor;
-    final line = <String>[
-      formatDateRange(view.rangeStart, view.rangeEnd),
-      if (limit != null && left != null && left >= 0)
-        l.spendingHeroLimitLine(
-          formatMoney(
-            Money.fromMinor(left, Currency.of(view.currencyCode)),
+    final spent = view.moneyOutMinor;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        ObHero(
+          value: spent == null
+              ? ValueSpec.noneRecorded(l.spendingNothingRecorded)
+              : ValueSpec.real(
+                  wholeMoney(Money.fromMinor(spent, currency)),
+                ),
+          numberSuffix: limit == null
+              ? l.spendingNoLimit
+              : l.spendingHeroOfLimit(
+                  _amount(limit, currency, hidden: false),
+                ),
+          hiddenNumberSuffix: limit == null
+              ? l.spendingNoLimit
+              : l.spendingHeroOfLimit(
+                  _amount(limit, currency, hidden: true),
+                ),
+        ),
+        const VSpace(Space.xs),
+        Text(
+          l.spendingRangeStatus(
+            formatDateRange(view.rangeStart, view.rangeEnd),
+            _limitStatus(l, view, currency, hidden: hidden),
           ),
-          formatMoney(
-            Money.fromMinor(limit, Currency.of(view.currencyCode)),
+          style: AppText.caption.copyWith(
+            color: context.tokens.textSecondary,
           ),
-        )
-      else if (limit != null)
-        l.spendingHeroLimitLine(
-          formatMoney(Money.fromMinor(0, Currency.of(view.currencyCode))),
-          formatMoney(
-            Money.fromMinor(limit, Currency.of(view.currencyCode)),
-          ),
-        )
-      else
-        l.spendingNoLimit,
-    ].join(' · ');
-    return ObHero(
-      kicker: l.spendingSpentKicker,
-      value: money == null
-          ? ValueSpec.noneRecorded(l.spendingNothingRecorded)
-          : ValueSpec.real(
-              Money.fromMinor(money, Currency.of(view.currencyCode)),
-            ),
-      contextLine: line,
-      backgroundChart: _chartWidget(l, view, preview: true, height: 120),
+        ),
+      ],
     );
+  }
+
+  /// SCREENS X30: the current period shows what is left; a closed period says
+  /// "within the limit" or how far it is over.
+  String _limitStatus(
+    AppLocalizations l,
+    SpendingView view,
+    Currency currency, {
+    required bool hidden,
+  }) {
+    final limit = view.limitMinor;
+    if (limit == null) {
+      return l.spendingNoLimit;
+    }
+    final spent = view.moneyOutMinor;
+    if (spent == null) {
+      return l.spendingNothingRecorded;
+    }
+    final difference = limit - spent;
+    if (difference < 0) {
+      return l.spendingOverLimit(
+        _amount(-difference, currency, hidden: hidden),
+      );
+    }
+    if (view.partial) {
+      return l.spendingLeftAmount(
+        _amount(difference, currency, hidden: hidden),
+      );
+    }
+    return l.spendingWithinLimit;
+  }
+
+  static String _amount(
+    int minor,
+    Currency currency, {
+    required bool hidden,
+  }) {
+    final money = wholeMoney(Money.fromMinor(minor, currency));
+    if (hidden) {
+      return formatValueState(ValueSpec.real(money), hidden: true).text;
+    }
+    return formatMoney(money, trimZeroFraction: true);
   }
 
   Widget _chips(AppLocalizations l) {
@@ -172,25 +213,14 @@ class _X30SpendingState extends State<X30Spending> {
   }
 
   Widget _chart(AppLocalizations l, SpendingView view) {
-    return GlassCard(
-      title: l.spendingChartTitle,
-      meta: formatDateRange(view.rangeStart, view.rangeEnd),
-      child: _chartWidget(l, view),
-    );
-  }
-
-  Widget _chartWidget(
-    AppLocalizations l,
-    SpendingView view, {
-    bool preview = false,
-    double height = 160,
-  }) {
     final currency = Currency.of(view.currencyCode);
     final bars = <PeriodBar>[
       for (final bucket in view.buckets)
         PeriodBar(
           label: _bucketLabel(view, bucket),
-          amount: Money.fromMinor(bucket.amountMinor ?? 0, currency),
+          amount: wholeMoney(
+            Money.fromMinor(bucket.amountMinor ?? 0, currency),
+          ),
           current: bucket.lastDate == view.rangeEnd,
           incomplete: view.partial && bucket.lastDate == view.rangeEnd,
         ),
@@ -198,18 +228,20 @@ class _X30SpendingState extends State<X30Spending> {
     final moneyOut = view.moneyOutMinor;
     final average = moneyOut == null || bars.isEmpty
         ? null
-        : Money.fromMinor(moneyOut ~/ bars.length, currency);
-    return PeriodBarChart(
-      title: l.spendingSpentKicker,
-      period: formatDateRange(view.rangeStart, view.rangeEnd),
-      bars: bars,
-      columns: <String>[l.spendingChartColumn, l.spendingChartAmountColumn],
-      average: average,
-      averageLabel: l.spendingAverageShort,
-      incompleteLabel: view.partial ? l.spendingIncomplete : null,
-      emptyLabel: l.spendingNothingRecorded,
-      preview: preview,
-      height: height,
+        : wholeMoney(Money.fromMinor(moneyOut ~/ bars.length, currency));
+    return GlassCard(
+      title: l.spendingChartTitle,
+      meta: formatDateRange(view.rangeStart, view.rangeEnd),
+      child: PeriodBarChart(
+        title: l.spendingSpentKicker,
+        period: formatDateRange(view.rangeStart, view.rangeEnd),
+        bars: bars,
+        columns: <String>[l.spendingChartColumn, l.spendingChartAmountColumn],
+        average: average,
+        averageLabel: l.spendingAverageShort,
+        incompleteLabel: view.partial ? l.spendingIncomplete : null,
+        emptyLabel: l.spendingNothingRecorded,
+      ),
     );
   }
 
@@ -236,18 +268,23 @@ class _X30SpendingState extends State<X30Spending> {
         : difference < 0
             ? l.spendingLowerBy(
                 formatMoney(
-                  Money.fromMinor(-difference, currency),
+                  wholeMoney(Money.fromMinor(-difference, currency)),
+                  trimZeroFraction: true,
                 ),
               )
             : l.spendingHigherBy(
                 formatMoney(
-                  Money.fromMinor(difference, currency),
+                  wholeMoney(Money.fromMinor(difference, currency)),
+                  trimZeroFraction: true,
                 ),
               );
     return Text(
       l.spendingSameDaysLine(
         formatMonthShort(previousMonth),
-        formatMoney(Money.fromMinor(previous, currency)),
+        formatMoney(
+          wholeMoney(Money.fromMinor(previous, currency)),
+          trimZeroFraction: true,
+        ),
         comparison,
       ),
       style: AppText.caption.copyWith(color: context.tokens.textSecondary),
@@ -258,38 +295,77 @@ class _X30SpendingState extends State<X30Spending> {
     final largeText = MediaQuery.textScalerOf(context).scale(1) > 1.3;
     final limits = _controller.limits;
     final currency = Currency.of(view.currencyCode);
+    final range = formatDateRange(view.rangeStart, view.rangeEnd);
     final meters = <RingMeter>[];
-    for (final row in view.categories) {
+    for (var i = 0; i < view.categories.length; i += 1) {
+      final row = view.categories[i];
       final limit = _controller.limitFor(row.id);
       if (limit <= 0) {
         continue;
       }
+      final style = categoryStyleFor(name: row.name, index: i);
       meters.add(
         RingMeter(
           name: row.name.isEmpty ? l.spendingUncategorised : row.name,
-          value: Money.fromMinor(row.amountMinor, currency),
-          limit: Money.fromMinor(limit, currency),
-          todayShare:
-              view.monthGone == null ? null : _fraction(view.monthGone!),
+          value: wholeMoney(Money.fromMinor(row.amountMinor, currency)),
+          limit: wholeMoney(Money.fromMinor(limit, currency)),
+          icon: style.icon,
+          mark: style.mark,
+          iconUsesMark: true,
+          variant: RingMeterVariant.card,
+          size: 44,
           leftLabel: l.spendingLeftLabel,
           paidLabel: l.spendingPaid,
         ),
       );
     }
-    if (meters.isEmpty) {
-      return GlassCard(
-        title: l.spendingByCategoryTitle,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              limits == null || limits.rows.isEmpty
-                  ? l.spendingNoLimits
-                  : l.spendingCategoriesWithoutLimit,
-              style: AppText.caption.copyWith(
-                color: context.tokens.textSecondary,
-              ),
+    final parts = _needsWants(l, view, currency);
+    final empty = Text(
+      limits == null || limits.rows.isEmpty
+          ? l.spendingNoLimits
+          : l.spendingCategoriesWithoutLimit,
+      style: AppText.caption.copyWith(
+        color: context.tokens.textSecondary,
+      ),
+    );
+    return GlassCard(
+      title: l.spendingByCategoryTitle,
+      meta: largeText ? null : range,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          if (parts.isNotEmpty)
+            SplitStrip(
+              title: l.spendingNeedsWants,
+              period: range,
+              parts: parts,
+              shareDecimals: 1,
+              showTable: false,
+              columns: <String>[
+                l.homeSplitPart,
+                l.homeSplitAmount,
+                l.homeSplitShare,
+              ],
             ),
+          if (parts.isNotEmpty && meters.isNotEmpty) const VSpace(Space.l),
+          if (meters.isNotEmpty)
+            RingMeterGrid(
+              title: l.spendingByCategoryTitle,
+              period: range,
+              meters: meters,
+              maxColumns: 3,
+              columns: <String>[
+                l.spendingChartColumn,
+                l.spendingSpentKicker,
+                l.spendingLimitLabel,
+                l.spendingLeftLabel,
+              ],
+              paidLabel: l.spendingPaid,
+              leftLabel: l.spendingLeftLabel,
+              emptyLabel: l.spendingNothingRecorded,
+            )
+          else ...<Widget>[
+            empty,
             if (widget.onEditLimits != null) ...<Widget>[
               const VSpace(Space.s),
               AppButton(
@@ -299,98 +375,212 @@ class _X30SpendingState extends State<X30Spending> {
               ),
             ],
           ],
+        ],
+      ),
+    );
+  }
+
+  /// SPEC 4.4: Needs and Wants are the user's tags; untagged spending keeps an
+  /// honest third part so the strip is the whole of the period.
+  List<SplitStripPart> _needsWants(
+    AppLocalizations l,
+    SpendingView view,
+    Currency currency,
+  ) {
+    var needs = 0;
+    var wants = 0;
+    var unclassified = 0;
+    for (final row in view.categories) {
+      if (row.isEssential == true) {
+        needs += row.amountMinor;
+      } else if (row.isEssential == false) {
+        wants += row.amountMinor;
+      } else {
+        unclassified += row.amountMinor;
+      }
+    }
+    return <SplitStripPart>[
+      if (needs > 0)
+        SplitStripPart(
+          name: l.homeSplitNeeds,
+          amount: wholeMoney(Money.fromMinor(needs, currency)),
+          mark: ChartMark.needs,
+        ),
+      if (wants > 0)
+        SplitStripPart(
+          name: l.homeSplitWants,
+          amount: wholeMoney(Money.fromMinor(wants, currency)),
+          mark: ChartMark.wants,
+        ),
+      if (unclassified > 0)
+        SplitStripPart(
+          name: l.homeSplitUnclassified,
+          amount: wholeMoney(Money.fromMinor(unclassified, currency)),
+          mark: ChartMark.other,
+        ),
+    ];
+  }
+
+  /// X30 rows, in the three groups of the reference: Repeating and Money in,
+  /// Where it goes and Budget, All payments and Edit limits.
+  List<Widget> _rowCards(AppLocalizations l, SpendingView view) {
+    final rows = _controller.rows;
+    final month = rows?.month ?? view.month;
+    final monthName = formatMonthLong(month);
+    final currency = Currency.of(view.currencyCode);
+    final hidden = HiddenAmountsScope.resolve(context, null);
+    final cards = <Widget>[];
+
+    final first = <Widget>[
+      if (widget.onRepeating != null)
+        SelectRow(
+          name: l.spendingRepeatingRow,
+          line: rows == null
+              ? null
+              : rows.repeatingCount == 0
+                  ? l.repeatingEmpty
+                  : l.spendingRepeatingRowLine(
+                      rows.repeatingCount,
+                      rows.repeatingChanges,
+                    ),
+          trailing: rows == null || rows.repeatingCount == 0
+              ? null
+              : _perMonthTrailing(l, rows.repeatingMonthlyMinor, currency),
+          onTap: widget.onRepeating,
+          semanticLabel: l.spendingRepeatingRow,
+          stackValue: true,
+        ),
+      if (widget.onMoneyIn != null)
+        SelectRow(
+          name: l.spendingMoneyInRow,
+          line: rows?.moneyInAverageMinor == null
+              ? monthName
+              : l.spendingMoneyInRowLine(
+                  monthName,
+                  _averageText(rows!.moneyInAverageMinor!, currency, hidden),
+                ),
+          trailing: _moneyTrailing(rows?.moneyInMinor, currency),
+          onTap: widget.onMoneyIn,
+          semanticLabel: l.spendingMoneyInRow,
+          stackValue: true,
+        ),
+    ];
+    if (first.isNotEmpty) {
+      cards.add(
+        GlassCard(
+          variant: GlassCardVariant.list,
+          child: Column(children: first),
         ),
       );
     }
-    return GlassCard(
-      title: l.spendingByCategoryTitle,
-      meta: largeText ? null : formatDateRange(view.rangeStart, view.rangeEnd),
-      child: RingMeterGrid(
-        title: l.spendingByCategoryTitle,
-        period: formatDateRange(view.rangeStart, view.rangeEnd),
-        meters: meters,
-        columns: <String>[
-          l.spendingChartColumn,
-          l.spendingSpentKicker,
-          l.spendingLimitLabel,
-          l.spendingLeftLabel,
-        ],
-        paidLabel: l.spendingPaid,
-        leftLabel: l.spendingLeftLabel,
-        emptyLabel: l.spendingNothingRecorded,
-      ),
+
+    final second = <Widget>[
+      if (widget.onWhereItGoes != null)
+        SelectRow(
+          name: l.spendingWhereItGoes,
+          line: l.spendingWhereRowLine(monthName),
+          trailing: Text(
+            '${rows?.whereCount ?? view.categories.length}',
+            style: _rowValueStyle,
+          ),
+          onTap: widget.onWhereItGoes,
+          semanticLabel: l.spendingWhereItGoes,
+          stackValue: true,
+        ),
+      if (widget.onBudget != null)
+        SelectRow(
+          name: l.spendingBudgetRow,
+          line: l.spendingBudgetRowLine(monthName),
+          trailing: _moneyTrailing(rows?.leftMinor, currency),
+          onTap: widget.onBudget,
+          semanticLabel: l.spendingBudgetRow,
+          stackValue: true,
+        ),
+    ];
+    if (second.isNotEmpty) {
+      cards.add(
+        GlassCard(
+          variant: GlassCardVariant.list,
+          child: Column(children: second),
+        ),
+      );
+    }
+
+    final third = <Widget>[
+      if (widget.onAllPayments != null)
+        SelectRow(
+          name: l.spendingAllPaymentsRow,
+          line: monthName,
+          trailing: rows?.paymentsCount == null
+              ? null
+              : Text('${rows!.paymentsCount}', style: _rowValueStyle),
+          onTap: widget.onAllPayments,
+          semanticLabel: l.spendingAllPaymentsRow,
+          stackValue: true,
+        ),
+      if (widget.onEditLimits != null)
+        SelectRow(
+          name: l.spendingEditLimitsRow,
+          line: l.spendingCategoriesLine(
+            _controller.limits?.categoryCount ?? 0,
+          ),
+          trailing: _moneyTrailing(rows?.limitMinor, currency),
+          onTap: widget.onEditLimits,
+          semanticLabel: l.spendingEditLimitsRow,
+          stackValue: true,
+        ),
+    ];
+    if (third.isNotEmpty) {
+      cards.add(
+        GlassCard(
+          variant: GlassCardVariant.list,
+          child: Column(children: third),
+        ),
+      );
+    }
+    return cards;
+  }
+
+  TextStyle get _rowValueStyle => AppText.bodyStrong.copyWith(
+        color: context.tokens.textPrimary,
+      );
+
+  Widget? _moneyTrailing(int? minor, Currency currency) {
+    if (minor == null) {
+      return null;
+    }
+    return MoneyText(
+      ValueSpec.real(wholeMoney(Money.fromMinor(minor, currency))),
+      trimZeroFraction: true,
+      style: _rowValueStyle,
     );
   }
 
-  Widget _rows(AppLocalizations l, SpendingView view) {
-    final currency = Currency.of(view.currencyCode);
-    return GlassCard(
-      child: Column(
-        children: <Widget>[
-          if (widget.onWhereItGoes != null)
-            SelectRow(
-              name: l.spendingWhereItGoes,
-              line: formatDateRange(view.rangeStart, view.rangeEnd),
-              onTap: widget.onWhereItGoes,
-              semanticLabel: l.spendingWhereItGoes,
-            ),
-          if (widget.onBudget != null)
-            SelectRow(
-              name: l.spendingBudgetRow,
-              trailing: view.leftMinor == null
-                  ? null
-                  : MoneyText(
-                      ValueSpec.real(
-                        Money.fromMinor(view.leftMinor!, currency),
-                      ),
-                      style: AppText.body.copyWith(
-                        color: context.tokens.textSecondary,
-                      ),
-                    ),
-              onTap: widget.onBudget,
-              semanticLabel: l.spendingBudgetRow,
-            ),
-          if (widget.onMoneyIn != null)
-            SelectRow(
-              name: l.spendingMoneyInRow,
-              onTap: widget.onMoneyIn,
-              semanticLabel: l.spendingMoneyInRow,
-            ),
-          if (widget.onAllPayments != null)
-            SelectRow(
-              name: l.spendingAllPaymentsRow,
-              line: formatDateRange(view.rangeStart, view.rangeEnd),
-              onTap: widget.onAllPayments,
-              semanticLabel: l.spendingAllPaymentsRow,
-            ),
-          if (widget.onRepeating != null)
-            SelectRow(
-              name: l.spendingRepeatingRow,
-              onTap: widget.onRepeating,
-              semanticLabel: l.spendingRepeatingRow,
-            ),
-          if (widget.onEditLimits != null)
-            SelectRow(
-              name: l.spendingEditLimitsRow,
-              trailing: view.limitMinor == null
-                  ? null
-                  : MoneyText(
-                      ValueSpec.real(
-                        Money.fromMinor(view.limitMinor!, currency),
-                      ),
-                      style: AppText.body.copyWith(
-                        color: context.tokens.textSecondary,
-                      ),
-                    ),
-              onTap: widget.onEditLimits,
-              semanticLabel: l.spendingEditLimitsRow,
-            ),
-        ],
-      ),
+  Widget? _perMonthTrailing(
+    AppLocalizations l,
+    int? minor,
+    Currency currency,
+  ) {
+    final amount = _moneyTrailing(minor, currency);
+    if (amount == null) {
+      return null;
+    }
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        amount,
+        Text(' ${l.spendingPerMonth}', style: _rowValueStyle),
+      ],
     );
   }
 
-  static double _fraction(Percent percent) => percent.value.toDouble() / 100;
+  String _averageText(int minor, Currency currency, bool hidden) {
+    final money = wholeMoney(Money.fromMinor(minor, currency));
+    if (hidden) {
+      return formatValueState(ValueSpec.real(money), hidden: true).text;
+    }
+    return formatMoney(money, trimZeroFraction: true);
+  }
 
   static String _chipLabel(AppLocalizations l, SpendingPeriod period) =>
       switch (period) {

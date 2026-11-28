@@ -43,21 +43,26 @@ class HeroSideFigure {
 /// optional context line and up to two side figures.
 class ObHero extends StatelessWidget {
   const ObHero({
-    required this.kicker,
+    this.kicker,
     required this.value,
     this.variant = ObHeroVariant.number,
     this.hidden,
     this.contextLine,
     this.hiddenContextLine,
+    this.numberSuffix,
+    this.hiddenNumberSuffix,
     this.backgroundChart,
     this.onInfo,
     this.infoLabel,
     this.sideFigures = const <HeroSideFigure>[],
     this.hiddenLabel,
+    this.minFontSize = 40,
     super.key,
   });
 
-  final String kicker;
+  /// The metric name in `section.text`. Null when the screen header already
+  /// carries it (X10 Home keeps the name on the top line beside the actions).
+  final String? kicker;
 
   /// The hero number and its state.
   final ValueSpec value;
@@ -66,6 +71,13 @@ class ObHero extends StatelessWidget {
   /// The component override; null follows [HiddenAmountsScope].
   final bool? hidden;
   final String? contextLine;
+
+  /// A short phrase on the same line as the number, after it, for example
+  /// "of $5,200 limit" (X30). The number shrinks to keep the phrase beside it.
+  final String? numberSuffix;
+
+  /// [numberSuffix] with every amount masked. Used in the hidden state.
+  final String? hiddenNumberSuffix;
 
   /// The context line with every amount masked, built by the screen. When the
   /// state is hidden and this is null, the context line is not shown: a word
@@ -83,6 +95,10 @@ class ObHero extends StatelessWidget {
   /// The accessible word in hidden mode, from l10n.
   final String? hiddenLabel;
 
+  /// The smallest fit size for the hero number. A screen with a wide side
+  /// figure or a large text scale can pass a smaller value (DESIGN 2.5).
+  final double minFontSize;
+
   @override
   Widget build(BuildContext context) {
     final tokens = context.tokens;
@@ -96,32 +112,37 @@ class ObHero extends StatelessWidget {
       hiddenLabel: hiddenLabel,
     );
 
-    final number = HeroAmount(value: heroValue);
+    final number = HeroAmount(value: heroValue, minFontSize: minFontSize);
 
     final children = <Widget>[
-      Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Flexible(
-            child: Text(
-              kicker.toUpperCase(),
-              style: AppText.labelCaps.copyWith(color: role.text),
-              // CR-14: keep the spoken name in the original case; a screen
-              // reader can spell out all-caps words letter by letter.
-              semanticsLabel: kicker,
+      if (kicker != null) ...<Widget>[
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Flexible(
+              child: Text(
+                kicker!.toUpperCase(),
+                style: AppText.labelCaps.copyWith(color: role.text),
+                // CR-14: keep the spoken name in the original case; a screen
+                // reader can spell out all-caps words letter by letter.
+                semanticsLabel: kicker,
+              ),
             ),
-          ),
-          if (onInfo != null)
-            InfoButton(
-              semanticLabel: infoLabel ?? kicker,
-              onPressed: onInfo,
-            ),
-        ],
-      ),
-      const VSpace(Space.m),
-      SemanticAmount(
-        label: heroValue.semanticsLabel,
-        child: number,
+            if (onInfo != null)
+              InfoButton(
+                semanticLabel: infoLabel ?? kicker!,
+                onPressed: onInfo,
+              ),
+          ],
+        ),
+        const VSpace(Space.m),
+      ],
+      _numberBlock(
+        context,
+        heroValue,
+        number,
+        hiddenNow ? hiddenNumberSuffix : numberSuffix,
+        tokens,
       ),
     ];
 
@@ -151,6 +172,49 @@ class ObHero extends StatelessWidget {
       return column;
     }
     return _periodStack(column, hiddenNow);
+  }
+
+  /// The hero number, with an optional phrase on the same baseline.
+  Widget _numberBlock(
+    BuildContext context,
+    HeroValue heroValue,
+    Widget number,
+    String? suffix,
+    ContourTokens tokens,
+  ) {
+    if (suffix == null) {
+      return SemanticAmount(
+        label: heroValue.semanticsLabel,
+        child: number,
+      );
+    }
+    final suffixText = Text(
+      suffix,
+      style: AppText.line.copyWith(color: tokens.textSecondary),
+    );
+    final largeText = MediaQuery.textScalerOf(context).scale(13) >= 13 * 1.3;
+    return Semantics(
+      label: '${heroValue.semanticsLabel}, $suffix',
+      excludeSemantics: true,
+      child: largeText
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                number,
+                const VSpace(Space.xs),
+                suffixText,
+              ],
+            )
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: <Widget>[
+                Flexible(child: number),
+                const HSpace(Space.s),
+                Flexible(child: suffixText),
+              ],
+            ),
+    );
   }
 
   /// DESIGN 6.7: the period line sits behind the number, masked to 45% at its

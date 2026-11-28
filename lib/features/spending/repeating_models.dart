@@ -48,6 +48,7 @@ final class RepeatingView {
     required this.currencyCode,
     required this.monthlyCount,
     required this.yearlyCount,
+    this.changesThisMonth = 0,
   });
 
   final List<RepeatingItem> items;
@@ -57,6 +58,9 @@ final class RepeatingView {
   final String currencyCode;
   final int monthlyCount;
   final int yearlyCount;
+
+  /// The number of schedules with a price change in the current month.
+  final int changesThisMonth;
 
   /// The yearly total, from the monthly total.
   int get yearlyTotalMinor => monthlyTotalMinor * 12;

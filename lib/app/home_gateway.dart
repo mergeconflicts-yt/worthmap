@@ -7,10 +7,13 @@
 library;
 
 import '../core/dates.dart';
+import '../core/money.dart';
 import '../data/repositories/accounts.dart';
+import '../data/repositories/categories.dart';
 import '../data/repositories/inbox.dart';
 import '../data/repositories/occurrences.dart';
 import '../data/repositories/schedules.dart';
+import '../domain/numbers/net_worth_target.dart';
 import '../domain/periods/budget_month.dart';
 import '../domain/periods/period_math.dart';
 import '../features/home/home_models.dart';
@@ -20,21 +23,35 @@ import '../features/spending/spending_models.dart';
 final class SqlHomeGateway implements HomeGateway {
   SqlHomeGateway({
     required this.accounts,
+    required this.categories,
     required this.inbox,
     required this.schedules,
     required this.occurrences,
     required this.spending,
     required this.today,
     this.currencyCode = 'USD',
+    this.netWorthTargetMinor,
+    this.netWorthTargetDate,
+    this.investmentsTodayMinor,
   });
 
   final AccountRepository accounts;
+  final CategoryRepository categories;
   final InboxRepository inbox;
   final ScheduleRepository schedules;
   final OccurrenceRepository occurrences;
   final SpendingGateway spending;
   final LocalDate Function() today;
   final String currencyCode;
+
+  /// The owner's target. Null in v1 until the goals record ships (G09).
+  final int? netWorthTargetMinor;
+  final LocalDate? netWorthTargetDate;
+
+  /// The synthetic demo value for the investments "today" line. Null until
+  /// the holdings and prices read lands (Phase 5), so the release path shows
+  /// no line.
+  final int? investmentsTodayMinor;
 
   @override
   Future<HomeSummary> load() async {
@@ -52,6 +69,8 @@ final class SqlHomeGateway implements HomeGateway {
     var cashMissing = false;
     var cardOwed = 0;
     var cardMissing = false;
+    var cardCount = 0;
+    String? cardName;
     var investments = 0;
     var investmentsMissing = false;
     for (final account in accountRows) {
@@ -78,6 +97,8 @@ final class SqlHomeGateway implements HomeGateway {
         }
       }
       if (account.isLiability) {
+        cardCount++;
+        cardName = cardCount == 1 ? account.name : null;
         if (minor == null) {
           cardMissing = true;
         } else {
@@ -155,15 +176,58 @@ final class SqlHomeGateway implements HomeGateway {
     final moneyIn = moneyInView.amountMinor;
     final spent = spendingView.moneyOutMinor;
 
+    final resolvedNetWorth = netWorthMissing ? null : netWorth;
+    final targetMinor = netWorthTargetMinor;
+    final targetDate = netWorthTargetDate;
+    final target = targetMinor == null || targetDate == null
+        ? null
+        : HomeNetWorthTarget(
+            amountMinor: targetMinor,
+            date: targetDate,
+            share: netWorthTargetShare(
+              current: resolvedNetWorth == null
+                  ? null
+                  : Money.fromMinor(
+                      resolvedNetWorth,
+                      Currency.of(currencyCode),
+                    ),
+              target: Money.fromMinor(
+                targetMinor,
+                Currency.of(currencyCode),
+              ),
+            ),
+          );
+
+    var needs = 0;
+    var wants = 0;
+    var unclassified = 0;
+    final tagged = <String, bool?>{
+      for (final category in await categories.list(kind: 'expense'))
+        category.id: category.isEssential,
+    };
+    for (final category in spendingView.categories) {
+      final tag = tagged[category.id];
+      if (tag == true) {
+        needs += category.amountMinor;
+      } else if (tag == false) {
+        wants += category.amountMinor;
+      } else {
+        unclassified += category.amountMinor;
+      }
+    }
+
     return HomeSummary(
       currencyCode: currencyCode,
       month: month.start,
-      netWorthMinor: netWorthMissing ? null : netWorth,
+      netWorthMinor: resolvedNetWorth,
       netWorthChangeMinor: first == null || last == null ? null : last - first,
+      netWorthTarget: target,
       netWorthSeries: series,
       cashMinor: cashMissing ? null : cash,
       cardOwedMinor: cardMissing ? null : cardOwed,
+      cardName: cardMissing ? null : cardName,
       investmentsMinor: investmentsMissing ? null : investments,
+      investmentsTodayMinor: investmentsMissing ? null : investmentsTodayMinor,
       subscriptionsMonthlyMinor: subscriptions,
       moneyInMinor: moneyIn,
       spentMinor: spent,
@@ -189,6 +253,9 @@ final class SqlHomeGateway implements HomeGateway {
           ? null
           : HomeIncomeSplit(
               moneyInMinor: moneyIn,
+              needsMinor: needs,
+              wantsMinor: wants,
+              unclassifiedMinor: unclassified,
               investedMinor: invested,
               inCashMinor: moneyIn - spent,
               currencyCode: currencyCode,

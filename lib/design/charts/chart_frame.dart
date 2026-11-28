@@ -110,6 +110,7 @@ class ChartFrame extends StatefulWidget {
     required this.chart,
     this.table,
     this.preview = false,
+    this.showTable = true,
     this.emptyLabel,
     this.tableLabel,
     this.initiallyOpen = false,
@@ -128,6 +129,10 @@ class ChartFrame extends StatefulWidget {
 
   /// PREVIEW-CHART: no table, label only.
   final bool preview;
+
+  /// Shows the "Show as table" disclosure. False when the visible labels
+  /// already list every value (X10 This month split).
+  final bool showTable;
 
   /// The phrase for an empty table, for example "None recorded".
   final String? emptyLabel;
@@ -151,7 +156,8 @@ class _ChartFrameState extends State<ChartFrame> {
     final l10n = AppLocalizations.of(context);
     final showLabel = widget.tableLabel ?? l10n.chartShowAsTable;
     final hideLabel = l10n.chartHideTable;
-    final hasTable = !widget.preview && widget.table != null;
+    final hasTable =
+        widget.showTable && !widget.preview && widget.table != null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

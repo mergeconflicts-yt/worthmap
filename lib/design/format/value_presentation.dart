@@ -105,6 +105,7 @@ ValuePresentation formatValueState(
   String? mark,
   String? hiddenLabel,
   SignStyle sign = SignStyle.negativeOnly,
+  bool trimZeroFraction = false,
 }) {
   final amount = spec.amount;
   switch (spec.state) {
@@ -134,6 +135,7 @@ ValuePresentation formatValueState(
         mark: mark,
         hiddenLabel: hiddenLabel,
         sign: sign,
+        trimZeroFraction: trimZeroFraction,
       );
   }
 }
@@ -146,6 +148,7 @@ ValuePresentation _presentAmount(
   required SignStyle sign,
   String? mark,
   String? hiddenLabel,
+  bool trimZeroFraction = false,
 }) {
   // N-14: every state label must be non-empty, not only the unknown states.
   if (marker != null && marker.isEmpty) {
@@ -156,8 +159,13 @@ ValuePresentation _presentAmount(
     final symbol = showSymbol ? (mark ?? currencyMark(amount.currency)) : '';
     visible = '$symbol$hiddenMask';
   } else {
-    visible =
-        formatMoney(amount, showSymbol: showSymbol, mark: mark, sign: sign);
+    visible = formatMoney(
+      amount,
+      showSymbol: showSymbol,
+      mark: mark,
+      sign: sign,
+      trimZeroFraction: trimZeroFraction,
+    );
   }
   final text = marker == null ? visible : '$visible $marker';
   final String semanticsLabel;

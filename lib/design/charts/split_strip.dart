@@ -11,6 +11,7 @@ import 'package:flutter/widgets.dart';
 import '../../core/money.dart';
 import '../../core/percent.dart';
 import '../format/hidden_amounts.dart';
+import '../format/percent_text.dart';
 import '../theme/app_theme.dart';
 import '../tokens/space.dart';
 import '../tokens/tokens.g.dart';
@@ -39,6 +40,8 @@ class SplitStrip extends StatelessWidget {
     required this.period,
     required this.parts,
     required this.columns,
+    this.shareDecimals = 1,
+    this.showTable = true,
     this.emptyLabel,
     this.hidden,
     super.key,
@@ -50,6 +53,15 @@ class SplitStrip extends StatelessWidget {
 
   /// Table columns: name, amount, share.
   final List<String> columns;
+
+  /// Decimal places in the shares. 0 gives whole shares that still add to
+  /// exactly 100% (SPEC 4.1).
+  final int shareDecimals;
+
+  /// Shows the "Show as table" disclosure. False when the legend already
+  /// lists every value (X10 This month).
+  final bool showTable;
+
   final String? emptyLabel;
   final bool? hidden;
 
@@ -60,11 +72,14 @@ class SplitStrip extends StatelessWidget {
     final tokens = context.tokens;
     final shares = parts.isEmpty
         ? const <Percent>[]
-        : Percent.split(<Decimal>[
-            for (final part in parts) Decimal.fromInt(part.amount.minor),
-          ]);
+        : Percent.split(
+            <Decimal>[
+              for (final part in parts) Decimal.fromInt(part.amount.minor),
+            ],
+            scale: shareDecimals,
+          );
     final shareText = <String>[
-      for (final share in shares) '${_trim(share.value)}%',
+      for (final share in shares) formatPercent(share, decimals: shareDecimals),
     ];
     final table = ChartTable(
       columns: columns,
@@ -90,6 +105,7 @@ class SplitStrip extends StatelessWidget {
       label: label,
       emptyLabel: emptyLabel,
       table: table,
+      showTable: showTable,
       chart: parts.isEmpty
           ? Text(
               emptyLabel ?? '',
@@ -143,8 +159,8 @@ class SplitStrip extends StatelessWidget {
                           style: AppText.caption,
                         ),
                         const HSpace(Space.s),
-                        SizedBox(
-                          width: 48,
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(minWidth: 48),
                           child: Text(
                             shareText[i],
                             textAlign: TextAlign.end,
@@ -159,11 +175,6 @@ class SplitStrip extends StatelessWidget {
               ],
             ),
     );
-  }
-
-  static String _trim(Decimal value) {
-    final text = value.toString();
-    return text.endsWith('.0') ? text.substring(0, text.length - 2) : text;
   }
 }
 

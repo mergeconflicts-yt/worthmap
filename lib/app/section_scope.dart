@@ -12,14 +12,12 @@ import 'router.dart';
 export '../design/theme/section.dart'
     show Section, SectionScope, SectionContext;
 
-/// The Section of a route (DESIGN 3). Phase 1: everything is Home.
+/// The Section of a route (DESIGN 3; SCREENS.md screen table).
 Section sectionForRoute(AppRoute route) {
   return switch (route) {
-    AppRoute.welcome ||
-    AppRoute.lock ||
-    AppRoute.home ||
-    AppRoute.accountEditor =>
-      Section.wealth,
+    AppRoute.welcome || AppRoute.lock || AppRoute.home => Section.home,
+    AppRoute.wealth || AppRoute.accountEditor => Section.wealth,
+    AppRoute.plan => Section.plan,
     AppRoute.paymentAdd => Section.spending,
     AppRoute.transferAdd ||
     AppRoute.voiceCapture ||

@@ -23,6 +23,7 @@ class X37AllPayments extends StatefulWidget {
     required this.onOpenPayment,
     this.initialFilter,
     this.controller,
+    this.today,
     super.key,
   });
 
@@ -30,6 +31,10 @@ class X37AllPayments extends StatefulWidget {
   final VoidCallback onClose;
   final Future<DeletedPayment?> Function(String) onOpenPayment;
   final PaymentFilter? initialFilter;
+
+  /// Test and golden seam: the local date the day labels compare with. The
+  /// composition passes none, so the screen reads today.
+  final LocalDate? today;
 
   /// Test and golden seam: a prepared controller. The caller owns it.
   final PaymentsListController? controller;
@@ -84,6 +89,7 @@ class _X37AllPaymentsState extends State<X37AllPayments> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final today = widget.today ?? _localToday();
     return AnimatedBuilder(
       animation: _controller,
       builder: (BuildContext context, _) {
@@ -120,7 +126,7 @@ class _X37AllPaymentsState extends State<X37AllPayments> {
               ),
             ] else if (page != null) ...<Widget>[
               _chips(l, page),
-              ..._days(l, page),
+              ..._days(l, page, today),
             ],
           ],
         );
@@ -153,7 +159,11 @@ class _X37AllPaymentsState extends State<X37AllPayments> {
     );
   }
 
-  List<Widget> _days(AppLocalizations l, PaymentListPage page) {
+  List<Widget> _days(
+    AppLocalizations l,
+    PaymentListPage page,
+    LocalDate today,
+  ) {
     if (page.items.isEmpty) {
       return <Widget>[
         GlassCard(
@@ -181,7 +191,7 @@ class _X37AllPaymentsState extends State<X37AllPayments> {
     }
     return <Widget>[
       for (final entry in groups.entries)
-        _dayCard(l, LocalDate.parse(entry.key), entry.value),
+        _dayCard(l, LocalDate.parse(entry.key), entry.value, today),
     ];
   }
 
@@ -189,11 +199,12 @@ class _X37AllPaymentsState extends State<X37AllPayments> {
     AppLocalizations l,
     LocalDate date,
     List<PaymentListItem> items,
+    LocalDate today,
   ) {
     final currency = Currency.of(items.first.currencyCode);
     final total = items.fold<int>(0, (sum, item) => sum + item.amountMinor);
     return GlassCard(
-      title: _dayLabel(l, date),
+      title: _dayLabel(l, date, today),
       meta: formatMoney(Money.fromMinor(total, currency)),
       child: Column(
         children: <Widget>[
@@ -248,9 +259,7 @@ class _X37AllPaymentsState extends State<X37AllPayments> {
     }
   }
 
-  String _dayLabel(AppLocalizations l, LocalDate date) {
-    final now = DateTime.now();
-    final today = LocalDate(now.year, now.month, now.day);
+  String _dayLabel(AppLocalizations l, LocalDate date, LocalDate today) {
     if (date == today) {
       return '${l.paymentsToday} · ${formatDate(date, DateStyle.short)}';
     }
@@ -291,4 +300,9 @@ class _X37AllPaymentsState extends State<X37AllPayments> {
         PaymentPeriod.lastMonth => l.paymentsPeriodLastMonth,
         PaymentPeriod.thisYear => l.paymentsPeriodThisYear,
       };
+}
+
+LocalDate _localToday() {
+  final now = DateTime.now();
+  return LocalDate(now.year, now.month, now.day);
 }

@@ -19,6 +19,7 @@ class MoneyText extends StatelessWidget {
     this.hiddenLabel,
     this.prefix,
     this.sign = SignStyle.negativeOnly,
+    this.trimZeroFraction = false,
     this.style,
     super.key,
   });
@@ -43,6 +44,10 @@ class MoneyText extends StatelessWidget {
   /// part of the pixels and of the spoken name, and it masks with the amount.
   final String? prefix;
 
+  /// Drops the fraction when it is all zeros (DESIGN 4: cents only where they
+  /// matter). Real cents always stay.
+  final bool trimZeroFraction;
+
   @override
   Widget build(BuildContext context) {
     final hiddenNow = HiddenAmountsScope.resolve(context, hidden);
@@ -53,6 +58,7 @@ class MoneyText extends StatelessWidget {
       mark: mark,
       hiddenLabel: hiddenLabel,
       sign: sign,
+      trimZeroFraction: trimZeroFraction,
     );
     final prefixText = prefix ?? '';
     return Text(

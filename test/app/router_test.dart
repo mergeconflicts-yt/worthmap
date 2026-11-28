@@ -64,6 +64,48 @@ void main() {
     expect(SectionScope.of(context), Section.home);
   });
 
+  testWidgets('the tab bar opens the four section roots', (tester) async {
+    final (config, _) = await pumpRouter(tester, ScriptedGate(true));
+    config.go('/x03');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AppTabBar), findsOneWidget);
+    Finder tab(String label) => find.descendant(
+          of: find.byType(AppTabBar),
+          matching: find.text(label),
+        );
+    expect(tab('Home'), findsOneWidget);
+    expect(tab('Spending'), findsOneWidget);
+    expect(tab('Wealth'), findsOneWidget);
+    expect(tab('Plan'), findsOneWidget);
+
+    await tester.tap(tab('Wealth'));
+    await tester.pumpAndSettle();
+    expect(
+      config.routerDelegate.currentConfiguration.matches.last.matchedLocation,
+      '/x40',
+    );
+
+    await tester.tap(tab('Plan'));
+    await tester.pumpAndSettle();
+    expect(
+      config.routerDelegate.currentConfiguration.matches.last.matchedLocation,
+      '/x50',
+    );
+
+    await tester.tap(tab('Spending'));
+    await tester.pumpAndSettle();
+    expect(
+      config.routerDelegate.currentConfiguration.matches.last.matchedLocation,
+      '/x30',
+    );
+
+    // A detail screen has no tab bar (SPEC 5.1).
+    config.go('/x80');
+    await tester.pumpAndSettle();
+    expect(find.byType(AppTabBar), findsNothing);
+  });
+
   testWidgets('a deep link waits behind unlock and resumes after it',
       (tester) async {
     final gate = ScriptedGate(false);

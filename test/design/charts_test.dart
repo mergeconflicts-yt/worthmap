@@ -1,3 +1,4 @@
+import 'package:contour/core/dates.dart';
 import 'package:contour/core/money.dart';
 import 'package:contour/design/design.dart';
 import 'package:contour/l10n/generated/app_localizations.dart';
@@ -322,5 +323,126 @@ void main() {
     expect(chartShortAmount(_money(303)), r'$303');
     expect(chartShortAmount(_money(150000)), r'$150K');
     expect(chartShortAmount(_money(1200000)), r'$1.2M');
+  });
+
+  group('GlyphTimeline', () {
+    final start = LocalDate(2026, 10, 13);
+
+    Widget timeline({
+      bool hidden = false,
+      int? incomeDayIndex,
+      List<TimelineItem>? items,
+    }) {
+      return _wrap(
+        SizedBox(
+          width: 380,
+          child: GlyphTimeline(
+            title: 'Next 30 days',
+            windowLabel: '13 Oct to 12 Nov',
+            start: start,
+            incomeDayIndex: incomeDayIndex,
+            hidden: hidden,
+            items: items ??
+                <TimelineItem>[
+                  TimelineItem(
+                    dayIndex: 5,
+                    dateLabel: '18 Oct',
+                    name: 'Netflix',
+                    amount: Money.fromMinor(1799, Currency.usd),
+                    mark: ChartMark.spending,
+                  ),
+                  TimelineItem(
+                    dayIndex: 7,
+                    dateLabel: '20 Oct',
+                    name: 'Phone',
+                    amount: Money.fromMinor(4500, Currency.usd),
+                    mark: ChartMark.spending,
+                  ),
+                  TimelineItem(
+                    dayIndex: 9,
+                    dateLabel: '22 Oct',
+                    name: 'Visa card',
+                    amount: Money.fromMinor(124000, Currency.usd),
+                    mark: ChartMark.spending,
+                  ),
+                ],
+          ),
+        ),
+        hidden: hidden,
+      );
+    }
+
+    testWidgets('shows today, the day scale and the item labels', (
+      tester,
+    ) async {
+      await tester.pumpWidget(timeline());
+      await tester.pumpAndSettle();
+
+      expect(find.text('TODAY'), findsOneWidget);
+      expect(find.text('13 OCT'), findsOneWidget);
+      expect(find.text('14'), findsOneWidget);
+      expect(find.text('Netflix'), findsOneWidget);
+      expect(find.text(r'$17.99'), findsOneWidget);
+      expect(find.text(r'$45'), findsOneWidget);
+      expect(find.text(r'$1,240'), findsOneWidget);
+    });
+
+    testWidgets('the legend names the flow groups', (tester) async {
+      await tester.pumpWidget(timeline());
+      await tester.pumpAndSettle();
+
+      expect(find.text('Spending'), findsOneWidget);
+      expect(find.text('Investing'), findsOneWidget);
+      expect(find.text('Money in'), findsOneWidget);
+    });
+
+    testWidgets('hidden amounts mask the labels, names and days stay', (
+      tester,
+    ) async {
+      await tester.pumpWidget(timeline(hidden: true));
+      await tester.pumpAndSettle();
+
+      expect(find.text('\$······'), findsNWidgets(3));
+      expect(find.text(r'$17.99'), findsNothing);
+      expect(find.text('Netflix'), findsOneWidget);
+      expect(find.text('13 OCT'), findsOneWidget);
+    });
+
+    testWidgets('an empty window shows the empty phrase', (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          SizedBox(
+            width: 380,
+            child: GlyphTimeline(
+              title: 'Next 30 days',
+              windowLabel: '13 Oct to 12 Nov',
+              start: start,
+              emptyLabel: 'None recorded',
+              items: const <TimelineItem>[],
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('None recorded'), findsOneWidget);
+    });
+
+    testWidgets('the axis scrolls sideways and draws after the next income', (
+      tester,
+    ) async {
+      await tester.pumpWidget(timeline(incomeDayIndex: 19));
+      await tester.pumpAndSettle();
+
+      final scrollable = find.descendant(
+        of: find.byType(GlyphTimeline),
+        matching: find.byType(Scrollable),
+      );
+      final position = tester.state<ScrollableState>(scrollable).position;
+      expect(position.pixels, 0);
+      await tester.drag(find.byType(GlyphTimeline), const Offset(-200, 0));
+      await tester.pumpAndSettle();
+      expect(position.pixels, greaterThan(0));
+    });
   });
 }

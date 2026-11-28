@@ -26,8 +26,8 @@ class TabShell extends StatelessWidget {
         Positioned.fill(child: child),
         if (!(hideWithKeyboard && keyboard))
           Positioned(
-            left: Space.l,
-            right: Space.l,
+            left: Space.s,
+            right: Space.s,
             bottom: MediaQuery.paddingOf(context).bottom + AppTabBar.lift,
             child: tabBar,
           ),

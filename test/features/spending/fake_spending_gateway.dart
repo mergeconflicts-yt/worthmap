@@ -116,6 +116,7 @@ final class FakeSpendingGateway implements SpendingGateway {
       period: period,
       rangeStart: start,
       rangeEnd: end,
+      month: LocalDate(start.year, start.month, 1),
       currencyCode: 'USD',
       partial: period == SpendingPeriod.week || period == SpendingPeriod.month,
       moneyOutMinor: spent,
@@ -142,12 +143,14 @@ final class FakeSpendingGateway implements SpendingGateway {
           name: 'Rent',
           amountMinor: 120000,
           currencyCode: 'USD',
+          isEssential: true,
         ),
         SpendingCategoryView(
           id: 'groceries',
           name: 'Groceries',
           amountMinor: 36000,
           currencyCode: 'USD',
+          isEssential: true,
         ),
       ];
     }
@@ -157,42 +160,49 @@ final class FakeSpendingGateway implements SpendingGateway {
         name: 'Rent',
         amountMinor: 180000,
         currencyCode: 'USD',
+        isEssential: true,
       ),
       SpendingCategoryView(
         id: 'groceries',
         name: 'Groceries',
         amountMinor: 60000,
         currencyCode: 'USD',
+        isEssential: true,
       ),
       SpendingCategoryView(
         id: 'dining',
         name: 'Dining',
         amountMinor: 52000,
         currencyCode: 'USD',
+        isEssential: false,
       ),
       SpendingCategoryView(
         id: 'shopping',
         name: 'Shopping',
         amountMinor: 24000,
         currencyCode: 'USD',
+        isEssential: false,
       ),
       SpendingCategoryView(
         id: 'transport',
         name: 'Transport',
         amountMinor: 30000,
         currencyCode: 'USD',
+        isEssential: true,
       ),
       SpendingCategoryView(
         id: 'utilities',
         name: 'Utilities',
         amountMinor: 20000,
         currencyCode: 'USD',
+        isEssential: true,
       ),
       SpendingCategoryView(
         id: 'subscriptions',
         name: 'Subscriptions',
         amountMinor: 9000,
         currencyCode: 'USD',
+        isEssential: false,
       ),
       SpendingCategoryView(
         id: 'other',
@@ -297,6 +307,26 @@ final class FakeSpendingGateway implements SpendingGateway {
       throw failure;
     }
     return moneyIn;
+  }
+
+  @override
+  Future<SpendingRowsView> loadRows() async {
+    final failure = loadFailure;
+    if (failure != null) {
+      throw failure;
+    }
+    return SpendingRowsView(
+      month: LocalDate(2026, 10, 1),
+      leftMinor: 126000,
+      limitMinor: 520000,
+      whereCount: 8,
+      moneyInMinor: 820000,
+      moneyInAverageMinor: 926700,
+      paymentsCount: 42,
+      repeatingCount: 7,
+      repeatingChanges: 3,
+      repeatingMonthlyMinor: 208400,
+    );
   }
 
   @override

@@ -31,6 +31,7 @@ void main() {
       _wrap(
         X37AllPayments(
           gateway: FakePaymentsReadGateway(),
+          today: FakePaymentsReadGateway.defaultToday,
           onClose: () {},
           onOpenPayment: (String id) async {
             opened.add(id);
