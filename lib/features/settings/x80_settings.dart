@@ -17,7 +17,10 @@ import '../../l10n/generated/app_localizations.dart';
 
 /// X80: Settings, five cards with icon rows.
 class X80Settings extends StatelessWidget {
-  const X80Settings({super.key});
+  const X80Settings({required this.onClose, super.key});
+
+  /// Back. The route supplies it, so a screen opened directly still leaves.
+  final VoidCallback onClose;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +61,7 @@ class X80Settings extends StatelessWidget {
           icon: AppIcons.back,
           variant: AppIconButtonVariant.onPage,
           semanticLabel: l.x80Back,
-          onPressed: () => context.pop(),
+          onPressed: onClose,
         ),
       ),
       children: <Widget>[

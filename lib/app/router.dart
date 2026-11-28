@@ -637,7 +637,14 @@ final class ContourRouter {
             ),
           ),
         ),
-        _route(AppRoute.settings, const X80Settings()),
+        GoRoute(
+          path: AppRoute.settings.path,
+          name: AppRoute.settings.screenId,
+          builder: (context, state) => _screenScaffold(
+            AppRoute.settings,
+            X80Settings(onClose: () => _closeOrHome(context)),
+          ),
+        ),
         _route(AppRoute.privacy, const X86Privacy()),
         if (kDebugMode)
           GoRoute(
@@ -661,6 +668,17 @@ final class ContourRouter {
       name: route.screenId,
       builder: (context, state) => _screenScaffold(route, screen),
     );
+  }
+
+  /// Back from a detail screen. It returns to the previous page; a screen
+  /// opened directly (a deep link, the demo route or the gallery) has no
+  /// previous page, so it opens the Home root instead of failing a pop.
+  void _closeOrHome(BuildContext context) {
+    if (context.canPop()) {
+      context.pop();
+    } else {
+      context.go(AppRoute.home.path);
+    }
   }
 
   /// Wraps the screen in the route's SectionScope (DESIGN 3). A tab root also

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:contour/app/router.dart';
 import 'package:contour/design/design.dart';
 import 'package:contour/l10n/generated/app_localizations.dart';
@@ -104,6 +106,35 @@ void main() {
     config.go('/x80');
     await tester.pumpAndSettle();
     expect(find.byType(AppTabBar), findsNothing);
+  });
+
+  testWidgets('X80 Back returns to the previous page, or Home when none',
+      (tester) async {
+    final (config, _) = await pumpRouter(tester, ScriptedGate(true));
+    config.go('/x03');
+    await tester.pumpAndSettle();
+
+    // Home opens Settings on top of the stack: Back pops it.
+    unawaited(config.push('/x80'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(AppIconButton).first);
+    await tester.pumpAndSettle();
+    expect(
+      config.routerDelegate.currentConfiguration.matches.last.matchedLocation,
+      '/x03',
+    );
+
+    // A screen opened directly has no previous page: Back opens Home.
+    config.go('/x80');
+    await tester.pumpAndSettle();
+    expect(find.byType(AppTabBar), findsNothing);
+    await tester.tap(find.byType(AppIconButton).first);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(
+      config.routerDelegate.currentConfiguration.matches.last.matchedLocation,
+      '/x03',
+    );
   });
 
   testWidgets('a deep link waits behind unlock and resumes after it',

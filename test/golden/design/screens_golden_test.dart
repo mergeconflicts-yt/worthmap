@@ -50,7 +50,7 @@ void main() {
     (
       'x80_settings',
       const Size(420, 4800),
-      (context) => const X80Settings(),
+      (context) => X80Settings(onClose: () {}),
     ),
     (
       'x86_privacy',
