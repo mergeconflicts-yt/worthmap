@@ -4,6 +4,7 @@ library;
 import 'package:contour/core/dates.dart';
 import 'package:contour/design/design.dart';
 import 'package:contour/features/home/x03_home_first.dart';
+import 'package:contour/features/plan/x50_plan.dart';
 import 'package:contour/features/settings/x80_settings.dart';
 import 'package:contour/features/settings/x86_privacy.dart';
 import 'package:contour/features/start/x01_welcome.dart';
@@ -13,6 +14,7 @@ import 'package:contour/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../features/plan/fake_plan_gateway.dart';
 import '../../features/wealth/fake_wealth_gateway.dart';
 import 'golden_harness.dart';
 
@@ -53,6 +55,11 @@ void main() {
       'x40_wealth',
       const Size(420, 2600),
       (context) => X40Wealth(gateway: FakeWealthGateway()),
+    ),
+    (
+      'x50_plan',
+      const Size(420, 2200),
+      (context) => X50Plan(gateway: FakePlanGateway()),
     ),
     (
       'x80_settings',
@@ -207,6 +214,20 @@ void main() {
       l.wealthNoBalance,
       l.wealthMissing,
       l.wealthLoadFailed,
+      l.planKicker,
+      l.planBeforeIncome,
+      l.planFromIncome,
+      l.planNoEvents,
+      l.planKindIncome,
+      l.planKindInvesting,
+      l.planKindSpending,
+      l.planDayTitle,
+      l.planLoadFailed,
+      l.planNextDays(45),
+      l.calendarLegendIncome,
+      l.calendarLegendInvesting,
+      l.calendarLegendSpending,
+      l.calendarSpoken(2, '30 Nov 2026'),
     ];
     final lowered = all.map((s) => s.toLowerCase()).toList();
     for (final word in _bannedWords) {

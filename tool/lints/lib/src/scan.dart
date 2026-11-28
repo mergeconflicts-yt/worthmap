@@ -50,6 +50,9 @@ const Set<String> _nonChartModules = <String>{
   'chart_tone.dart',
   'chart_values.dart',
   'brand_mark.dart',
+  // DESIGN 6.7: a date grid with one flow glyph per event. It draws shapes,
+  // not a data series; the exact values are in the list and the Day sheet.
+  'symbol_calendar.dart',
 };
 
 /// DESIGN 7.1: a chart module needs a ChartFrame and a ChartTable, unless it

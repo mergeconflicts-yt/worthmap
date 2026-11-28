@@ -40,6 +40,7 @@ import '../features/import/import_models.dart';
 import '../features/import/x63_import.dart';
 import '../features/inbox/inbox_models.dart';
 import '../features/inbox/x60_inbox.dart';
+import '../features/plan/plan_models.dart';
 import '../features/plan/x50_plan.dart';
 import '../features/settings/x80_settings.dart';
 import '../features/settings/x86_privacy.dart';
@@ -153,6 +154,7 @@ final class ContourRouter {
     HistoryGateway? history,
     HomeGateway? home,
     WealthGateway? wealth,
+    PlanGateway? plan,
     ImportGateway? imports,
     ImportFileIntake? importFiles,
     ImportPasswordVault? importPasswords,
@@ -177,6 +179,7 @@ final class ContourRouter {
         _history = history ?? const UnavailableHistoryGateway(),
         _home = home,
         _wealth = wealth ?? const UnavailableWealthGateway(),
+        _plan = plan ?? const UnavailablePlanGateway(),
         _imports = imports ?? const UnavailableImportGateway(),
         _importFiles = importFiles ?? const PlatformImportFileIntake(),
         _importPasswords = importPasswords;
@@ -228,6 +231,10 @@ final class ContourRouter {
   /// The Wealth read port for X40. The default is the factual unavailable
   /// state until the vault composition mounts the SQL gateway.
   final WealthGateway _wealth;
+
+  /// The Plan read port for X50. The default is the factual unavailable
+  /// state until the vault composition mounts the SQL gateway.
+  final PlanGateway _plan;
 
   /// The PDF import port for X63.
   final ImportGateway _imports;
@@ -422,7 +429,7 @@ final class ContourRouter {
           name: AppRoute.plan.screenId,
           builder: (context, state) => _screenScaffold(
             AppRoute.plan,
-            const X50Plan(),
+            X50Plan(gateway: _plan),
           ),
         ),
         GoRoute(

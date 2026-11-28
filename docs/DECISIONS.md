@@ -165,6 +165,36 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   request per family, when a typed read is first needed.
 ## Decided
 
+### P4-PLAN
+
+- Decision (2026-11-28). X50 reads the retained Expected occurrences from
+  today to 45 days ahead and writes nothing. The window ends at a real
+  occurrence date, so no invented day appears on the calendar.
+
+- Calendar. New `SymbolCalendar`: Monday first, cells 72 high (96 above 1.3
+  text scale), one flow glyph per event (up to three, then "+N"), a month mark
+  on the first day of a month, today outlined, past days in `text.secondary`.
+  A day with events is a button that opens the X51 sheet. Amounts stay out of
+  the cells, as DESIGN 6.7 says.
+
+- Amounts. X50 keeps cents ("−$17.99"), unlike X30 and X40 which round to
+  whole units for their layouts. `MoneyText(trimZeroFraction: true)` drops
+  only an all-zero fraction.
+
+- Card. "Before next income" lists the events before the next income date and
+  then "From next income". When the range holds no income, the title is
+  "Next 45 days"; the demo has no income schedule, so it shows that title.
+
+- Not built, and recorded so the screen is not read as complete: the
+  Calendar · Goals · Protect · Tax SegmentTabs (Goals is v1.1, Protect and
+  Tax are v1.2; a tab that opens nothing would be a dead control), the X50b
+  cash-flow row (no balance forecast read), and the calendar's legend
+  amounts.
+
+- Evidence: `test/features/plan/x50_plan_test.dart` (3),
+  `test/app/demo_plan_test.dart` (1), and four X50 goldens (dark and light at
+  1.0 and 2.0), all checked.
+
 ### P4-WEALTH
 
 - Decision (2026-11-28). X40 is built from the existing P14 account reads.

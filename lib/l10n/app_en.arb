@@ -3981,4 +3981,72 @@
   "@wealthTableDate": {
     "description": "X40 chart table column."
   }
+  ,"planKicker": "Plan",
+  "@planKicker": {
+    "description": "X50 header kicker."
+  },
+  "planMeta": "to {date}",
+  "@planMeta": {
+    "description": "X50 calendar card meta."
+  },
+  "planBeforeIncome": "Before next income",
+  "@planBeforeIncome": {
+    "description": "X50 card title."
+  },
+  "planNextDays": "Next {days} days",
+  "@planNextDays": {
+    "description": "X50 card title when no income is in the range."
+  },
+  "planFromIncome": "From next income",
+  "@planFromIncome": {
+    "description": "X50 card sub-head."
+  },
+  "planNoEvents": "No payments in this range.",
+  "@planNoEvents": {
+    "description": "X50 empty state."
+  },
+  "planKindIncome": "Income",
+  "@planKindIncome": {
+    "description": "X50 row kind."
+  },
+  "planKindInvesting": "Investment",
+  "@planKindInvesting": {
+    "description": "X50 row kind."
+  },
+  "planKindSpending": "Payment",
+  "@planKindSpending": {
+    "description": "X50 row kind."
+  },
+  "planLoadFailed": "Could not load Plan.",
+  "@planLoadFailed": {
+    "description": "X50 load failure."
+  },
+  "planRetry": "Retry",
+  "@planRetry": {
+    "description": "X50 retry action."
+  },
+  "planDayTitle": "Payments on this day",
+  "@planDayTitle": {
+    "description": "X51 day sheet title."
+  },
+  "planDayDone": "Done",
+  "@planDayDone": {
+    "description": "X51 day sheet action."
+  },
+  "calendarLegendIncome": "Income",
+  "@calendarLegendIncome": {
+    "description": "SymbolCalendar legend."
+  },
+  "calendarLegendInvesting": "Investing",
+  "@calendarLegendInvesting": {
+    "description": "SymbolCalendar legend."
+  },
+  "calendarLegendSpending": "Spending",
+  "@calendarLegendSpending": {
+    "description": "SymbolCalendar legend."
+  },
+  "calendarSpoken": "{date}, {count, plural, =1{1 item} other{{count} items}}",
+  "@calendarSpoken": {
+    "description": "SymbolCalendar spoken day label."
+  }
 }

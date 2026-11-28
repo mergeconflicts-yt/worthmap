@@ -13,6 +13,7 @@ export 'charts/period_bar_chart.dart';
 export 'charts/ring_meter.dart';
 export 'charts/split_bar.dart';
 export 'charts/split_strip.dart';
+export 'charts/symbol_calendar.dart';
 export 'components/buttons/app_button.dart';
 export 'components/buttons/icon_button.dart';
 export 'components/buttons/info_button.dart';

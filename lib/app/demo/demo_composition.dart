@@ -42,6 +42,7 @@ import '../inbox_gateway.dart';
 import '../payment_draft_store.dart';
 import '../payments_gateway.dart';
 import '../payments_read_gateway.dart';
+import '../plan_gateway.dart';
 import '../repeating_gateway.dart';
 import '../router.dart';
 import '../spending_gateway.dart';
@@ -629,6 +630,10 @@ final class DemoComposition {
       // Real holdings and prices arrive in Phase 5.
       investmentsTodayMinor: 55000,
     );
+    final planGateway = SqlPlanGateway(
+      occurrences: occurrences,
+      today: () => today,
+    );
     final wealthGateway = SqlWealthGateway(
       accounts: accounts,
       today: () => today,
@@ -659,6 +664,7 @@ final class DemoComposition {
       history: historyGateway,
       home: homeGateway,
       wealth: wealthGateway,
+      plan: planGateway,
       imports: importGateway,
       importFiles: const SyntheticFileIntake(),
       importPasswords: MemoryImportPasswordVault(),
