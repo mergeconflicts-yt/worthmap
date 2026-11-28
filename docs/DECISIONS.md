@@ -180,11 +180,15 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
 - Consequence. The projection lives in `lib/domain/values/`. With this basis
   the Appendix A deposit is $10,278 today (not $10,280) and $10,312 at
   maturity; the pension is $23,934 (not $24,010). Net worth becomes $187,822
-  and the attribution needs a Values part of −$78.
-- Follow-up. `P4-01b` regenerates the Appendix A values, the attribution
-  example, the screen samples and the goldens in one SPEC pull request.
-  Until it lands, the Appendix A projection values are approximate and the
-  domain tests use the exact basis.
+  and the 30 September close $182,332, so the four-part bridge keeps
+  Values $0 and the change stays +$5,490.
+- Follow-up (done 2026-11-28, `P4-01b`). The Appendix A values, the
+  attribution example, the screen samples, the test constants and the
+  goldens moved in one change. The levels move by −$78 (30 September close $182,332,
+  12-month start $170,922, 1-month start $181,222) so every change figure
+  stays the same: +$5,490 this month, +$16,900 in 12 months, +$6,600 in 1
+  month. This supersedes the fixture arithmetic quoted in FIN-3-03 and
+  CLOSED-G14-FIN-DEFINITIONS; their text stays as the record of its date.
 
 ### P4-PLAN
 

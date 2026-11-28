@@ -19,7 +19,7 @@
 - futureCost = cost × (1 + inflation)^years. need = max(0, futureCost − saved × (1 + r)^years). monthly = need × (r/12) / ((1 + r/12)^(12·years) − 1). lumpToday = need / (1 + r)^years.
 - Test: [cost 5,000,000; 15 years; inflation 8%; return 10%; saved 0] → futureCost 15,860,846, monthly 38,268, lumpToday 3,796,960.
 - Goals screen (simple form, no return): monthly = (target − current) ÷ months until the date. Test: [6,000; 1,935; 5 months] → 813.
-- Net worth target (same simple form, "Est. amount to go ÷ months left"): [1,000,000; 187,900; 170 months to Dec 2040] → 4,777. Share reached = current ÷ target → 18.8%.
+- Net worth target (same simple form, "Est. amount to go ÷ months left"): [1,000,000; 187,822; 170 months to Dec 2040] → 4,778. Share reached = current ÷ target → 18.8%.
 
 ### 13.3 Target mix
 
@@ -114,16 +114,16 @@ Used in all designs, golden tests and "Sample data" mode. Every section 6 total 
 | Checking (First Bank) | $6,450 | cash you can use |
 | Savings (Harbor Bank) | $15,000 | cash you can use |
 | Investments | $129,800 | 12 holdings, see below |
-| Workplace pension | $24,010 Est. | last real value $22,700 on 31 Jul; $500 a month, 5% a year |
-| Term deposit (Harbor Bank) | $10,280 Est. | $10,000 at 4.1%, 12 Feb to 12 Nov 2026, $10,312 at maturity |
+| Workplace pension | $23,934 Est. | last real value $22,700 on 31 Jul; $500 a month, 5% a year |
+| Term deposit (Harbor Bank) | $10,278 Est. | $10,000 at 4.1%, 12 Feb to 12 Nov 2026, $10,312 at maturity |
 | Car | $12,000 Est. | depreciation 10% a year |
-| What you own | $197,540 |  |
+| What you own | $197,462 |  |
 | Car loan (City Auto Finance) | $8,400 | $20,000 original, 7% fixed, EMI $420 on the 30th, 22 EMIs left, last Aug 2028, interest paid $1,840 |
 | Visa card | $1,240 | statement 12 Oct, due 22 Oct, minimum $40, limit $6,000 |
 | What you owe | $9,640 |  |
-| Net worth | $187,900 | +$5,490 this month (kept +$4,260, markets +$1,780, currency −$550); +$16,900 in 12 months |
+| Net worth | $187,822 | +$5,490 this month (kept +$4,260, markets +$1,780, currency −$550); +$16,900 in 12 months |
 
-October attribution example (NUM-001): 30 Sep close to 13 Oct cut-off. Opening $182,410; closing $187,900. Parts: $4,260 + $1,780 − $550 + $0 = $5,490, 3.0% of opening (one decimal).
+October attribution example (NUM-001): 30 Sep close to 13 Oct cut-off. Opening $182,332; closing $187,822. Parts: $4,260 + $1,780 − $550 + $0 = $5,490, 3.0% of opening (one decimal).
 
 - Values $0 is set explicitly for this synthetic case, not inferred from absent valuation history. Valuation fixtures supply dated changes; include a nonzero Values part and recalculate opening or closing totals.
 - Do not use the superseded September closing $184,480.
@@ -266,9 +266,9 @@ Goals:
 | Emergency fund | $15,000 of $30,000 | Savings 100% | — |
 | Japan trip | $1,935 of $6,000 | Checking 30% | by Mar 2027, $813 a month |
 
-- Assigned: $39,440 + $15,000 + $1,935 = $56,375. Not assigned: $197,540 − $56,375 = $141,165.
+- Assigned: $39,440 + $15,000 + $1,935 = $56,375. Not assigned: $197,462 − $56,375 = $141,087.
 - House goal excludes the Employer share account. Goal allocations are views of existing assets, not added assets.
-- Net worth target: $1,000,000 by Dec 2040, counts net worth; $187,900 reached (18.8%), $812,100 to go, $4,777 a month Est. (170 months). Assigns no money; not in Assigned.
+- Net worth target: $1,000,000 by Dec 2040, counts net worth; $187,822 reached (18.8%), $812,178 to go, $4,778 a month Est. (170 months). Assigns no money; not in Assigned.
 
 Tax (user entered): advance tax $1,800 on 15 Dec; filing on 15 Apr; tax-saving room $4,000 of $6,500; interest earned $590; tax withheld from salary $14,760; tagged medical and donations $1,950; fees and interest paid in 2026 $630 (loan interest $470, currency fees $112, bank fees $48).
 
@@ -276,4 +276,4 @@ Payslip (October): gross $10,400, tax −$1,476, pension −$520, share purchase
 
 Transfer sample: 13.11 transfer test, from Savings to an INR account ($2,000, fee $12, rate 83.20, mid 83.45, received ₹165,402, cost $18).
 
-Month start sample (X11HomeMonthStart, 2 Oct): September closed: money in $8,200, money out $4,320, kept $3,880 (47%; August 41%). Net worth on 30 Sep $182,410. Cash you can use $26,190; 8 payments due before 1 Nov $3,330; available until 1 Nov $22,860.
+Month start sample (X11HomeMonthStart, 2 Oct): September closed: money in $8,200, money out $4,320, kept $3,880 (47%; August 41%). Net worth on 30 Sep $182,332. Cash you can use $26,190; 8 payments due before 1 Nov $3,330; available until 1 Nov $22,860.

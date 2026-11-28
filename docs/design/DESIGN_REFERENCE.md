@@ -392,7 +392,7 @@ All amounts, percentages, changes and dates go through `lib/design/format/`. Nev
 
 | WIDGET | SHOWS | RULES |
 |---|---|---|
-| `MoneyText(amount, style: NumberStyle.hero)` | "$187,900" | locale separators, currency symbol, cents only with `showCents` or when the value has cents; hidden as "$······" (currency mark stays) in text and accessible name |
+| `MoneyText(amount, style: NumberStyle.hero)` | "$187,822" | locale separators, currency symbol, cents only with `showCents` or when the value has cents; hidden as "$······" (currency mark stays) in text and accessible name |
 | `ChangeText(amount or percent, period: ...)` | "+$5,490 this month", "−0.4% today" | always a sign; colour from `state.gain` / `loss` / `neutral`; period words from SPEC Appendix B |
 | `PercentText(value)` | "37%" | splits come from `Percent.split(...)` (largest remainder) |
 | `DateText(date, format: DateStyle.short)` | "22 Oct", "Tuesday, 13 October", "in 9 days" | no relative word without a date for payments |

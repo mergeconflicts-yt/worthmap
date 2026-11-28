@@ -54,8 +54,8 @@
 
 **About this number (`X40bAboutNumber`)**, sheet titled "About net worth"; opens from a tap on the Home or Wealth hero number
 
-- Facts Period, Currency, Coverage ("9 of 9"). $187,900 = own $197,540 − owe $9,640.
-- **Change this month** (+$5,490 · +3.0%), attribution (4.7): You kept +$4,260, Markets +$1,780, Currency −$550, Values $0; "From $182,410 on 30 Sep to $187,900 on 13 Oct. The parts add up to the change."
+- Facts Period, Currency, Coverage ("9 of 9"). $187,822 = own $197,462 − owe $9,640.
+- **Change this month** (+$5,490 · +3.0%), attribution (4.7): You kept +$4,260, Markets +$1,780, Currency −$550, Values $0; "From $182,332 on 30 Sep to $187,822 on 13 Oct. The parts add up to the change."
 - **Parts** with value, basis and source ("Captured", "Imported", "Est."; Retirement "Statement 31 Jul, then your rule"). Caption: rates used (INR 84.00, TWD 32.00 per USD); "Est." values grow by the user's rule between real updates.
 - Done; "Open Wealth".
 
@@ -63,12 +63,12 @@
 
 - Days 1–7: "In the first 7 days of a month, Home shows last month first."
 - Hero kept $3,880: "September is not closed yet. Kept 47% of money in. In August: 41%." After Save and finish (`X71MonthSummary`): "September closed" and "Make a private snapshot" → `X83Backup` (`G10`). Facts In → Money in, Out → Spending, Kept → Month summary.
-- **Close September** ("5 steps, about 8 minutes") → `X70MonthClose`. **Net worth** $182,410 ("September close, 30 Sep") → Wealth.
+- **Close September** ("5 steps, about 8 minutes") → `X70MonthClose`. **Net worth** $182,332 ("September close, 30 Sep") → Wealth.
 - Then normal Home with that date's values ($26,190; 8 payments $3,330; available $22,860).
 
 **Home, amounts hidden (`X12HomeHidden`)**: every amount "$····" (currency mark stays); percentages stay; charts keep shape without text; spoken labels masked. Long-press any large number to hide or show all.
 
-**Home, main number (`X13MainNumberSheet`)**, sheet over Settings (Settings > Screens and widgets > "Main number on Home"); title "Main number on Home": one radio group; option, definition, today's value: Available until 1 Nov ($19,035); **Net worth** ($187,900; default, DESIGN-HTML-015); Spent this month ($3,940 of $5,200); Cash you can use now ($21,450). **Use [option]**; Cancel.
+**Home, main number (`X13MainNumberSheet`)**, sheet over Settings (Settings > Screens and widgets > "Main number on Home"); title "Main number on Home": one radio group; option, definition, today's value: Available until 1 Nov ($19,035); **Net worth** ($187,822; default, DESIGN-HTML-015); Spent this month ($3,940 of $5,200); Cash you can use now ($21,450). **Use [option]**; Cancel.
 
 **Home, available breakdown (`X14ToUseBreakdown`)**, sheet
 
@@ -244,11 +244,11 @@
 
 **Account detail, term deposit (`X41fDeposit`)**: value Est. from rate; term bar start to maturity; put in, interest so far (Est.), at maturity ("in [n] days"); Update value.
 
-**Update a value (`X41bUpdateValue`)**, sheet ("Save value", Cancel): Estimated today $24,010 ("Est. · from your rule"); last real value $22,700 (31 Jul). New value and statement date restart the estimate with the rule ($500 a month plus 5% a year).
+**Update a value (`X41bUpdateValue`)**, sheet ("Save value", Cancel): Estimated today $23,934 ("Est. · from your rule"); last real value $22,700 (31 Jul). New value and statement date restart the estimate with the rule ($500 a month plus 5% a year).
 
 **Add, choose type (`X42AddAssetType`)**: Cash (Bank account, Cash); Investments (Broker account, Bonds, Gold and silver, Shares from work); Retirement (X41c types); Deposits (Term, Recurring); Things (Property, Vehicle); You owe (Credit card, Loan, Money borrowed); Other (Money lent, Other). Only the deposit form is designed. Data model for direct bonds, recurring deposits and pension subtypes is open (SPEC-SYNC-001).
 
-**Forms for each type. Add deposit (`X42bAddDeposit`)**: Name, Amount, Rate per year, Interest added, Start date, Matures, Renews automatically; "Counts as cash you can use" off (locked until maturity). Value today $10,280 Est., interest so far +$280 Est., $10,312 at maturity 12 Nov ("The app updates the value every day from the rate."); "Save deposit". Other types use the same layout:
+**Forms for each type. Add deposit (`X42bAddDeposit`)**: Name, Amount, Rate per year, Interest added, Start date, Matures, Renews automatically; "Counts as cash you can use" off (locked until maturity). Value today $10,278 Est., interest so far +$278 Est., $10,312 at maturity 12 Nov ("The app updates the value every day from the rate."); "Save deposit". Other types use the same layout:
 
 | TYPE | REQUIRED FIELDS | OPTIONAL FIELDS |
 |---|---|---|
@@ -351,7 +351,7 @@
 **Plan, goals (`X52Goals`)**
 
 - Hero: assigned to goals, total targets, amount to go. Goal vials: equal height = target; level = share reached.
-- **Net worth target** (above goal cards, when one exists): "$187,900 of $1,000,000"; "$812,100 to go · counts net worth"; "By Dec 2040 · $4,777 a month" with "Est. · amount to go ÷ months left" (13.2 simple form, no return) → Financial independence in Tools.
+- **Net worth target** (above goal cards, when one exists): "$187,822 of $1,000,000"; "$812,178 to go · counts net worth"; "By Dec 2040 · $4,778 a month" with "Est. · amount to go ÷ months left" (13.2 simple form, no return) → Financial independence in Tools.
     - The target **measures** net worth (or the part in "counts"). It **assigns no money** and is not in "Assigned to goals" or "Not assigned".
     - DECISION-PENDING: NW-TARGET-PACE (prototype row "At +$16,900 a year · 2074 · Est.", from the last 12 months' change, needs a wording and Est. rule).
     - Under every net worth number (Home, Wealth), once: "18.8% of $1,000,000 target · Dec 2040" with a bar → Goals.

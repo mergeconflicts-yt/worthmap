@@ -176,7 +176,7 @@ Fixed: hero with 1M · 6M · 1Y and "Where money in went".
 
 | KEY | NAME | POS | SHOWS | OPENS | MOVES | EMPTY |
 |-----|------|-----|-------|-------|-------|-------|
-| wealth.ownOwe | What you own and owe * | 1 | You own $197,540 / You owe $9,640 tabs; split bar and type tiles (Investments $129,800, Retirement $24,010, Cash & bank $21,450, Car $12,000, Deposits $10,280; empty types "None recorded"); You owe: Car loan $8,400, Visa $1,240. | each type | No (own tabs) | empty types show "None recorded" |
+| wealth.ownOwe | What you own and owe * | 1 | You own $197,462 / You owe $9,640 tabs; split bar and type tiles (Investments $129,800, Retirement $23,934, Cash & bank $21,450, Car $12,000, Deposits $10,278; empty types "None recorded"); You owe: Car loan $8,400, Visa $1,240. | each type | No (own tabs) | empty types show "None recorded" |
 | wealth.notInNetWorth | Not in net worth | 2 | Meta "Expected". Unvested shares $31,595 "160 shares at today's price"; Owed to you $2,640; Dividends, next 6 months $245 "Est." (SPEC 4.3: owned is not expected; no total). | X49, X46, X43f | Yes | not shown when all three are "None recorded" |
 
 Fixed: hero (net worth, 1M · 1Y · 5Y, three-line chart and table).
@@ -206,7 +206,7 @@ Fixed: the Plan tabs (Calendar · Goals · Protect · Tax) and the top line.
 
 | KEY | NAME | POS | SHOWS | OPENS | MOVES | EMPTY |
 |-----|------|-----|-------|-------|-------|-------|
-| goals.netWorthTarget | Net worth target | 1 | Ring 18.8%, "$187,900 of $1,000,000", rows By Dec 2040 "$4,777 a month · Est.", At +$16,900 a year "2074 · Est.", Financial independence. | Tools (X59) | Yes | not shown with no target |
+| goals.netWorthTarget | Net worth target | 1 | Ring 18.8%, "$187,822 of $1,000,000", rows By Dec 2040 "$4,778 a month · Est.", At +$16,900 a year "2074 · Est.", Financial independence. | Tools (X59) | Yes | not shown with no target |
 | goals.glance | Goals at a glance * | 2 | Three equal vials: House deposit 66%, Emergency fund 50%, Japan trip 32%. | Goal rows | Yes | not shown with no goal |
 | goals.list | Goals | 3 | House deposit $39,440 "of $60,000 · Dec 2028 · Brokerage 40%"; Emergency fund $15,000; Japan trip $1,935. | Goal detail | Yes | "No goals yet." |
 
@@ -244,8 +244,8 @@ Tile lines: icon and name, value, one short fact. Edit: Home edit mode > Quick l
 | tile.cardBill | Card bill | Yes (2) | $1,240 · "Visa · 22 Oct" — the nearest bill only, never a sum across dates; with more cards "+N more · $X by [date]" | card statement (SPEC 6 Home) | Card (X48) or You owe |
 | tile.investments | Investments | Yes (3) | $129,800 · "+$550 today" | investments value and today's change (SPEC 4.5) | Investments (X43) |
 | tile.subscriptions | Subscriptions | Yes (4) | $28.98 · "a month" (exact cents; a trial is named) | repeating rules of kind subscription (DECISION-PENDING SUBS-TOTAL) | Repeating (X34) |
-| tile.retirement | Retirement | No | $24,010 · "401(k) · Est." | retirement accounts | Retirement (X41c) |
-| tile.deposits | Deposits | No | $10,280 · "Est. · 12 Nov" (next maturity) | deposit accounts | Deposit (X41f) |
+| tile.retirement | Retirement | No | $23,934 · "401(k) · Est." | retirement accounts | Retirement (X41c) |
+| tile.deposits | Deposits | No | $10,278 · "Est. · 12 Nov" (next maturity) | deposit accounts | Deposit (X41f) |
 | tile.owe | What you owe | No | $9,640 · "loan and card" | debts (SPEC 4.4 what you owe) | You owe (X46) |
 | tile.nextIncome | Next income | No | $8,200 · "Expected · 1 Nov" — Expected, never in a total | expected income (SPEC 4.9) | Money in (X31) |
 

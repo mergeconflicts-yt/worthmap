@@ -152,8 +152,8 @@
 **X10 Home** — TabRootScreen · Home (v_home)
 
 1. ScreenHeader: "Today", 13 Oct 2026, USD (reader heading only); Hide amounts, Inbox (badge 12), Settings (sliders glyph) on the kicker line; the kicker keeps space for them. Same on X12, X03, X11. Under the title: a Search field (spoken "Search"); it opens X15.
-2. 0Hero (number): kicker "NET WORTH" (no (i) button); $187,900 (a tap on the number opens X40b); side figure "+$16,900 · 12 months". Under it: target line "18.8% of $1,000,000 target · Dec 2040" with a 36 pt bar (opens Goals; 44 pt target; NW-TARGET), and a small AreaLineChart of the last 12 month ends with end dot (opens Wealth). Preview chart, no table. No period chips.
-3. GlassCard "Quick look" (meta "today"), IconTileGrid(quickLook): Cash $21,450 "available now" (Cash and bank); Card bill $1,240 "Visa · 22 Oct" (next bill only; more cards "+N more · $X by [date]"); Investments $129,800 "+$550 today"; Subscriptions $28.98 "a month" (Repeating). Library tiles, hidden by default: Retirement $24,010 "401(k) · Est."; Deposits $10,280 "Est. · 12 Nov"; What you owe $9,640 "loan and card"; Next income $8,200 "Expected · 1 Nov". Edit: Quick look "Tiles".
+2. 0Hero (number): kicker "NET WORTH" (no (i) button); $187,822 (a tap on the number opens X40b); side figure "+$16,900 · 12 months". Under it: target line "18.8% of $1,000,000 target · Dec 2040" with a 36 pt bar (opens Goals; 44 pt target; NW-TARGET), and a small AreaLineChart of the last 12 month ends with end dot (opens Wealth). Preview chart, no table. No period chips.
+3. GlassCard "Quick look" (meta "today"), IconTileGrid(quickLook): Cash $21,450 "available now" (Cash and bank); Card bill $1,240 "Visa · 22 Oct" (next bill only; more cards "+N more · $X by [date]"); Investments $129,800 "+$550 today"; Subscriptions $28.98 "a month" (Repeating). Library tiles, hidden by default: Retirement $23,934 "401(k) · Est."; Deposits $10,278 "Est. · 12 Nov"; What you owe $9,640 "loan and card"; Next income $8,200 "Expected · 1 Nov". Edit: Quick look "Tiles".
 4. GlassCard "Next 30 days" (meta "$2,415 due before 1 Nov"; opens Calendar): GlyphTimeline 13 Oct–12 Nov, name and amount per mark, legend in words. Preview chart, no table.
 5. GlassCard "This month" (meta "October · day 13 of 31"): tiles Money in $8,200 "Salary · 1 Oct" (Money in) and Spent $3,940 "of $5,200 limit · 76%" with CapsuleMeter (variable), today tick 42%. Then SplitBar of income: Needs, Wants, Invested, In cash with amounts and shares. Tiles stack at 200%.
 6. GlassCard "Repeating" (meta "$2,084 a month"; head opens Repeating): SelectRows, no icons: Netflix "18 Oct · monthly" $17.99, Phone "20 Oct · monthly" $45, Health "28 Oct · monthly" $210 (each X35); "All repeating payments" 7 (X34). Text only, no chart or data colour (HOME-REPEAT).
@@ -172,7 +172,7 @@
 1. ScreenHeader: "Today", "2 October 2026 · USD"; Inbox spoken "Inbox, 4 to check".
 2. 0Hero (number): kicker "KEPT · SEPTEMBER"; $3,880; line "September is not closed yet. Kept 47% of money in. In August: 41%." SplitBar of $8,200: Out $4,320 (52.7%, data.flow.spending), Kept $3,880 (47.3%, data.flow.moneyIn). FactRow: In $8,200 "Salary" (X31); Out $4,320 "spent" (X30); Kept $3,880 "47%" (X71). Table adds "Kept, August: Missing, 41%".
 3. GlassCard: check-badge row "Close September" "5 steps, about 8 minutes" (X70). After Save and finish (X71): the hero line starts "September closed" and the row becomes "Make a private snapshot" (X83).
-4. GlassCard: Net worth $182,410 "September close, 30 Sep" (X40).
+4. GlassCard: Net worth $182,332 "September close, 30 Sep" (X40).
 5. GlassCard "Quick look" (meta "today"): Cash $26,190 "available now" (X41d).
 6. GlassCard (wide) "Next 30 days" (meta "$3,330 due before 1 Nov"): "Payments before your next income" 8, "Cash $26,190 less $3,330 due: $22,860 available until 1 Nov" (X50).
 7. Rest of Home as X10 with 2 Oct values: This month (meta "October · day 2 of 31"): Money in $8,200 "Salary · 1 Oct"; Spent $1,900 "of $5,200 limit · 37%" (tick 6%); Needs $1,900 23.2% · Wants $0 · Invested $0 · In cash $6,300 76.8%. Repeating ($2,084 a month): Spotify 9 Oct $10.99, Netflix 18 Oct $17.99, Phone 20 Oct $45, All repeating payments 7. Goals progress: House 66%, Emergency 50%, Car loan 56%; Put into investments in 2026 $5,500. Caption "In the first 7 days of a month, Home shows last month first." Footer "Prices 2 Oct, 4:00 pm · 9 of 9 accounts updated · snapshot 1 Oct".
@@ -183,15 +183,15 @@
 
 1. Head: kicker "NET WORTH · 13 OCT", title "About net worth".
 2. FactRow: Period "13 Oct" (as of 4:00 pm); Currency "USD" (main currency); Coverage "9 of 9" (accounts).
-3. $187,900 (numberHero.light); line "Net worth: what you own, $197,540, less what you owe, $9,640."
-4. GlassCard (stage) "Change this month" (meta "+$5,490 · +3.0%"): centre-line bars with end amounts: You kept +$4,260 (money in less money out); Markets +$1,780 (price changes); Currency −$550 (exchange-rate effect); Values $0 (updated values, no bar length). Caption "From $182,410 on 30 Sep to $187,900 on 13 Oct. The parts add up to the change." Table: part, amount, basis, total. Spoken "Net worth change this month, 30 Sep to 13 Oct: +$5,490. You kept +$4,260; markets +$1,780; currency −$550. Values $0."
-5. GlassCard "Parts" (meta "6"): Investments $129,800 "Prices today, 4:00 pm" Captured; Retirement $24,010 "Statement 31 Jul, then your rule" Est.; Cash and bank $21,450 "Statement 13 Oct, then captured" Imported; Car $12,000 "Your value, then depreciation" Est.; Deposits $10,280 "Interest rule, daily" Est.; Loans and cards −$9,640 "Statements 12 Oct" Imported.
+3. $187,822 (numberHero.light); line "Net worth: what you own, $197,462, less what you owe, $9,640."
+4. GlassCard (stage) "Change this month" (meta "+$5,490 · +3.0%"): centre-line bars with end amounts: You kept +$4,260 (money in less money out); Markets +$1,780 (price changes); Currency −$550 (exchange-rate effect); Values $0 (updated values, no bar length). Caption "From $182,332 on 30 Sep to $187,822 on 13 Oct. The parts add up to the change." Table: part, amount, basis, total. Spoken "Net worth change this month, 30 Sep to 13 Oct: +$5,490. You kept +$4,260; markets +$1,780; currency −$550. Values $0."
+5. GlassCard "Parts" (meta "6"): Investments $129,800 "Prices today, 4:00 pm" Captured; Retirement $23,934 "Statement 31 Jul, then your rule" Est.; Cash and bank $21,450 "Statement 13 Oct, then captured" Imported; Car $12,000 "Your value, then depreciation" Est.; Deposits $10,278 "Interest rule, daily" Est.; Loans and cards −$9,640 "Statements 12 Oct" Imported.
 6. Caption "Other currencies use today's rates: INR 84.00, TWD 32.00. "Est." values grow by your rule between real updates." AppButton primary "Done"; link "Open Wealth".
 
 **X13 Home, main number** — AppSheet over Settings · Home (v_main_number). Opens from Settings > Screens and widgets > "Main number on Home".
 
 1. Head: kicker "HOME · MAIN NUMBER", title "Main number on Home".
-2. Radio group "Main number on Home", four options ≥ 64 pt (6 pt colour bar, name, grey line, value): Available until 1 Nov "Cash you can use less payments due before 1 Nov" $19,035; **Net worth** (selected, default) "What you own less what you owe" $187,900; Spent this month "Of your $5,200 limit" $3,940; Cash you can use now "All accounts marked as cash" $21,450. Selected: 2 pt edge in its colour, aria-checked true. At 200% the value moves under the name.
+2. Radio group "Main number on Home", four options ≥ 64 pt (6 pt colour bar, name, grey line, value): Available until 1 Nov "Cash you can use less payments due before 1 Nov" $19,035; **Net worth** (selected, default) "What you own less what you owe" $187,822; Spent this month "Of your $5,200 limit" $3,940; Cash you can use now "All accounts marked as cash" $21,450. Selected: 2 pt edge in its colour, aria-checked true. At 200% the value moves under the name.
 3. Caption "This number is the first thing you see on Home. Net worth is the default." AppButton primary "Use Net worth"; text button "Cancel".
 
 **X14 Home, available breakdown** — AppSheet over Home · Home (v_to_use)
@@ -286,7 +286,7 @@
 2. Icon lines: "The app listens only while the button is held or until you tap Stop."; "Speech is turned into text on this phone."; "No audio is saved or sent."
 3. AppButton primary "Allow microphone"; text button "Not now".
 
-**X29 Add, chooser** — AppSheet "Add" over the screen that opens it; its section is that screen's section. Sample: over Wealth (header "Wealth", hero "NET WORTH · 13 OCT $187,900" dimmed) · Wealth (v_b_chooser)
+**X29 Add, chooser** — AppSheet "Add" over the screen that opens it; its section is that screen's section. Sample: over Wealth (header "Wealth", hero "NET WORTH · 13 OCT $187,822" dimmed) · Wealth (v_b_chooser)
 
 1. Title "Add" (spoken "Add, from Wealth").
 2. Five rows ≥ 68 pt (44 pt badge, name, grey line, chevron); first row has a 2 pt section-colour edge: Something you own or owe "Account, investment, deposit, loan, card, asset" (X42); Expense "Amount first, 3 taps" (X20); Income "Salary, bonus, other money in" (X20); Transfer "Between your own accounts" (X26); Import a file "Statement, positions, receipt" (X63).
@@ -470,9 +470,9 @@
 
 **X40 Wealth** — TabRootScreen · Wealth (v_wealth)
 
-1. 0Hero (period): kicker "NET WORTH"; $187,900 (a tap on the number opens X40b); PeriodChips 1M · 1Y (default) · 5Y. Side figures: 1M +$6,600 / +3.6% (rolling 30 days, WEALTH-1M-BASIS); 1Y +$16,900 / +9.9%; 5Y "Missing" (history starts Oct 2025). Target line as X10. AreaLineChart(multi): net worth, investments, cash, one scale from $0, $50K steps; legend in words. Table: month ends of the three series. Open: net worth line uses the gain hue #3DF2B0 (needs a neutral token).
-2. GlassCard You own / You owe: tabs with totals You own $197,540, You owe $9,640 (card-level control; DECISION-PENDING CONTROL-ROW-SCOPE). Per tab a SplitBar of types, then IconTileGrid(types):
-   - You own: Investments $129,800 "+0.4% today"; Retirement $24,010 "401(k) · Est."; Cash & bank $21,450 "2 accounts"; Car $12,000 "Est."; Deposits $10,280 "Est. · 12 Nov". Empty ("None recorded", dashed, opens Add): Property, Gold and silver, Bonds, Other.
+1. 0Hero (period): kicker "NET WORTH"; $187,822 (a tap on the number opens X40b); PeriodChips 1M · 1Y (default) · 5Y. Side figures: 1M +$6,600 / +3.6% (rolling 30 days, WEALTH-1M-BASIS); 1Y +$16,900 / +9.9%; 5Y "Missing" (history starts Oct 2025). Target line as X10. AreaLineChart(multi): net worth, investments, cash, one scale from $0, $50K steps; legend in words. Table: month ends of the three series. Open: net worth line uses the gain hue #3DF2B0 (needs a neutral token).
+2. GlassCard You own / You owe: tabs with totals You own $197,462, You owe $9,640 (card-level control; DECISION-PENDING CONTROL-ROW-SCOPE). Per tab a SplitBar of types, then IconTileGrid(types):
+   - You own: Investments $129,800 "+0.4% today"; Retirement $23,934 "401(k) · Est."; Cash & bank $21,450 "2 accounts"; Car $12,000 "Est."; Deposits $10,278 "Est. · 12 Nov". Empty ("None recorded", dashed, opens Add): Property, Gold and silver, Bonds, Other.
    - You owe: Car loan $8,400 "22 payments left"; Visa card $1,240 "Due 22 Oct"; empty: Other money owed. Row "What you owe" $9,640 (X46).
    - Table per tab: type, value, share, fact.
 3. GlassCard "Not in net worth" (meta "Expected"): Unvested shares $31,595 "160 shares at today's price"; Owed to you $2,640; Dividends, next 6 months $245 "Est.".
@@ -495,9 +495,9 @@
 
 **X41c Account detail, retirement** — DetailScreen "Retirement", sub-line "Workplace pension · USD" · Wealth (v_retirement)
 
-1. 0Hero (detail): kicker "RETIREMENT · 1 ACCOUNT"; $24,010; side "Est.", "since 31 Jul".
-2. GlassCard "Accounts" (meta "1"): 401(k) · Workplace $24,010 "Est. · last statement 31 Jul".
-3. GlassCard (stage) "401(k) · Workplace" (meta "estimate"): AreaLineChart, dashed estimate from $22,700 (31 Jul, solid dot, "STATEMENT") to $24,010 today (end dot, "EST."). Caption "Solid dot: the last statement. Dashed: the estimate from your rule." FactRow: Last statement $22,700 (31 Jul); Added since +$1,000 (Aug, Sep · $500 a month); Growth +$310 (Est. · 5% a year).
+1. 0Hero (detail): kicker "RETIREMENT · 1 ACCOUNT"; $23,934; side "Est.", "since 31 Jul".
+2. GlassCard "Accounts" (meta "1"): 401(k) · Workplace $23,934 "Est. · last statement 31 Jul".
+3. GlassCard (stage) "401(k) · Workplace" (meta "estimate"): AreaLineChart, dashed estimate from $22,700 (31 Jul, solid dot, "STATEMENT") to $23,934 today (end dot, "EST."). Caption "Solid dot: the last statement. Dashed: the estimate from your rule." FactRow: Last statement $22,700 (31 Jul); Added since +$1,000 (Aug, Sep · $500 a month); Growth +$234 (Est. · 5% a year).
 4. GlassCard "Rule": Contribution $500 a month; Growth 5% a year; Update value "From a statement" (X41b).
 5. GlassCard "Retirement types": tiles 401(k) "1 account", IRA · Roth IRA, EPF, PPF, NPS, Superannuation, Workplace pension, Other pension; recorded type has a 1 px section-colour edge. Caption: values come from statements or a rule; no pension portal connection.
 
@@ -516,8 +516,8 @@
 
 **X41f Account detail, term deposit** — DetailScreen "Term deposit", sub-line "Harbor Bank · USD" · Wealth (v_deposit)
 
-1. 0Hero (detail): kicker "TERM DEPOSIT · HARBOR BANK"; $10,280; side "Est.", "4.1% a year".
-2. GlassCard (stage) "Term" (meta "9 months"): term bar 12 Feb ($10,000) to 12 Nov ($10,312), filled to days passed (89%), mark "Today · $10,280 Est." in data.neutral.fill. FactRow: Put in $10,000 (12 Feb); Interest so far +$280 (Est. · 4.1%); At maturity $10,312 (12 Nov · in 30 days).
+1. 0Hero (detail): kicker "TERM DEPOSIT · HARBOR BANK"; $10,278; side "Est.", "4.1% a year".
+2. GlassCard (stage) "Term" (meta "9 months"): term bar 12 Feb ($10,000) to 12 Nov ($10,312), filled to days passed (89%), mark "Today · $10,278 Est." in data.neutral.fill. FactRow: Put in $10,000 (12 Feb); Interest so far +$278 (Est. · 4.1%); At maturity $10,312 (12 Nov · in 30 days).
 3. GlassCard: Rate 4.1% a year "Fixed"; Matures 12 Nov 2026 "In 30 days"; Update value "From a statement".
 
 **X47 Account detail, loan** — DetailScreen "Car loan", sub-line "City Auto Finance · USD" · Wealth (v_loan)
@@ -537,7 +537,7 @@
 
 **X41b Update a value** — AppSheet "Update value", sub-line "Workplace pension · 401(k)", over X41c Retirement · Wealth (v_update_value)
 
-1. FactRow: Estimated today $24,010 "Est. · from your rule"; Last real value $22,700 "31 Jul · statement".
+1. FactRow: Estimated today $23,934 "Est. · from your rule"; Last real value $22,700 "31 Jul · statement".
 2. AppField "New value from your statement" $24,180; AppField "Statement date" "30 Sep 2026".
 3. Caption "The estimate restarts from this value: $500 a month plus 5% a year." AppButton primary "Save value"; text button "Cancel".
 
@@ -552,7 +552,7 @@
 1. Kicker "ADD · TERM DEPOSIT".
 2. GlassCard "Deposit": Name "Harbor Bank term deposit"; Amount $10,000; 2 × 2: Rate per year 4.1%; Interest added "Monthly"; Start date "12 Feb 2026"; Matures "12 Nov 2026".
 3. GlassCard, ToggleRows (off): Renews automatically; Counts as cash you can use "Off: locked until it matures".
-4. GlassCard (stage) "Value today" (meta "Est."): FactRow Value today $10,280 "Est."; Interest so far +$280 "Est. · 4.1%"; At maturity $10,312 "12 Nov". Caption "The app updates the value every day from the rate." AppButton primary "Save deposit".
+4. GlassCard (stage) "Value today" (meta "Est."): FactRow Value today $10,278 "Est."; Interest so far +$278 "Est. · 4.1%"; At maturity $10,312 "12 Nov". Caption "The app updates the value every day from the rate." AppButton primary "Save deposit".
 
 **X49 Shares from work** — DetailScreen "Shares from work", sub-line "NVDA · employer plan · USD" · Wealth (v_vest)
 
@@ -668,7 +668,7 @@
 
 1. ScreenHeader (tabs): Goals selected.
 2. 0Hero (number): kicker "ASSIGNED TO 3 GOALS"; $56,375; line "Of $96,000 in targets. $39,625 to go. Goals use money you already have."
-3. GlassCard "Net worth target" (meta "not assigned money"; NW-TARGET): RingMeter 18.8%, "$187,900 of $1,000,000", "$812,100 to go · counts net worth"; rows By Dec 2040 "$4,777 a month" ("Est. · amount to go ÷ months left"); At +$16,900 a year "2074 · Est." ("last 12 months' change"; DECISION-PENDING NW-TARGET-PACE); Financial independence "Tools".
+3. GlassCard "Net worth target" (meta "not assigned money"; NW-TARGET): RingMeter 18.8%, "$187,822 of $1,000,000", "$812,178 to go · counts net worth"; rows By Dec 2040 "$4,778 a month" ("Est. · amount to go ÷ months left"); At +$16,900 a year "2074 · Est." ("last 12 months' change"; DECISION-PENDING NW-TARGET-PACE); Financial independence "Tools".
 4. GlassCard (stage): three equal goalVials: House deposit 66% ($39,440 of $60,000, Dec 2028); Emergency fund 50% ($15,000 of $30,000, no date); Japan trip 32% ($1,935 of $6,000, Mar 2027). Caption "Each vial is one goal target. The level is the share reached." Table: goal, assigned, target, to go.
 5. GlassCard "Goals": House deposit $39,440 "of $60,000 · Dec 2028 · Brokerage 40%"; Emergency fund $15,000 "of $30,000 · Savings 100%"; Japan trip $1,935 "of $6,000 · Mar 2027 · Checking 30%".
 
@@ -740,7 +740,7 @@
 
 1. 0Hero (number): kicker "SEPTEMBER SUMMARY · YOU KEPT"; $3,880; line "47% of money in. August: 41%."
 2. GlassCard (stage) "Kept, % of money in" (meta "6 months"): data.flow.moneyIn columns with % above: Apr 38%, May 44%, Jun 36%, Jul 42%, Aug 41%, Sep 47% (Sep solid, earlier lighter). Spoken label, table.
-3. GlassCard "September": Net worth $182,410 "30 Sep · +$1,710 in September" (X40); Spending $4,320 "of $5,200 limit" (X30); Largest category $1,800 "Rent" (X36); Fees and interest $58 "paid in September" (X58).
+3. GlassCard "September": Net worth $182,332 "30 Sep · +$1,710 in September" (X40); Spending $4,320 "of $5,200 limit" (X30); Largest category $1,800 "Rent" (X36); Fees and interest $58 "paid in September" (X58).
 4. AppButton primary "Save and finish". Caption "Saved on this phone. A recovery snapshot is made on this phone after you finish."
 
 **X80 Settings** — DetailScreen, DetailHeader with Back, "Settings", sub-line "on this phone"; keeps the tab bar · Home (v_e_settings)

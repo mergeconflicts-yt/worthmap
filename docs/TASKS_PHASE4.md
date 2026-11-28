@@ -36,6 +36,8 @@ backup":
 ## Delivery status (2026-11-28)
 
 - Built and tested:
+  - P4-01 value projections (`lib/domain/values/value_projection.dart`, 26
+    tests) and P4-01b: one number per item in Appendix A and every sample.
   - X40 Wealth: net worth hero, 1M/1Y/5Y chips, the three-series chart, the
     You own / You owe tabs with type tiles, the Not in net worth card from
     synthetic values, and the load, empty and error states. Tests:
@@ -49,8 +51,6 @@ backup":
   - X10 Home with data in the debug demo (DECISIONS `P4-HOME-DATA`). The
     release path still shows X03 until the vault composition.
 - Absent and needed in this phase:
-  - The value-method model (interest, contribution, weight and price, manual,
-    depreciation, capital account) and the projections that use it.
   - The account detail family, X40b, X46, X47, X48 and X49.
   - The whole investments model: securities, holdings, lots, investment
     transactions, realised gain, quotes and FX.
@@ -169,7 +169,7 @@ Shared files (`router.dart`, `tokens.json`, `pubspec.yaml`, database schema,
 - Evidence: `test/domain/values/value_projection_test.dart` (26 tests).
   Reviewer: product and finance.
 
-### P4-01b — Regenerate the Appendix A value fixtures
+### P4-01b — Regenerate the Appendix A value fixtures (done)
 
 - Objective: align Appendix A and the screen samples with the decided basis.
 - Refs: SPEC 4.7, 9.2; Appendix A in `docs/spec/spec-calculation.md`;
@@ -178,12 +178,15 @@ Shared files (`router.dart`, `tokens.json`, `pubspec.yaml`, database schema,
 - Depends on: P4-01. Blocks P4-23. Owner: Planner + design owner for the
   goldens. Files allowed: SPEC and SCREENS documents, `docs/DECISIONS.md`,
   feature test fixtures, `test/golden/*`.
-- Contract: change the retirement value to $23,934, the deposit to $10,278
-  and its interest to +$278, keep $10,312 at maturity, then recompute the
-  totals: what you own $197,462, net worth $187,822. Update the attribution
-  example to add a Values part of −$78 (4,260 + 1,780 − 550 − 78 = 5,412).
-  Update every screen sample, widget sample and test constant, and
-  regenerate the goldens.
+- Contract: one number per item, used everywhere. Retirement $23,934 and
+  its growth +$234; deposit $10,278 and its interest +$278; maturity stays
+  $10,312; what you own $197,462; net worth $187,822. Shift the earlier
+  levels by the same −$78 so every change stays: 30 September close
+  $182,332, 12-month start $170,922, 1-month start $181,222. Keep the
+  monthly bridge with Values $0. The net worth target becomes $812,178 to
+  go and $4,778 a month. Update every screen sample, widget sample and test
+  constant, and regenerate the goldens.
+- Status: done 2026-11-28 (this change).
 - Acceptance: every section 6 total comes from Appendix A; the attribution
   adds up; no test constant keeps the old values; all AGENTS 4 commands pass
   and every changed golden is checked.
@@ -309,6 +312,9 @@ Shared files (`router.dart`, `tokens.json`, `pubspec.yaml`, database schema,
 - Acceptance: every type total equals the sum of its accounts; Expected
   items never enter the totals; a missing account makes its type Missing;
   goldens at 1.0 and 2.0.
+- Known gaps at P4-01b (28 Nov 2026): the type facts read "[n] accounts"
+  instead of the SCREENS facts ("401(k) · Est.", "Est. · 12 Nov"); the period
+  chips clip at the right edge at 2.0 text scale. Fix both here.
 - Evidence: widget tests, goldens, one test per state. Reviewer: product and
   finance + design.
 
