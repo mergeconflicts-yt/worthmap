@@ -20,6 +20,7 @@ final class CategoryRow {
     required this.parentId,
     required this.archived,
     required this.revision,
+    this.isEssential,
   });
 
   final String id;
@@ -28,6 +29,9 @@ final class CategoryRow {
   final String? parentId;
   final bool archived;
   final int revision;
+
+  /// SPEC 4.4: the user's tag. Null is not tagged yet.
+  final bool? isEssential;
 }
 
 /// One category rule (SPEC 9.3).
@@ -78,7 +82,8 @@ final class CategoryRepository {
     bool includeArchived = false,
   }) async {
     final rows = await _db.customSelect(
-      'SELECT id, name, kind, parent_id, archived, revision FROM categories '
+      'SELECT id, name, kind, parent_id, archived, revision, is_essential '
+      'FROM categories '
       'WHERE kind = ? '
       '${includeArchived ? '' : 'AND archived = 0 '}'
       'ORDER BY sort_order, name',
@@ -93,6 +98,11 @@ final class CategoryRepository {
           parentId: row.data['parent_id'] as String?,
           archived: (row.data['archived'] as int) == 1,
           revision: row.data['revision'] as int,
+          isEssential: switch (row.data['is_essential']) {
+            1 => true,
+            0 => false,
+            _ => null,
+          },
         ),
     ];
   }
@@ -140,6 +150,7 @@ final class CategoryRepository {
     required String kind,
     String? parentId,
     int sortOrder = 0,
+    bool? isEssential,
   }) {
     if (kind != 'expense' && kind != 'income') {
       throw ArgumentError.value(kind, 'kind', 'Must be expense or income');
@@ -158,9 +169,23 @@ final class CategoryRepository {
       apply: () async {
         await _db.customStatement(
           'INSERT INTO categories (id, created_at, updated_at, deleted_at, '
-          'revision, name, parent_id, kind, sort_order, archived) '
-          'VALUES (?, ?, ?, NULL, 1, ?, ?, ?, ?, 0)',
-          [id, now, now, name, parentId, kind, sortOrder],
+          'revision, name, parent_id, kind, sort_order, archived, '
+          'is_essential) '
+          'VALUES (?, ?, ?, NULL, 1, ?, ?, ?, ?, 0, ?)',
+          [
+            id,
+            now,
+            now,
+            name,
+            parentId,
+            kind,
+            sortOrder,
+            switch (isEssential) {
+              true => 1,
+              false => 0,
+              null => null,
+            },
+          ],
         );
       },
     );
@@ -200,6 +225,48 @@ final class CategoryRepository {
         if (updated == 0) {
           throw StateError('Stale category revision');
         }
+      },
+    );
+  }
+
+  /// Tags a category as a need (true), a want (false), or not tagged (null).
+  ///
+  /// SPEC 4.4: the tag is the user's own label; the app adds no judgement.
+  WritePlan planSetEssential({
+    required String id,
+    required bool? isEssential,
+    required int expectedRevision,
+  }) {
+    final now = _nowMs();
+    return WritePlan(
+      changes: <ChangeLogEntry>[
+        ChangeLogEntry(
+          entityId: id,
+          fromRevision: expectedRevision,
+          toRevision: expectedRevision + 1,
+          changeKind: 'edit',
+          beforeJson: '{"isEssential":null}',
+          afterJson: jsonEncode(<String, Object?>{
+            'isEssential': isEssential,
+          }),
+          schemaVersion: 1,
+        ),
+      ],
+      apply: () async {
+        await _db.customStatement(
+          'UPDATE categories SET is_essential = ?, updated_at = ?, '
+          'revision = revision + 1 WHERE id = ? AND revision = ?',
+          [
+            switch (isEssential) {
+              true => 1,
+              false => 0,
+              null => null,
+            },
+            now,
+            id,
+            expectedRevision,
+          ],
+        );
       },
     );
   }

@@ -48,7 +48,7 @@ void main() {
     try {
       createFreshVault(raw, dbEpoch: _epoch);
       final state = raw.select('SELECT schema_version FROM db_state').first;
-      expect(state['schema_version'], 8);
+      expect(state['schema_version'], 9);
       expect(_columns(raw, 'schedules'), contains('auto_create'));
       final tables = raw.select(
         "SELECT name FROM sqlite_master WHERE type = 'table' "
@@ -79,7 +79,7 @@ void main() {
 
       final version = verifyExistingVault(raw);
 
-      expect(version, 8);
+      expect(version, 9);
       expect(_columns(raw, 'schedules'), contains('auto_create'));
       final kept = raw.select(
         'SELECT name, auto_create FROM schedules WHERE id = ?',

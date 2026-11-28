@@ -114,7 +114,7 @@ void main() {
           .getSingle();
       expect(state.data['db_epoch'], epoch);
       expect(state.data['commit_sequence'], 0);
-      expect(state.data['schema_version'], 8);
+      expect(state.data['schema_version'], 9);
       expect(state.data['network_enabled'], 0);
       expect(state.data['read_revision'], 0);
       expect(vault.dbEpoch, epoch);
@@ -259,7 +259,7 @@ void main() {
         dbEpochFactory: () => epoch,
       );
       await vault.database.customStatement(
-        'UPDATE db_state SET schema_version = 9 WHERE singleton = 1',
+        'UPDATE db_state SET schema_version = 10 WHERE singleton = 1',
       );
       await vault.close();
 
@@ -273,7 +273,7 @@ void main() {
         throwsA(
           isA<VaultOpenError>()
               .having((e) => e.code, 'code', VaultOpenErrorCode.schemaState)
-              .having((e) => e.detail, 'detail', 'newerSchema 9'),
+              .having((e) => e.detail, 'detail', 'newerSchema 10'),
         ),
       );
       // The data is untouched; nothing was recreated as empty.
@@ -281,7 +281,7 @@ void main() {
       final version =
           raw.select('SELECT schema_version FROM db_state').first.values.first;
       raw.close();
-      expect(version, 9);
+      expect(version, 10);
     } finally {
       await directory.delete(recursive: true);
     }

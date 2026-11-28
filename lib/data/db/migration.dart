@@ -21,13 +21,14 @@ import 'package:sqlite3/sqlite3.dart';
 import 'migrations/v006_classification.dart';
 import 'migrations/v007_budgets.dart';
 import 'migrations/v008_repeating.dart';
+import 'migrations/v009_categories.dart';
 import 'schema/reference_schema.dart';
 import 'statement_splitter.dart';
 
 export 'schema/reference_schema.dart' show kReferenceTableNames;
 
-/// The current schema version: the reference body plus migrations 6-8.
-const int kCurrentSchemaVersion = 8;
+/// The current schema version: the reference body plus migrations 6-9.
+const int kCurrentSchemaVersion = 9;
 
 /// Typed, safe migration failure codes.
 enum SchemaErrorCode {
@@ -73,6 +74,9 @@ void createFreshVault(
       raw.execute(statement);
     }
     for (final statement in splitSqlStatements(migrationV8Sql)) {
+      raw.execute(statement);
+    }
+    for (final statement in splitSqlStatements(migrationV9Sql)) {
       raw.execute(statement);
     }
     raw.execute(
@@ -134,6 +138,10 @@ int verifyExistingVault(Database raw) {
       _upgradeFromV7(raw);
       return kCurrentSchemaVersion;
     }
+    if (version == 8) {
+      _upgradeFromV8(raw);
+      return kCurrentSchemaVersion;
+    }
     throw SchemaError(
       SchemaErrorCode.oldSchemaUnsupported,
       version: version,
@@ -169,6 +177,9 @@ void _upgradeFromV5(Database raw) {
     for (final statement in splitSqlStatements(migrationV8Sql)) {
       raw.execute(statement);
     }
+    for (final statement in splitSqlStatements(migrationV9Sql)) {
+      raw.execute(statement);
+    }
     raw.execute(
       'UPDATE db_state SET schema_version = ? WHERE singleton = 1',
       [kCurrentSchemaVersion],
@@ -197,6 +208,9 @@ void _upgradeFromV6(Database raw) {
     for (final statement in splitSqlStatements(migrationV8Sql)) {
       raw.execute(statement);
     }
+    for (final statement in splitSqlStatements(migrationV9Sql)) {
+      raw.execute(statement);
+    }
     raw.execute(
       'UPDATE db_state SET schema_version = ? WHERE singleton = 1',
       [kCurrentSchemaVersion],
@@ -222,6 +236,9 @@ void _upgradeFromV7(Database raw) {
     for (final statement in splitSqlStatements(migrationV8Sql)) {
       raw.execute(statement);
     }
+    for (final statement in splitSqlStatements(migrationV9Sql)) {
+      raw.execute(statement);
+    }
     raw.execute(
       'UPDATE db_state SET schema_version = ? WHERE singleton = 1',
       [kCurrentSchemaVersion],
@@ -234,5 +251,30 @@ void _upgradeFromV7(Database raw) {
       // A ROLLBACK without an open transaction is fine at this point.
     }
     throw const SchemaError(SchemaErrorCode.migrationFailed, version: 7);
+  }
+}
+
+/// Applies schema version 9 to a version 8 vault, in one transaction.
+///
+/// A failure rolls back the new column and the version stays 8, so the vault
+/// is unchanged and the next open retries or fails closed.
+void _upgradeFromV8(Database raw) {
+  raw.execute('BEGIN IMMEDIATE');
+  try {
+    for (final statement in splitSqlStatements(migrationV9Sql)) {
+      raw.execute(statement);
+    }
+    raw.execute(
+      'UPDATE db_state SET schema_version = ? WHERE singleton = 1',
+      [kCurrentSchemaVersion],
+    );
+    raw.execute('COMMIT');
+  } on Object {
+    try {
+      raw.execute('ROLLBACK');
+    } on Object {
+      // A ROLLBACK without an open transaction is fine at this point.
+    }
+    throw const SchemaError(SchemaErrorCode.migrationFailed, version: 8);
   }
 }

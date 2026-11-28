@@ -51,7 +51,7 @@ void main() {
       expect(tables, contains('budget_limits'));
       expect(tables, contains('budget_templates'));
       final state = raw.select('SELECT schema_version FROM db_state').first;
-      expect(state['schema_version'], 8);
+      expect(state['schema_version'], 9);
       final triggers = raw
           .select(
             "SELECT count(*) AS n FROM sqlite_master WHERE type = 'trigger' "
@@ -79,12 +79,12 @@ void main() {
 
       final version = verifyExistingVault(raw);
 
-      expect(version, 8);
+      expect(version, 9);
       expect(_tables(raw), contains('budgets'));
       final stored = raw
           .select('SELECT schema_version FROM db_state WHERE singleton = 1')
           .first;
-      expect(stored['schema_version'], 8);
+      expect(stored['schema_version'], 9);
       final kept = raw.select(
         'SELECT name FROM categories WHERE id = ?',
         [_category],
