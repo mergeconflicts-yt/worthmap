@@ -161,6 +161,7 @@ class _X40WealthState extends State<X40Wealth> {
     final change = view.changeMinor;
     final share = view.changeShare;
     final hero = ObHero(
+      exposeBaseline: true,
       value: netWorth == null
           ? ValueSpec.missing(l.wealthNoBalance)
           : ValueSpec.real(

@@ -17,11 +17,16 @@ class HeroAmount extends StatelessWidget {
   const HeroAmount({
     required this.value,
     this.minFontSize = 40,
+    this.exposeBaseline = false,
     super.key,
   });
 
   final HeroValue value;
   final double minFontSize;
+
+  /// Reports the text baseline to a parent Row. X40 aligns its change block
+  /// to the number, and the layout builders hide the baseline by default.
+  final bool exposeBaseline;
 
   /// DESIGN 2.5: the currency mark is 0.45 em.
   static const double currencyScale = 0.45;
@@ -65,12 +70,15 @@ class HeroAmount extends StatelessWidget {
           // Even the split parts at the minimum size do not fit on one line.
           // Keep the old FitNumber behaviour: one string that shrinks and
           // wraps at group boundaries, so no digit is lost.
-          return FitNumber(
+          final fit = FitNumber(
             text: parts.text,
             style: AppText.numberHeroLight,
             minFontSize: minFontSize,
             semanticsLabel: value.semanticsLabel,
           );
+          return exposeBaseline
+              ? _withBaseline(context, parts.text, minFontSize, fit)
+              : fit;
         }
 
         final amount = ShaderMask(
@@ -84,7 +92,7 @@ class HeroAmount extends StatelessWidget {
           ),
         );
 
-        return Row(
+        final row = Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
@@ -118,7 +126,38 @@ class HeroAmount extends StatelessWidget {
             ],
           ],
         );
+        return exposeBaseline
+            ? _withBaseline(context, parts.whole, size, row)
+            : row;
       },
+    );
+  }
+
+  /// Reports the number's text baseline through the layout builder.
+  ///
+  /// `LayoutBuilder` and `FitNumber` do not pass a baseline to a parent Row,
+  /// so X40's change block could not end on the number's baseline.
+  Widget _withBaseline(
+    BuildContext context,
+    String text,
+    double size,
+    Widget child,
+  ) {
+    final painter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: AppText.numberHeroLight.copyWith(fontSize: size),
+      ),
+      textDirection: TextDirection.ltr,
+      textScaler: MediaQuery.textScalerOf(context),
+    )..layout();
+    final baseline = painter.computeDistanceToActualBaseline(
+      TextBaseline.alphabetic,
+    );
+    return Baseline(
+      baseline: baseline,
+      baselineType: TextBaseline.alphabetic,
+      child: child,
     );
   }
 

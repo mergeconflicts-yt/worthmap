@@ -57,6 +57,7 @@ class ObHero extends StatelessWidget {
     this.sideFigures = const <HeroSideFigure>[],
     this.hiddenLabel,
     this.minFontSize = 40,
+    this.exposeBaseline = false,
     super.key,
   });
 
@@ -99,6 +100,9 @@ class ObHero extends StatelessWidget {
   /// figure or a large text scale can pass a smaller value (DESIGN 2.5).
   final double minFontSize;
 
+  /// Reports the number's text baseline to a parent Row (X40).
+  final bool exposeBaseline;
+
   @override
   Widget build(BuildContext context) {
     final tokens = context.tokens;
@@ -112,7 +116,11 @@ class ObHero extends StatelessWidget {
       hiddenLabel: hiddenLabel,
     );
 
-    final number = HeroAmount(value: heroValue, minFontSize: minFontSize);
+    final number = HeroAmount(
+      value: heroValue,
+      minFontSize: minFontSize,
+      exposeBaseline: exposeBaseline,
+    );
 
     final children = <Widget>[
       if (kicker != null) ...<Widget>[
