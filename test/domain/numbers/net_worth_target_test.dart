@@ -5,9 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('netWorthTargetShare', () {
-    test('SPEC 13.2 sample: 187,900 of 1,000,000 is 18.8%', () {
+    test('SPEC 13.2 sample: 187,822 of 1,000,000 is 18.8%', () {
       final share = netWorthTargetShare(
-        current: Money.fromMinor(18790000, Currency.usd),
+        current: Money.fromMinor(18782200, Currency.usd),
         target: Money.fromMinor(100000000, Currency.usd),
       );
       expect(share?.value.toString(), '18.8');
@@ -34,7 +34,7 @@ void main() {
     test('a zero target is not available', () {
       expect(
         netWorthTargetShare(
-          current: Money.fromMinor(18790000, Currency.usd),
+          current: Money.fromMinor(18782200, Currency.usd),
           target: Money.fromMinor(0, Currency.usd),
         ),
         isNull,

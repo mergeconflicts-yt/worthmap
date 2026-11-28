@@ -82,7 +82,7 @@ class DesignGallery extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        '187,900 Contour',
+                        '187,822 Contour',
                         style: entry.value.copyWith(color: tokens.textPrimary),
                       ),
                     ),

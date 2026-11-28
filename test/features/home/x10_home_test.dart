@@ -39,12 +39,12 @@ void main() {
       find.byWidgetPredicate(
         (Widget widget) =>
             widget is Text &&
-            (widget.data ?? '').replaceAll('\u200B', '').contains('187,900'),
+            (widget.data ?? '').replaceAll('\u200B', '').contains('187,822'),
       ),
       findsOneWidget,
     );
     expect(
-      find.text('19% of \$1,000,000 target · Dec 2040'),
+      find.text('18.8% of \$1,000,000 target · Dec 2040'),
       findsOneWidget,
     );
     expect(find.text(r'+$16,900'), findsOneWidget);
@@ -169,7 +169,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.text('19% of \$······ target · Dec 2040'),
+      find.text('18.8% of \$······ target · Dec 2040'),
       findsOneWidget,
     );
     expect(find.textContaining(r'$1,000,000'), findsNothing);

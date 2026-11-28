@@ -81,7 +81,7 @@ void main() {
       await tester.pumpWidget(
         _wrap(
           const ChartFrame(
-            label: 'Net worth, 12 months: \$182,410',
+            label: 'Net worth, 12 months: \$182,332',
             preview: true,
             chart: SizedBox(height: 80),
           ),

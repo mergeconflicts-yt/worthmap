@@ -16,7 +16,7 @@ final class FakeHomeGateway implements HomeGateway {
 final HomeSummary demoSummary = HomeSummary(
   currencyCode: 'USD',
   month: LocalDate(2026, 10, 1),
-  netWorthMinor: 18790000,
+  netWorthMinor: 18782200,
   netWorthChangeMinor: 1690000,
   netWorthTarget: HomeNetWorthTarget(
     amountMinor: 100000000,
@@ -31,7 +31,7 @@ final HomeSummary demoSummary = HomeSummary(
           ((10 + i) % 12) + 1,
           1,
         ),
-        amountMinor: 17100000 + i * 153636,
+        amountMinor: 17092200 + i * 153636,
       ),
   ],
   cashMinor: 2145000,

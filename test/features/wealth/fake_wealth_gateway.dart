@@ -23,13 +23,13 @@ final class FakeWealthGateway implements WealthGateway {
       for (var i = 0; i < 12; i++)
         WealthPoint(
           date: addMonths(first, i),
-          netWorthMinor: 17100000 + i * 140000,
+          netWorthMinor: 17092200 + i * 140000,
           investmentsMinor: 11980000 + i * 90000,
           cashMinor: 2145000,
         ),
       WealthPoint(
         date: last,
-        netWorthMinor: 18790000,
+        netWorthMinor: 18782200,
         investmentsMinor: 12980000,
         cashMinor: 2145000,
       ),
@@ -47,7 +47,7 @@ final class FakeWealthGateway implements WealthGateway {
       points: period == WealthPeriod.fiveYears
           ? <WealthPoint>[points.first, points.last]
           : points,
-      ownMinor: 19754000,
+      ownMinor: 19746200,
       oweMinor: 964000,
       ownTypes: const <WealthType>[
         WealthType(
@@ -58,6 +58,21 @@ final class FakeWealthGateway implements WealthGateway {
         WealthType(
           kind: WealthTypeKind.investments,
           amountMinor: 12980000,
+          count: 1,
+        ),
+        WealthType(
+          kind: WealthTypeKind.retirement,
+          amountMinor: 2393400,
+          count: 1,
+        ),
+        WealthType(
+          kind: WealthTypeKind.car,
+          amountMinor: 1200000,
+          count: 1,
+        ),
+        WealthType(
+          kind: WealthTypeKind.deposits,
+          amountMinor: 1027800,
           count: 1,
         ),
       ],

@@ -139,7 +139,7 @@ void main() {
                   builder: (_) => SectionScope(
                     section: Section.wealth,
                     child: MoneyText(
-                      ValueSpec.real(_usd(182410)),
+                      ValueSpec.real(_usd(182332)),
                       style: AppText.numberM,
                     ),
                   ),
@@ -157,7 +157,7 @@ void main() {
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
       expect(find.text('\$$hiddenMask'), findsOneWidget);
-      expect(find.text(r'$182,410.00'), findsNothing);
+      expect(find.text(r'$182,332.00'), findsNothing);
     });
 
     testWidgets('a chart keeps percentages and masks amounts', (tester) async {

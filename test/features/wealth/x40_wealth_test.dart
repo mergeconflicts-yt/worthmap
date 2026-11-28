@@ -24,7 +24,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('NET WORTH'), findsOneWidget);
-    expect(find.textContaining('187,900'), findsWidgets);
+    expect(find.textContaining('187,822'), findsWidgets);
     expect(find.text('1M'), findsOneWidget);
     expect(find.text('1Y'), findsOneWidget);
     expect(find.text('5Y'), findsOneWidget);
@@ -76,7 +76,7 @@ void main() {
       return tester.getTopLeft(finder).dy + distance;
     }
 
-    expect(baselineOf('+9.9%'), closeTo(baselineOf('187,900'), 0.5));
+    expect(baselineOf('+9.9%'), closeTo(baselineOf('187,822'), 0.5));
     expect(
       tester.getRect(find.text('+9.9%')).top,
       greaterThan(tester.getRect(find.text(r'+$16,900')).top),

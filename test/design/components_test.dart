@@ -110,11 +110,11 @@ void main() {
 
     test('trimZeroFraction drops a zero fraction and keeps real cents', () {
       final whole = formatValueState(
-        ValueSpec.real(Money.fromMinor(18790000, Currency.usd)),
+        ValueSpec.real(Money.fromMinor(18782200, Currency.usd)),
         trimZeroFraction: true,
       );
-      expect(whole.text, r'$187,900');
-      expect(whole.semanticsLabel, r'$187,900');
+      expect(whole.text, r'$187,822');
+      expect(whole.semanticsLabel, r'$187,822');
       final cents = formatValueState(
         ValueSpec.real(amount),
         trimZeroFraction: true,

@@ -25,7 +25,7 @@ void main() {
     final loss = wealthChangeShare(startMinor: 20000, endMinor: 15000);
     expect(loss!.value, Decimal.fromInt(-25));
 
-    final small = wealthChangeShare(startMinor: 182410, endMinor: 187900);
+    final small = wealthChangeShare(startMinor: 182332, endMinor: 187822);
     expect(small!.value.toStringAsFixed(1), '3.0');
   });
 

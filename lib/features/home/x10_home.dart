@@ -192,7 +192,7 @@ class _X10HomeState extends State<X10Home> {
     final hidden = HiddenAmountsScope.resolve(context, null);
     final targetMoney = _whole(Money.fromMinor(target.amountMinor, currency));
     final date = formatMonthYear(target.date);
-    final percent = formatPercent(share, decimals: 0);
+    final percent = formatPercent(share, decimals: 1);
     final targetText = hidden
         ? formatValueState(ValueSpec.real(targetMoney), hidden: true).text
         : formatMoney(targetMoney, trimZeroFraction: true);
