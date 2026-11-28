@@ -187,40 +187,94 @@ class _X40WealthState extends State<X40Wealth> {
                 sign: SignStyle.always,
                 trimZeroFraction: true,
               );
-    final side = Column(
-      crossAxisAlignment:
-          largeText ? CrossAxisAlignment.start : CrossAxisAlignment.end,
-      children: <Widget>[
-        Text(
-          changeText,
-          style: AppText.bodyStrong.copyWith(color: colour),
-        ),
-        if (share != null)
-          Text(
-            change != null && change > 0
-                ? '+${formatPercent(share)}'
-                : formatPercent(share),
-            style: AppText.caption.copyWith(color: colour),
-          ),
-      ],
-    );
+    final shareText = share == null
+        ? null
+        : change != null && change > 0
+            ? '+${formatPercent(share)}'
+            : formatPercent(share);
     if (largeText) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           hero,
           const VSpace(Space.s),
-          side,
+          Text(
+            changeText,
+            style: AppText.bodyStrong.copyWith(color: colour),
+          ),
+          if (shareText != null)
+            Text(
+              shareText,
+              style: AppText.caption.copyWith(color: colour),
+            ),
         ],
       );
     }
+    // The change block ends on the number's baseline: the share sits on the
+    // baseline, the amount floats above it.
+    final side = _changeBlock(
+      context,
+      amount: changeText,
+      share: shareText,
+      colour: colour,
+    );
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
       children: <Widget>[
         Expanded(child: hero),
         const HSpace(Space.s),
         side,
       ],
+    );
+  }
+
+  /// The two-line change block with the share on the shared baseline.
+  ///
+  /// A Column reports its first line as the baseline, so the share is the
+  /// Stack's first child and the amount is positioned above it.
+  Widget _changeBlock(
+    BuildContext context, {
+    required String amount,
+    required String? share,
+    required Color colour,
+  }) {
+    final amountStyle = AppText.bodyStrong.copyWith(color: colour);
+    final shareStyle = AppText.caption.copyWith(color: colour);
+    final scaler = MediaQuery.textScalerOf(context);
+    final shareLabel = share;
+    final amountPainter = TextPainter(
+      text: TextSpan(text: amount, style: amountStyle),
+      textDirection: TextDirection.ltr,
+      textScaler: scaler,
+    )..layout();
+    if (shareLabel == null) {
+      return Text(amount, style: amountStyle, textAlign: TextAlign.right);
+    }
+    final sharePainter = TextPainter(
+      text: TextSpan(text: shareLabel, style: shareStyle),
+      textDirection: TextDirection.ltr,
+      textScaler: scaler,
+    )..layout();
+    return SizedBox(
+      width: amountPainter.width > sharePainter.width
+          ? amountPainter.width
+          : sharePainter.width,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: <Widget>[
+          Text(shareLabel, style: shareStyle, textAlign: TextAlign.right),
+          Positioned(
+            right: 0,
+            bottom: sharePainter.height,
+            child: Text(
+              amount,
+              style: amountStyle,
+              textAlign: TextAlign.right,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
