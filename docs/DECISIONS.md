@@ -165,6 +165,40 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   request per family, when a typed read is first needed.
 ## Decided
 
+### P4-WEALTH
+
+- Decision (2026-11-28). X40 is built from the existing P14 account reads.
+  Net worth sums `include_in_net_worth` balances; cash sums `is_liquid`
+  balances; investments sum non-liquid, non-liability accounts in net worth.
+  A point with a Missing balance is Missing, so the 5Y change is Missing until
+  the history covers 60 months (`wealth_change`, SPEC 4.3).
+
+- Periods. 1M is rolling 30 days (SCREENS X40). 1Y and 5Y use month ends and
+  end at today, never at a future date. The change is end − start; the share
+  is change ÷ start through `Decimal`, formatted to one decimal. The demo
+  starts its anchors 13 months back, so 5Y reads Missing.
+
+- Chart. New `MultiLineChart`: up to three series on one zero-based scale,
+  legend in words, exact table, Missing points as gaps. Net worth uses
+  `ChartMark.gain`, investments `invested`, cash `inCash`. `state.gain`
+  already exists, so no new token is needed (SCREENS X40 lists this as open).
+
+- Card. "You own / You owe" shows the two totals and the recorded types
+  (cash and bank, investments, cards). SCREENS X40 uses tabs and a type grid;
+  this build uses one flat card, because a tab control is a second control row
+  (CONTROL-ROW-SCOPE) and property, car, deposits and loans have no records
+  yet.
+
+- Deferred and not claimed as built: X40b "About this number" (needs the
+  NUM-001 parts: markets, currency, values), the "Not in net worth" card, the
+  X41/X42 account details, and the goal record (G09). The demo target
+  ($1,000,000 by Dec 2040) stays synthetic, as on Home.
+
+- Evidence: `test/domain/numbers/wealth_change_test.dart` (6),
+  `test/features/wealth/x40_wealth_test.dart` (3),
+  `test/app/demo_wealth_test.dart` (1), and four X40 goldens (dark and light
+  at 1.0 and 2.0), all checked.
+
 ### GOLDEN-DATE-STABILITY
 
 - Problem (2026-11-28). `FakePaymentsReadGateway` read `DateTime.now()` for its

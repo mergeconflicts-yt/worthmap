@@ -3876,5 +3876,109 @@
   "homeFooterAccounts": "Prices off · {count} accounts read",
   "@homeFooterAccounts": {
     "description": "Home footer facts."
+  },
+  "wealthKicker": "Wealth",
+  "@wealthKicker": {
+    "description": "X40 header kicker."
+  },
+  "wealthHeroKicker": "Net worth",
+  "@wealthHeroKicker": {
+    "description": "X40 hero kicker."
+  },
+  "wealthPeriodOneMonth": "1M",
+  "@wealthPeriodOneMonth": {
+    "description": "X40 period chip."
+  },
+  "wealthPeriodOneYear": "1Y",
+  "@wealthPeriodOneYear": {
+    "description": "X40 period chip."
+  },
+  "wealthPeriodFiveYears": "5Y",
+  "@wealthPeriodFiveYears": {
+    "description": "X40 period chip."
+  },
+  "wealthPeriodSpokenOneMonth": "1 month",
+  "@wealthPeriodSpokenOneMonth": {
+    "description": "X40 side figure period, spoken form."
+  },
+  "wealthPeriodSpokenOneYear": "12 months",
+  "@wealthPeriodSpokenOneYear": {
+    "description": "X40 side figure period, spoken form."
+  },
+  "wealthPeriodSpokenFiveYears": "5 years",
+  "@wealthPeriodSpokenFiveYears": {
+    "description": "X40 side figure period, spoken form."
+  },
+  "wealthChartTitle": "Net worth, investments and cash",
+  "@wealthChartTitle": {
+    "description": "X40 chart card title."
+  },
+  "wealthSeriesNetWorth": "Net worth",
+  "@wealthSeriesNetWorth": {
+    "description": "X40 chart legend and table column."
+  },
+  "wealthSeriesInvestments": "Investments",
+  "@wealthSeriesInvestments": {
+    "description": "X40 chart legend and table column."
+  },
+  "wealthSeriesCash": "Cash",
+  "@wealthSeriesCash": {
+    "description": "X40 chart legend and table column."
+  },
+  "wealthChartSpoken": "From {start} to {end}: net worth {netWorth}, investments {investments}, cash {cash}.",
+  "@wealthChartSpoken": {
+    "description": "X40 chart spoken label with the last values."
+  },
+  "wealthOwn": "You own",
+  "@wealthOwn": {
+    "description": "X40 own total."
+  },
+  "wealthOwe": "You owe",
+  "@wealthOwe": {
+    "description": "X40 owe total."
+  },
+  "wealthTypeCash": "Cash and bank",
+  "@wealthTypeCash": {
+    "description": "X40 asset type row."
+  },
+  "wealthTypeInvestments": "Investments",
+  "@wealthTypeInvestments": {
+    "description": "X40 asset type row."
+  },
+  "wealthTypeCard": "Cards",
+  "@wealthTypeCard": {
+    "description": "X40 liability type row."
+  },
+  "wealthAccountsCount": "{count, plural, =1{1 account} other{{count} accounts}}",
+  "@wealthAccountsCount": {
+    "description": "X40 asset type fact."
+  },
+  "wealthMissing": "Missing",
+  "@wealthMissing": {
+    "description": "X40 value state."
+  },
+  "wealthNoBalance": "Add an account balance to see net worth.",
+  "@wealthNoBalance": {
+    "description": "X40 hero when no balance is recorded."
+  },
+  "wealthLoadFailed": "Could not load Wealth.",
+  "@wealthLoadFailed": {
+    "description": "X40 load failure."
+  },
+  "wealthRetry": "Retry",
+  "@wealthRetry": {
+    "description": "X40 retry action."
+  },
+  "wealthChange": "{amount} · {percent} · {period}",
+  "@wealthChange": {
+    "description": "X40 hero side figure: amount, share and period."
+  },
+  "wealthOwnOweTitle": "You own / You owe",
+  "@wealthOwnOweTitle": {
+    "description": "X40 card title."
+  },
+  "wealthTableDate": "Date",
+  "@wealthTableDate": {
+    "description": "X40 chart table column."
   }
 }

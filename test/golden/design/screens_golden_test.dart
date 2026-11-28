@@ -8,10 +8,12 @@ import 'package:contour/features/settings/x80_settings.dart';
 import 'package:contour/features/settings/x86_privacy.dart';
 import 'package:contour/features/start/x01_welcome.dart';
 import 'package:contour/features/start/x02_lock.dart';
+import 'package:contour/features/wealth/x40_wealth.dart';
 import 'package:contour/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../features/wealth/fake_wealth_gateway.dart';
 import 'golden_harness.dart';
 
 /// SPEC 16.3 banned words (data-only rule, AGENTS 2.2). The check runs over
@@ -46,6 +48,11 @@ void main() {
       'x03_home_first',
       const Size(420, 1600),
       (context) => X03HomeFirstRun(today: LocalDate(2026, 10, 13)),
+    ),
+    (
+      'x40_wealth',
+      const Size(420, 2600),
+      (context) => X40Wealth(gateway: FakeWealthGateway()),
     ),
     (
       'x80_settings',
@@ -185,6 +192,21 @@ void main() {
       l.x86DeleteAll,
       l.x86DeleteAllCaption,
       l.x86RowRead,
+      l.wealthKicker,
+      l.wealthHeroKicker,
+      l.wealthChartTitle,
+      l.wealthSeriesNetWorth,
+      l.wealthSeriesInvestments,
+      l.wealthSeriesCash,
+      l.wealthOwn,
+      l.wealthOwe,
+      l.wealthOwnOweTitle,
+      l.wealthTypeCash,
+      l.wealthTypeInvestments,
+      l.wealthTypeCard,
+      l.wealthNoBalance,
+      l.wealthMissing,
+      l.wealthLoadFailed,
     ];
     final lowered = all.map((s) => s.toLowerCase()).toList();
     for (final word in _bannedWords) {

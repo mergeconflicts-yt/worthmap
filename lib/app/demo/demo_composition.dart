@@ -47,6 +47,7 @@ import '../router.dart';
 import '../spending_gateway.dart';
 import '../transfer_draft_store.dart';
 import '../transfers_gateway.dart';
+import '../wealth_gateway.dart';
 import 'demo_gallery.dart';
 import 'sample_statement.dart';
 
@@ -628,6 +629,13 @@ final class DemoComposition {
       // Real holdings and prices arrive in Phase 5.
       investmentsTodayMinor: 55000,
     );
+    final wealthGateway = SqlWealthGateway(
+      accounts: accounts,
+      today: () => today,
+      // The same synthetic demo target as Home (SPEC 13.2 sample).
+      targetMinor: 100000000,
+      targetDate: LocalDate(2040, 12, 1),
+    );
     final historyGateway = SqlHistoryGateway(
       history: historyRepository,
       payments: payments,
@@ -650,6 +658,7 @@ final class DemoComposition {
       repeating: repeatingGateway,
       history: historyGateway,
       home: homeGateway,
+      wealth: wealthGateway,
       imports: importGateway,
       importFiles: const SyntheticFileIntake(),
       importPasswords: MemoryImportPasswordVault(),

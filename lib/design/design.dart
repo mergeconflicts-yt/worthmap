@@ -8,6 +8,7 @@ export 'charts/chart_frame.dart';
 export 'charts/chart_tone.dart';
 export 'charts/chart_values.dart';
 export 'charts/glyph_timeline.dart';
+export 'charts/multi_line_chart.dart';
 export 'charts/period_bar_chart.dart';
 export 'charts/ring_meter.dart';
 export 'charts/split_bar.dart';

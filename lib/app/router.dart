@@ -61,6 +61,7 @@ import '../features/spending/x39_payment_detail.dart';
 import '../features/spending/x84_rules.dart';
 import '../features/start/x01_welcome.dart';
 import '../features/start/x02_lock.dart';
+import '../features/wealth/wealth_models.dart';
 import '../features/wealth/x40_wealth.dart';
 import '../l10n/generated/app_localizations.dart';
 import 'import_intake.dart';
@@ -151,6 +152,7 @@ final class ContourRouter {
     RepeatingGateway? repeating,
     HistoryGateway? history,
     HomeGateway? home,
+    WealthGateway? wealth,
     ImportGateway? imports,
     ImportFileIntake? importFiles,
     ImportPasswordVault? importPasswords,
@@ -174,6 +176,7 @@ final class ContourRouter {
         _repeating = repeating ?? const UnavailableRepeatingGateway(),
         _history = history ?? const UnavailableHistoryGateway(),
         _home = home,
+        _wealth = wealth ?? const UnavailableWealthGateway(),
         _imports = imports ?? const UnavailableImportGateway(),
         _importFiles = importFiles ?? const PlatformImportFileIntake(),
         _importPasswords = importPasswords;
@@ -221,6 +224,10 @@ final class ContourRouter {
 
   /// The Home summary port. Null keeps X03, the first-run Home.
   final HomeGateway? _home;
+
+  /// The Wealth read port for X40. The default is the factual unavailable
+  /// state until the vault composition mounts the SQL gateway.
+  final WealthGateway _wealth;
 
   /// The PDF import port for X63.
   final ImportGateway _imports;
@@ -404,7 +411,10 @@ final class ContourRouter {
           name: AppRoute.wealth.screenId,
           builder: (context, state) => _screenScaffold(
             AppRoute.wealth,
-            const X40Wealth(),
+            X40Wealth(
+              gateway: _wealth,
+              onSettings: () => context.push(AppRoute.settings.path),
+            ),
           ),
         ),
         GoRoute(
