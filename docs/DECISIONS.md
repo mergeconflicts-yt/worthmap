@@ -163,6 +163,26 @@ SPEC.md, DESIGN.md or AGENTS.md; it records the item here.
   (DB-D/DB-E query variants), not with the schema translation.
 - Preferred resolution. Add drift table classes per read model, one pull
   request per family, when a typed read is first needed.
+
+- `P4-VALUE-METHOD-BASIS`. SPEC 9.2 names the value methods and their inputs,
+  but gives no formula, day-count or rounding rule. Appendix A says every
+  section 6 total comes from the sample set, and the samples do not agree:
+  $10,000 at 4.1% from 12 Feb to 13 Oct shows $10,280, and at maturity
+  12 Nov it shows $10,312. On a 365-day year, eight months simple gives
+  $10,273; 273 days simple gives $10,307; monthly compounding gives $10,277.
+  The pension sample also leaves the order of the monthly contribution and
+  the yearly growth undefined ($22,700 + two $500 contributions + 5%).
+  DECISION-PENDING: P4-VALUE-METHOD-BASIS.
+- Options. (a) Define the basis (actual days, 365-day year, the compounding
+  the user selects, round half-up at display) and correct the deposit sample
+  values once in a SPEC pull request. (b) Keep the samples and choose a
+  basis that reproduces them, for example a 360-day year. (c) Treat the
+  sample values as illustrative and do not test the projection.
+- Preferred. (a). The basis is standard, testable and easy to undo; the four
+  deposit values change once. (b) imposes a day-count the sources do not
+  name. (c) breaks Appendix A and leaves P4-01 without a test.
+- Blocks P4-01, P4-04 and P4-23.
+
 ## Decided
 
 ### P4-PLAN
